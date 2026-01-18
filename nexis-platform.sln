@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D5FD14EB-F497-41A7-AA7A-275B3363942F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{50E81A15-6004-4915-AA09-7F17F60B66E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{7E1B0B57-2A8A-4ADD-B93F-EA5E9EBEDD78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{14E643B4-7494-4C92-B1ED-DB7C6123077E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Users", "Users", "{EAA95334-2E7E-4063-8EF3-E0E3979001AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{50E81A15-6004-4915-AA09-7F17F60B66E6} = {D5FD14EB-F497-41A7-AA7A-275B3363942F}
+		{7E1B0B57-2A8A-4ADD-B93F-EA5E9EBEDD78} = {D5FD14EB-F497-41A7-AA7A-275B3363942F}
+		{14E643B4-7494-4C92-B1ED-DB7C6123077E} = {D5FD14EB-F497-41A7-AA7A-275B3363942F}
+		{EAA95334-2E7E-4063-8EF3-E0E3979001AE} = {50E81A15-6004-4915-AA09-7F17F60B66E6}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{14E643B4-7494-4C92-B1ED-DB7C6123077E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14E643B4-7494-4C92-B1ED-DB7C6123077E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14E643B4-7494-4C92-B1ED-DB7C6123077E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14E643B4-7494-4C92-B1ED-DB7C6123077E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
