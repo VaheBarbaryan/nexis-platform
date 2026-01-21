@@ -1,4 +1,6 @@
+using Modules.Users.Application.Seed;
 using Modules.Users.Persistence;
+using SharedKernel.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,14 @@ builder.Services.AddOpenApi();
 builder.Services.AddUsersPersistence(builder.Configuration);
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+var seeders = scope.ServiceProvider.GetServices<IModuleSeeder>();
+
+foreach (var seeder in seeders)
+{
+    await seeder.SeedAsync();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

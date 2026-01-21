@@ -14,6 +14,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
         builder.Property(x => x.Id)
             .HasConversion(id => id.Value, value => new RoleId(value));
         builder.Property(r => r.Name)
+            .HasConversion(name => name.Value, value => RoleName.Create(value))
             .HasMaxLength(100)
             .IsRequired();
         

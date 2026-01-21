@@ -15,6 +15,7 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
             .HasConversion(id => id.Value, value => new PermissionId(value))
             .ValueGeneratedNever();;
         builder.Property(x => x.Name)
+            .HasConversion(name => name.Value, value => PermissionName.Create(value))
             .HasMaxLength(100)
             .IsRequired();
         builder.HasIndex(x => x.Name).IsUnique();

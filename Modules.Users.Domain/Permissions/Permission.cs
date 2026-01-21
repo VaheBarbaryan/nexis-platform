@@ -5,18 +5,22 @@ namespace Modules.Users.Domain.Permissions;
 
 public sealed class Permission : AggregateRoot<PermissionId>
 {
-    public string Name { get; private set; }
+    public PermissionName Name { get; private set; }
     
     private Permission() {}
 
-    private Permission(string name)
+    private Permission(PermissionId id, PermissionName name)
     {
+        Id = id;
         Name = name;
     }
 
     public static Permission Create(string name)
     {
-        var permission = new Permission(name);
+        var permission = new Permission(
+            new PermissionId(Guid.NewGuid()),
+            PermissionName.Create(name)
+            );
         
         return permission;
     }

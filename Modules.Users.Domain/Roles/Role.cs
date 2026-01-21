@@ -2,7 +2,6 @@ using Modules.Users.Domain.Permissions.ValueObjects;
 using Modules.Users.Domain.Roles.Rules;
 using Modules.Users.Domain.Roles.ValueObjects;
 using SharedKernel.Domain.Aggregates;
-using SharedKernel.Domain.Exceptions;
 
 namespace Modules.Users.Domain.Roles;
 
@@ -10,23 +9,24 @@ public sealed class Role : AggregateRoot<RoleId>
 {
     private readonly List<RolePermission> _permissions = new();
 
-    public string Name { get; private set; }
+    public RoleName Name { get; private set; }
     
     public IReadOnlyCollection<RolePermission> Permissions => _permissions;
     
     private Role() {}
     
-    private Role(RoleId id, string name)
+    private Role(RoleId id, RoleName name)
     {
         Id = id;
         Name = name;
     }
 
-    public static Role Create(RoleId roleId, string name)
+    public static Role Create(string name)
     {
-        var role = new Role(roleId, name);
-
-        return role;
+        var roleId = new RoleId(Guid.NewGuid());
+        var roleName = RoleName.Create(name);
+        
+        return new Role(roleId, roleName);
     }
 
     public void AddPermission(PermissionId permissionId)
