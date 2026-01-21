@@ -1,6 +1,6 @@
 using SharedKernel.Domain.Exceptions;
 
-namespace Modules.Users.Domain.Roles.Exceptions;
+namespace Modules.Users.Domain.Permissions.Exceptions;
 
 public class PermissionCannotBeEmptyException : DomainException
 {
