@@ -1,16 +1,16 @@
+using MediatR;
 using SharedKernel.Domain.Entities;
-using SharedKernel.Domain.Events;
 
 namespace SharedKernel.Domain.Aggregates;
 
 public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
 {
-    private readonly List<IDomainEvent> _domainEvents = new();
+    private readonly List<INotification> _domainEvents = new();
 
-    public IReadOnlyCollection<IDomainEvent> DomainEvents =>
+    public IReadOnlyCollection<INotification> DomainEvents =>
         _domainEvents.AsReadOnly();
 
-    protected void RaiseDomainEvent(IDomainEvent domainEvent)
+    protected void RaiseDomainEvent(INotification domainEvent)
     {
         if (domainEvent is null)
         {

@@ -1,19 +1,30 @@
-using Modules.Users.Application.Seed;
-using Modules.Users.Persistence;
+using Modules.Users.Endpoints;
 using SharedKernel.Application;
+using SharedKernel.Infrastructure.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddUsersPersistence(builder.Configuration);
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblies(
+        Modules.Users.Application.UsersApplicationAssembly.Assembly,
+        Modules.Users.Infrastructure.UsersInfrastructureAssembly.Assembly);
+});
 
-var app = builder.Build();
+builder.Services.InstallModulesFromAssemblies(
+    builder.Configuration,
+    Modules.Users.Infrastructure.UsersInfrastructureAssembly.Assembly);
 
-using var scope = app.Services.CreateScope();
-var seeders = scope.ServiceProvider.GetServices<IModuleSeeder>();
+WebApplication app = builder.Build();
+
+using IServiceScope scope = app.Services.CreateScope();
+IEnumerable<IModuleSeeder> seeders = scope.ServiceProvider.GetServices<IModuleSeeder>();
 
 foreach (var seeder in seeders)
 {
@@ -27,5 +38,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.UseAuthorization();
+
+app.MapEndpoints(UsersEndpointsAssembly.Assembly);
 
 app.Run();

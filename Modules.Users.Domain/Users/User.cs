@@ -9,43 +9,47 @@ namespace Modules.Users.Domain.Users;
 public sealed class User : AggregateRoot<UserId>
 {
     private readonly List<UserRole> _roles = new();
-
-    public IReadOnlyCollection<UserRole> Roles => _roles;
+    public IReadOnlyCollection<UserRole> Roles => _roles.AsReadOnly();
     
     public Email Email { get; private set; }
-    public string Username { get; private set; }
+    public Username Username { get; private set; }
+    public Password Password { get; private set; }
+    public DateTimeOffset? EmailVerifiedAt { get; private set; }
     public string? Bio { get; private set; }
     public string? Location { get; private set; }
     public string? Website { get; private set; }
     public DateTime? BirthDate { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-    public DateTime UpdatedAt { get; private set; }
+    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset UpdatedAt { get; private set; }
     
     private User() {}
 
-    private User(UserId id, Email email, string username)
+    private User(UserId id, Email email, Username username, Password password)
     {
         Id = id;
         Email = email;
         Username = username;
+        Password = password;
         
-        var now = DateTime.UtcNow;
+        var now = DateTimeOffset.UtcNow;
         CreatedAt = now;
         UpdatedAt = now;
     }
 
     public static User Create(
-        UserId id, 
         Email email, 
-        string username,
+        Username username,
+        Password password,
         RoleId defaultRoleId,
+        DateTime? emailVerifiedAt = null,
         string? bio = null,
         string? location = null,
         string? website = null,
         DateTime? birthDate = null)
     {
-        var user = new User(id, email, username)
+        var user = new User(new UserId(Guid.NewGuid()), email, username, password)
         {
+            EmailVerifiedAt = emailVerifiedAt,
             Bio = bio,
             Location = location,
             Website = website,
@@ -56,7 +60,7 @@ public sealed class User : AggregateRoot<UserId>
 
         user.RaiseDomainEvent(new UserCreatedDomainEvent(
             user.Id.Value,
-            user.Username,
+            user.Username.Value,
             user.Email.Value
         ));
         

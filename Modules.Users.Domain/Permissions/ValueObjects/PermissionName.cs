@@ -14,7 +14,9 @@ public sealed record PermissionName
     public static PermissionName Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
+        {
             throw new PermissionCannotBeEmptyException();
+        }
 
         return new PermissionName(value.ToLowerInvariant());
     }
