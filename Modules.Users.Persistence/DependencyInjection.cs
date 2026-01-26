@@ -4,17 +4,16 @@ using Microsoft.Extensions.Configuration;
 using Modules.Users.Application.Contracts;
 using Modules.Users.Application.Seed;
 using Modules.Users.Persistence.Contexts;
-using Modules.Users.Persistence.Interceptors;
 using Modules.Users.Persistence.Repositories;
 using SharedKernel.Application;
+using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Persistence;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddUsersPersistence(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<DomainEventsInterceptor>();
         services.AddScoped<IModuleSeeder>(sp => sp.GetRequiredService<RolePermissionSeeder>());
         
         // DbContext
@@ -31,14 +30,12 @@ public static class DependencyInjection
 
             // Snake case naming
             options.UseSnakeCaseNamingConvention();
-
-            // Add interceptor
-            options.AddInterceptors(sp.GetRequiredService<DomainEventsInterceptor>());
         });
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         
         services.AddScoped<RolePermissionSeeder>();
 

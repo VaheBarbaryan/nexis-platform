@@ -100,6 +100,10 @@ namespace Modules.Users.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<DateTime?>("EmailVerifiedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("email_verified_at");
+
                     b.Property<string>("Location")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
@@ -185,7 +189,31 @@ namespace Modules.Users.Persistence.Migrations
                                 .HasConstraintName("fk_users_users_id");
                         });
 
+                    b.OwnsOne("Modules.Users.Domain.Users.ValueObjects.Password", "Password", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("password");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId")
+                                .HasConstraintName("fk_users_users_id");
+                        });
+
                     b.Navigation("Email")
+                        .IsRequired();
+
+                    b.Navigation("Password")
                         .IsRequired();
                 });
 

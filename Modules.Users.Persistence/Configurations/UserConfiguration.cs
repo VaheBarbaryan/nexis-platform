@@ -15,15 +15,28 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
                 id => id.Value,
                 value => new UserId(value))
             .ValueGeneratedNever();
-        builder.Property(x => x.Username)
-            .HasMaxLength(50)
-            .IsRequired();
+        
+        builder.OwnsOne(x => x.Username, username =>
+        {
+            username.Property(x => x.Value)
+                .HasColumnName("username")
+                .HasMaxLength(50)
+                .IsRequired();
+        });
 
         builder.OwnsOne(x => x.Email, email =>
         {
             email.Property(x => x.Value)
                 .HasColumnName("email")
                 .HasMaxLength(255)
+                .IsRequired();
+        });
+
+        builder.OwnsOne(x => x.Password, password =>
+        {
+            password.Property(x => x.Value)
+                .HasColumnName("password")
+                .HasMaxLength(200)
                 .IsRequired();
         });
         
