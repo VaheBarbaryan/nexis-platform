@@ -9,6 +9,8 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
     public void Configure(EntityTypeBuilder<Role> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.ToTable("roles");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
@@ -17,7 +19,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             .HasConversion(name => name.Value, value => RoleName.Create(value))
             .HasMaxLength(100)
             .IsRequired();
-        
+
         builder.HasMany(r => r.Permissions)
             .WithOne()
             .HasForeignKey(x => x.RoleId);

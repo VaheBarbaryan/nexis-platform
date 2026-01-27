@@ -18,7 +18,9 @@ public sealed record PermissionName
             throw new PermissionCannotBeEmptyException();
         }
 
-        return new PermissionName(value.ToLowerInvariant());
+        var normalized = value.Trim().ToUpperInvariant();
+
+        return new PermissionName(normalized);
     }
 
     public override string ToString() => Value;

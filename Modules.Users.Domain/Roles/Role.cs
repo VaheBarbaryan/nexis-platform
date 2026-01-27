@@ -9,12 +9,12 @@ public sealed class Role : AggregateRoot<RoleId>
 {
     private readonly List<RolePermission> _permissions = new();
 
-    public RoleName Name { get; private set; }
-    
+    public RoleName Name { get; private set; } = null!;
+
     public IReadOnlyCollection<RolePermission> Permissions => _permissions;
-    
+
     private Role() {}
-    
+
     private Role(RoleId id, RoleName name)
     {
         Id = id;
@@ -25,7 +25,7 @@ public sealed class Role : AggregateRoot<RoleId>
     {
         var roleId = new RoleId(Guid.NewGuid());
         var roleName = RoleName.Create(name);
-        
+
         return new Role(roleId, roleName);
     }
 
@@ -36,9 +36,9 @@ public sealed class Role : AggregateRoot<RoleId>
 
     public void RemovePermission(PermissionId permissionId)
     {
-        
+
         CheckRule(new RoleMustHavePermissionRule(_permissions, permissionId));
-        
+
         var permission = _permissions.First(p => p.PermissionId == permissionId);
 
         _permissions.Remove(permission);

@@ -10,10 +10,10 @@ public sealed class User : AggregateRoot<UserId>
 {
     private readonly List<UserRole> _roles = new();
     public IReadOnlyCollection<UserRole> Roles => _roles.AsReadOnly();
-    
-    public Email Email { get; private set; }
-    public Username Username { get; private set; }
-    public Password Password { get; private set; }
+
+    public Email Email { get; private set; } = null!;
+    public Username Username { get; private set; }  = null!;
+    public Password Password { get; private set; }  = null!;
     public DateTimeOffset? EmailVerifiedAt { get; private set; }
     public string? Bio { get; private set; }
     public string? Location { get; private set; }
@@ -21,7 +21,7 @@ public sealed class User : AggregateRoot<UserId>
     public DateTime? BirthDate { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset UpdatedAt { get; private set; }
-    
+
     private User() {}
 
     private User(UserId id, Email email, Username username, Password password)
@@ -30,14 +30,15 @@ public sealed class User : AggregateRoot<UserId>
         Email = email;
         Username = username;
         Password = password;
-        
+
         var now = DateTimeOffset.UtcNow;
         CreatedAt = now;
         UpdatedAt = now;
     }
 
     public static User Create(
-        Email email, 
+        UserId userId,
+        Email email,
         Username username,
         Password password,
         RoleId defaultRoleId,
@@ -47,7 +48,7 @@ public sealed class User : AggregateRoot<UserId>
         string? website = null,
         DateTime? birthDate = null)
     {
-        var user = new User(new UserId(Guid.NewGuid()), email, username, password)
+        var user = new User(userId, email, username, password)
         {
             EmailVerifiedAt = emailVerifiedAt,
             Bio = bio,
@@ -55,7 +56,7 @@ public sealed class User : AggregateRoot<UserId>
             Website = website,
             BirthDate = birthDate
         };
-        
+
         user.AssignRole(defaultRoleId);
 
         user.RaiseDomainEvent(new UserCreatedDomainEvent(
@@ -63,10 +64,10 @@ public sealed class User : AggregateRoot<UserId>
             user.Username.Value,
             user.Email.Value
         ));
-        
+
         return user;
     }
-    
+
     public void AssignRole(RoleId roleId)
     {
         CheckRule(new UserCannotHaveDuplicateRoleRule(_roles, roleId));

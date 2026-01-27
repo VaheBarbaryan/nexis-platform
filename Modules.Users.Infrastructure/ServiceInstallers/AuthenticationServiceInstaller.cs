@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -10,28 +11,34 @@ using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Infrastructure.ServiceInstallers;
 
+[SuppressMessage("Usage", "CA1812", Justification = "Used via IServiceInstaller collection")]
 internal sealed class AuthenticationServiceInstaller : IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         var pepper = configuration["Security:PasswordPepper"];
-        
+
+        if (string.IsNullOrWhiteSpace(pepper))
+        {
+            throw new InvalidOperationException("Security:PasswordPepper configuration value is missing.");
+        }
+
         services.AddSingleton<IPasswordHasher>(_ => new PasswordHasher(pepper));
         services.AddScoped<IJwtProvider, JwtProvider>();
-        
+
         services
             .AddOptions<JwtOptions>()
             .Bind(configuration.GetSection("Jwt"))
             .ValidateDataAnnotations()
             .ValidateOnStart();
-        
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 var jwt = configuration
                     .GetSection("Jwt")
                     .Get<JwtOptions>()!;
-                
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,

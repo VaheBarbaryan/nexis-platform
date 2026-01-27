@@ -14,15 +14,15 @@ public class UserRepository : IUserRepository
     {
         _context = context;
     }
-    
-    public async Task<bool> EmailExistsAsync(Email email, CancellationToken cancellationToken = default)
+
+    public async Task<bool> EmailExistsAsync(Email email, CancellationToken ct = default)
     {
-        return await _context.Users.AnyAsync(x => x.Email == email, cancellationToken);
+        return await _context.Users.AnyAsync(x => x.Email.Value == email.Value, ct);
     }
 
-    public async Task<bool> UsernameExistsAsync(Username username, CancellationToken cancellationToken = default)
+    public async Task<bool> UsernameExistsAsync(Username username, CancellationToken ct = default)
     {
-        return await _context.Users.AnyAsync(x => x.Username == username, cancellationToken);
+        return await _context.Users.AnyAsync(x => x.Username.Value == username.Value, ct);
     }
 
     public void Add(User user)

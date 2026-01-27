@@ -11,10 +11,12 @@ public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermissi
 {
     public void Configure(EntityTypeBuilder<RolePermission> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.ToTable("role_permissions");
-        
+
         builder.HasKey(p => new { p.RoleId, p.PermissionId });
-        
+
         builder.Property(x => x.RoleId)
             .HasConversion(id => id.Value, value => new RoleId(value));
 

@@ -31,8 +31,8 @@ public class RegisterUserEndpoint : IEndpoint
                     }
 
                     var id = await registerUserService.RegisterAsync(
-                        request.Email, 
-                        request.Username, 
+                        request.Email,
+                        request.Username,
                         request.Password,
                         cancellationToken);
 
@@ -45,15 +45,6 @@ public class RegisterUserEndpoint : IEndpoint
                 catch (DomainException ex)
                 {
                     return TypedResults.BadRequest(new { Title = ex.Message, Status = 400 });
-                }
-                catch (Exception ex)
-                {
-                    // fallback unknown errors
-                    return TypedResults.Problem(
-                        title: "An unexpected error occurred",
-                        detail: ex.Message,
-                        statusCode: 500
-                    );
                 }
             })
             .WithTags(Tags.Users)

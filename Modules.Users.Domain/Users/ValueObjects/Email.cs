@@ -1,10 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
 using Modules.Users.Domain.Users.Exceptions;
 
 namespace Modules.Users.Domain.Users.ValueObjects;
 
+[SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase")]
 public sealed record Email
 {
-    public string Value { get; }
+    public string Value { get; } = null!;
 
     private Email() { }
 
@@ -18,7 +20,7 @@ public sealed record Email
         if (string.IsNullOrWhiteSpace(value))
             throw new InvalidEmailException();
 
-        if (!value.Contains('@'))
+        if (!value.Contains('@', StringComparison.Ordinal))
             throw new InvalidEmailException();
 
         return new Email(value.Trim().ToLowerInvariant());

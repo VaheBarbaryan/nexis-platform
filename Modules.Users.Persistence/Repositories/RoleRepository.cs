@@ -29,6 +29,8 @@ public sealed class RoleRepository : IRoleRepository
 
     public async Task AddIfNotExistsAsync(Role role)
     {
+        ArgumentNullException.ThrowIfNull(role);
+
         if (await ExistsAsync(role.Name))
             return;
 

@@ -9,11 +9,14 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 {
     public void Configure(EntityTypeBuilder<Permission> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.ToTable("permissions");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
             .HasConversion(id => id.Value, value => new PermissionId(value))
-            .ValueGeneratedNever();;
+            .ValueGeneratedNever();
+
         builder.Property(x => x.Name)
             .HasConversion(name => name.Value, value => PermissionName.Create(value))
             .HasMaxLength(100)

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using Konscious.Security.Cryptography;
@@ -48,9 +49,11 @@ public sealed class PasswordHasher : IPasswordHasher
         return FormatHash(salt, hash);
     }
 
-    public bool Verify(string password, string storedHash)
+    public bool Verify(string password, string passwordHash)
     {
-        if (!TryParseHash(storedHash, out var parameters))
+        ArgumentNullException.ThrowIfNull(passwordHash);
+
+        if (!TryParseHash(passwordHash, out var parameters))
             return false;
 
         var passwordBytes = Encoding.UTF8.GetBytes(password);
@@ -59,9 +62,9 @@ public sealed class PasswordHasher : IPasswordHasher
         using var argon2 = CreateArgon2(
             pepperedPassword,
             parameters.Salt,
-            parameters.Iterations,
-            parameters.MemoryKb,
-            parameters.Parallelism);
+            parameters.IterationsCount,
+            parameters.MemoryKbSize,
+            parameters.Parallelismlevel);
 
         var computedHash = argon2.GetBytes(parameters.Hash.Length);
 
@@ -75,16 +78,18 @@ public sealed class PasswordHasher : IPasswordHasher
 
     public bool NeedsRehash(string storedHash)
     {
+        ArgumentNullException.ThrowIfNull(storedHash);
+
         if (!TryParseHash(storedHash, out var parameters))
             return true;
 
-        if (parameters.Iterations < Iterations)
+        if (parameters.IterationsCount < Iterations)
             return true;
 
-        if (parameters.MemoryKb < MemoryKb)
+        if (parameters.MemoryKbSize < MemoryKb)
             return true;
 
-        if (parameters.Parallelism < Parallelism)
+        if (parameters.Parallelismlevel < Parallelism)
             return true;
 
         return false;
@@ -137,7 +142,7 @@ public sealed class PasswordHasher : IPasswordHasher
     {
         parameters = default!;
 
-        var parts = storedHash.Split('$');
+        string[] parts = storedHash.Split('$');
 
         if (parts.Length != 6)
             return false;
@@ -145,30 +150,45 @@ public sealed class PasswordHasher : IPasswordHasher
         if (parts[0] != AlgorithmTag)
             return false;
 
+        if (!int.TryParse(parts[1], NumberStyles.None, CultureInfo.InvariantCulture, out int iterations))
+            return false;
+
+        if (!int.TryParse(parts[2], NumberStyles.None, CultureInfo.InvariantCulture, out int memoryKb))
+            return false;
+
+        if (!int.TryParse(parts[3], NumberStyles.None, CultureInfo.InvariantCulture, out int parallelism))
+            return false;
+
+        byte[] salt;
+        byte[] hash;
+
         try
         {
-            parameters = new HashParameters
-            {
-                Iterations = int.Parse(parts[1]),
-                MemoryKb = int.Parse(parts[2]),
-                Parallelism = int.Parse(parts[3]),
-                Salt = Convert.FromHexString(parts[4]),
-                Hash = Convert.FromHexString(parts[5])
-            };
-
-            return true;
+            salt = Convert.FromHexString(parts[4]);
+            hash = Convert.FromHexString(parts[5]);
         }
-        catch
+        catch (FormatException)
         {
             return false;
         }
+
+        parameters = new HashParameters
+        {
+            IterationsCount = iterations,
+            MemoryKbSize = memoryKb,
+            Parallelismlevel = parallelism,
+            Salt = salt,
+            Hash = hash
+        };
+
+        return true;
     }
 
     private sealed class HashParameters
     {
-        public required int Iterations { get; init; }
-        public required int MemoryKb { get; init; }
-        public required int Parallelism { get; init; }
+        public required int IterationsCount { get; init; }
+        public required int MemoryKbSize { get; init; }
+        public required int Parallelismlevel { get; init; }
         public required byte[] Salt { get; init; }
         public required byte[] Hash { get; init; }
     }

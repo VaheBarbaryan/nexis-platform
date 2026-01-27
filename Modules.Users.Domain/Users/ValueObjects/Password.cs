@@ -2,8 +2,8 @@ namespace Modules.Users.Domain.Users.ValueObjects;
 
 public sealed record Password
 {
-    public string Value { get; }
-    
+    public string Value { get; } = null!;
+
     private Password() {}
 
     private Password(string value)
@@ -18,7 +18,7 @@ public sealed record Password
 
         if (hash.Length < 8)
             throw new ArgumentException("Password is too short.");
-        
+
         return new Password(hash);
     }
 }

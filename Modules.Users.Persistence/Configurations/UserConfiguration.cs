@@ -9,13 +9,15 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
             .HasConversion(
                 id => id.Value,
                 value => new UserId(value))
             .ValueGeneratedNever();
-        
+
         builder.OwnsOne(x => x.Username, username =>
         {
             username.Property(x => x.Value)
@@ -39,7 +41,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
                 .HasMaxLength(200)
                 .IsRequired();
         });
-        
+
         builder.Property(x => x.Bio)
             .HasColumnName("bio")
             .HasMaxLength(500);
@@ -58,12 +60,12 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.UpdatedAt)
             .HasColumnName("updated_at")
             .IsRequired();
-        
-        
+
+
         builder.HasMany(x => x.Roles)
             .WithOne()
             .HasForeignKey(x => x.UserId);
-        
+
         builder.Navigation(r => r.Roles)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
