@@ -1,5 +1,6 @@
 using Modules.Users.Application.Contracts;
 using Modules.Users.Application.Security;
+using Modules.Users.Domain.Roles.Exceptions;
 using Modules.Users.Domain.Users;
 using Modules.Users.Domain.Users.Exceptions;
 using Modules.Users.Domain.Users.ValueObjects;
@@ -15,8 +16,8 @@ public sealed class RegisterUserService : IRegisterUserService
     private readonly IUnitOfWork _unitOfWork;
 
     public RegisterUserService(
-        IUserRepository userRepository, 
-        IRoleRepository roleRepository, 
+        IUserRepository userRepository,
+        IRoleRepository roleRepository,
         IPasswordHasher passwordHasher,
         IUnitOfWork unitOfWork)
     {
@@ -30,21 +31,21 @@ public sealed class RegisterUserService : IRegisterUserService
         string email,
         string username,
         string password,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
     {
         var emailVo = Email.Create(email);
         var usernameVo = Username.Create(username);
-        
-        if (await _userRepository.EmailExistsAsync(emailVo, cancellationToken))
+
+        if (await _userRepository.EmailExistsAsync(emailVo, ct))
         {
             throw new EmailAlreadyExistsException();
         }
 
-        if (await _userRepository.UsernameExistsAsync(usernameVo, cancellationToken))
+        if (await _userRepository.UsernameExistsAsync(usernameVo, ct))
         {
-            throw new InvalidUsernameException();
+            throw new InvalidUsernameException("User with this username already exists.");
         }
-        
+
         var hash = _passwordHasher.Hash(password);
         var passwordVo = Password.Create(hash);
 
@@ -52,15 +53,16 @@ public sealed class RegisterUserService : IRegisterUserService
 
         if (role is null)
         {
-            throw new ApplicationException("Role not found");
+            throw new RoleNotFoundException();
         }
-        
-        var user = User.Create(emailVo, usernameVo, passwordVo, role.Id);
-        
+
+        var userId = new UserId(Guid.NewGuid());
+        var user = User.Create(userId, emailVo, usernameVo, passwordVo, role.Id);
+
         _userRepository.Add(user);
-        
-        await _unitOfWork.CommitAsync(cancellationToken);
-        
+
+        await _unitOfWork.CommitAsync(ct);
+
         return user.Id.Value;
     }
 }

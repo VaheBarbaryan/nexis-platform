@@ -7,8 +7,10 @@ public abstract class Entity<TId>
 {
     public TId Id { get; protected set; } = default!;
 
-    protected void CheckRule(IBusinessRule rule)
+    protected static void CheckRule(IBusinessRule rule)
     {
+        ArgumentNullException.ThrowIfNull(rule);
+
         if (rule.IsBroken())
             throw new BusinessRuleValidationException(rule);
     }

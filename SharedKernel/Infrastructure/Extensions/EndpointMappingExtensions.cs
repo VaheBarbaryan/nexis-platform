@@ -11,6 +11,8 @@ public static class EndpointMappingExtensions
         this WebApplication app,
         params Assembly[] assemblies)
     {
+        ArgumentNullException.ThrowIfNull(app);
+
         // Resolve all registered IEndpoint implementations
         var endpoints = app.Services.GetServices<IEndpoint>();
 

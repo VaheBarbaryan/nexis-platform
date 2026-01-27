@@ -45,4 +45,4 @@ app.UseAuthorization();
 
 app.MapEndpoints(UsersEndpointsAssembly.Assembly);
 
-app.Run();
+await app.RunAsync();

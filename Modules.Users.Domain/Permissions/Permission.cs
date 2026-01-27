@@ -3,10 +3,14 @@ using SharedKernel.Domain.Aggregates;
 
 namespace Modules.Users.Domain.Permissions;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Naming",
+    "CA1711:Identifiers should not have incorrect suffix",
+    Justification = "Permission is a domain aggregate root name")]
 public sealed class Permission : AggregateRoot<PermissionId>
 {
-    public PermissionName Name { get; private set; }
-    
+    public PermissionName Name { get; private set; } = null!;
+
     private Permission() {}
 
     private Permission(PermissionId id, PermissionName name)
@@ -21,7 +25,7 @@ public sealed class Permission : AggregateRoot<PermissionId>
             new PermissionId(Guid.NewGuid()),
             PermissionName.Create(name)
             );
-        
+
         return permission;
     }
 }

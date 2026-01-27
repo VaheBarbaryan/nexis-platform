@@ -10,11 +10,12 @@ public sealed class UsersDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Permission> Permissions => Set<Permission>();
-    
+
     public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options) {}
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UsersDbContext).Assembly);
     }
 }

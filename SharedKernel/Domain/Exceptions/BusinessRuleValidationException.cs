@@ -1,22 +1,20 @@
+using System.Diagnostics.CodeAnalysis;
 using SharedKernel.Domain.Rules;
 
 namespace SharedKernel.Domain.Exceptions;
 
-public class BusinessRuleValidationException : DomainException
+[SuppressMessage("Design", "CA1032")]
+public sealed class BusinessRuleValidationException : DomainException
 {
     public IBusinessRule BrokenRule { get; }
 
-    public string Details { get; }
-
     public BusinessRuleValidationException(IBusinessRule brokenRule)
-        : base(brokenRule.Message)
+        : base(brokenRule?.Message
+               ?? throw new ArgumentNullException(nameof(brokenRule)))
     {
         BrokenRule = brokenRule;
-        Details = brokenRule.Message;
     }
 
     public override string ToString()
-    {
-        return $"{BrokenRule.GetType().FullName}: {BrokenRule.Message}";
-    }
+        => $"{BrokenRule.GetType().Name}: {Message}";
 }

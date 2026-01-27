@@ -29,7 +29,7 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
-    
+
     /// <summary>
     /// Scans given assemblies for classes implementing IModuleInstaller
     /// and executes their Install method automatically
@@ -39,8 +39,19 @@ public static class ServiceCollectionExtensions
         IConfiguration configuration,
         params Assembly[] assemblies)
     {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(assemblies);
+
+        if (assemblies.Length == 0)
+        {
+            throw new ArgumentException("At least one assembly must be provided.", nameof(assemblies));
+        }
+
         foreach (var assembly in assemblies)
         {
+            ArgumentNullException.ThrowIfNull(assembly);
+
             var installers = assembly
                 .GetTypes()
                 .Where(t =>
@@ -66,6 +77,8 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         Type implementationType)
     {
+        ArgumentNullException.ThrowIfNull(implementationType);
+
         var interfaces = implementationType.GetInterfaces();
 
         foreach (var @interface in interfaces)
@@ -75,11 +88,13 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
-    
+
     public static IServiceCollection AddScopedAsMatchingInterfaces(
         this IServiceCollection services,
         Type implementationType)
     {
+        ArgumentNullException.ThrowIfNull(implementationType);
+
         var interfaces = implementationType.GetInterfaces();
 
         foreach (var @interface in interfaces)
@@ -89,11 +104,13 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
-    
+
     public static IServiceCollection AddSingletonAsMatchingInterfaces(
         this IServiceCollection services,
         Type implementationType)
     {
+        ArgumentNullException.ThrowIfNull(implementationType);
+
         var interfaces = implementationType.GetInterfaces();
 
         foreach (var @interface in interfaces)
@@ -102,41 +119,5 @@ public static class ServiceCollectionExtensions
         }
 
         return services;
-    }
-    
-    private static void AddByConvention(
-        this IServiceCollection services,
-        Type implementationType)
-    {
-        // Convention rules:
-        // *Repository => Scoped
-        // *Service => Scoped
-        // *Handler => Transient
-        // *Factory => Singleton
-
-        var name = implementationType.Name;
-
-        if (name.EndsWith("Repository"))
-        {
-            services.AddScopedAsMatchingInterfaces(implementationType);
-            return;
-        }
-
-        if (name.EndsWith("Service"))
-        {
-            services.AddScopedAsMatchingInterfaces(implementationType);
-            return;
-        }
-
-        if (name.EndsWith("Handler"))
-        {
-            services.AddTransientAsMatchingInterfaces(implementationType);
-            return;
-        }
-
-        if (name.EndsWith("Factory"))
-        {
-            services.AddSingletonAsMatchingInterfaces(implementationType);
-        }
     }
 }

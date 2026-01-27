@@ -1,10 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace Modules.Users.Domain.Users.ValueObjects;
 
+[SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase")]
 public sealed class Username
 {
-    public string Value { get; }
+    public string Value { get; }  = null!;
 
     private Username() { }
 
@@ -22,8 +24,8 @@ public sealed class Username
         if (!Regex.IsMatch(value, @"^[a-zA-Z0-9._]+$"))
             throw new ArgumentException("Username contains invalid characters.");
 
-        return new Username(value);
+        return new Username(value.Trim().ToLowerInvariant());
     }
-    
+
     public override string ToString() => Value;
 }

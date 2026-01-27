@@ -16,7 +16,9 @@ public sealed record RoleName
         if (string.IsNullOrWhiteSpace(value))
             throw new RoleCannotBeEmptyException();
 
-        return new RoleName(value.ToLowerInvariant());
+        var normalized = value.Trim().ToUpperInvariant();
+
+        return new RoleName(normalized);
     }
 
     public override string ToString() => Value;
