@@ -1,8 +1,10 @@
 using Modules.Users.Application.Contracts;
 using Modules.Users.Application.Security;
 using Modules.Users.Domain.Roles.Exceptions;
+using Modules.Users.Domain.Roles.Repositories;
 using Modules.Users.Domain.Users;
 using Modules.Users.Domain.Users.Exceptions;
+using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;
 using SharedKernel.Infrastructure;
 

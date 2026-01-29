@@ -1,7 +1,6 @@
-using Modules.Users.Domain.Permissions;
 using Modules.Users.Domain.Permissions.ValueObjects;
 
-namespace Modules.Users.Application.Contracts;
+namespace Modules.Users.Domain.Permissions.Repositories;
 
 public interface IPermissionRepository
 {

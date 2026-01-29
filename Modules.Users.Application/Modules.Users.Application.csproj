@@ -2,6 +2,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Modules.Users.Domain\Modules.Users.Domain.csproj" />
+      <ProjectReference Include="..\Modules.Users.IntegrationEvents\Modules.Users.IntegrationEvents.csproj" />
     </ItemGroup>
 
     <ItemGroup>
