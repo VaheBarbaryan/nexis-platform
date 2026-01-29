@@ -2,15 +2,19 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Modules.Users.Application.Contracts;
 using Modules.Users.Application.Seed;
+using Modules.Users.Domain.Permissions.Repositories;
+using Modules.Users.Domain.Roles.Repositories;
+using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Infrastructure.Events;
 using Modules.Users.Persistence;
 using Modules.Users.Persistence.Contexts;
+using Modules.Users.Persistence.Outbox;
 using Modules.Users.Persistence.Repositories;
 using SharedKernel.Application;
 using SharedKernel.Infrastructure;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
+using SharedKernel.Infrastructure.Outbox;
 
 namespace Modules.Users.Infrastructure.ServiceInstallers;
 

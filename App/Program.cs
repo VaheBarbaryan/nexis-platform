@@ -1,3 +1,5 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Modules.Users.Endpoints;
 using SharedKernel.Application;
 using SharedKernel.Infrastructure.Extensions;
@@ -9,6 +11,13 @@ builder.Services.AddHttpContextAccessor();
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    containerBuilder.RegisterModule(new Modules.Users.Infrastructure.Outbox.OutboxModule());
+});
 
 builder.Services.AddMediatR(cfg =>
 {

@@ -1,6 +1,7 @@
 using MediatR;
 using Modules.Users.Persistence.Contexts;
 using SharedKernel.Domain.Aggregates;
+using SharedKernel.Domain.Events;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
 
 namespace Modules.Users.Infrastructure.Events;
@@ -14,7 +15,7 @@ public class DomainEventsAccessor : IDomainEventsAccessor
         _dbContext = dbContext;
     }
 
-    public IReadOnlyCollection<INotification> GetAllDomainEvents()
+    public IReadOnlyCollection<IDomainEvent> GetAllDomainEvents()
     {
         var domainEntities = _dbContext.ChangeTracker
             .Entries<IAggregateRoot>()

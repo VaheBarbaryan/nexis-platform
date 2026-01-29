@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Modules.Users.Application.Contracts;
 using Modules.Users.Domain.Permissions;
+using Modules.Users.Domain.Permissions.Repositories;
 using Modules.Users.Domain.Permissions.ValueObjects;
 using Modules.Users.Persistence.Contexts;
 

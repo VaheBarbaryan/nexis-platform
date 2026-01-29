@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Modules.Users.Persistence.Contexts;
 using SharedKernel.Infrastructure;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
@@ -18,10 +17,8 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task<int> CommitAsync(CancellationToken cancellationToken = default)
     {
-        var result =  await _dbContext.SaveChangesAsync(cancellationToken);
-        
         await _domainEventsDispatcher.DispatchEventsAsync();
-        
-        return result;
+
+        return await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }

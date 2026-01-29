@@ -1,7 +1,6 @@
-using Modules.Users.Domain.Roles;
 using Modules.Users.Domain.Roles.ValueObjects;
 
-namespace Modules.Users.Application.Contracts;
+namespace Modules.Users.Domain.Roles.Repositories;
 
 public interface IRoleRepository
 {

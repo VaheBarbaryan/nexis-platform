@@ -1,5 +1,5 @@
-using MediatR;
 using SharedKernel.Domain.Entities;
+using SharedKernel.Domain.Events;
 
 namespace SharedKernel.Domain.Aggregates;
 
@@ -9,11 +9,11 @@ namespace SharedKernel.Domain.Aggregates;
     Justification = "This is a domain event helper, not a true C# event")]
 public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
 {
-    private readonly List<INotification> _domainEvents = new();
+    private readonly List<IDomainEvent> _domainEvents = new();
 
-    public IReadOnlyCollection<INotification> DomainEvents => _domainEvents;
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
 
-    protected void RaiseDomainEvent(INotification domainEvent)
+    protected void RaiseDomainEvent(IDomainEvent domainEvent)
     {
         ArgumentNullException.ThrowIfNull(domainEvent);
 

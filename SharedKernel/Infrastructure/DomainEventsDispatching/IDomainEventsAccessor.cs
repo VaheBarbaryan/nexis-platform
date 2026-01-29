@@ -1,10 +1,11 @@
-using MediatR;
+
+using SharedKernel.Domain.Events;
 
 namespace SharedKernel.Infrastructure.DomainEventsDispatching;
 
 public interface IDomainEventsAccessor
 {
-    IReadOnlyCollection<INotification> GetAllDomainEvents();
+    IReadOnlyCollection<IDomainEvent> GetAllDomainEvents();
 
     void ClearAllDomainEvents();
 }

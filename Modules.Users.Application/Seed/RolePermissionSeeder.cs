@@ -1,8 +1,9 @@
-using Modules.Users.Application.Contracts;
 using Modules.Users.Application.Security;
 using Modules.Users.Domain.Permissions;
+using Modules.Users.Domain.Permissions.Repositories;
 using Modules.Users.Domain.Permissions.ValueObjects;
 using Modules.Users.Domain.Roles;
+using Modules.Users.Domain.Roles.Repositories;
 using Modules.Users.Domain.Roles.ValueObjects;
 using SharedKernel.Application;
 
@@ -24,7 +25,7 @@ public sealed class RolePermissionSeeder : IModuleSeeder
     public async Task SeedAsync()
     {
         await SeedPermissionsAsync();
-        
+
         var permissionMap = await _permissionRepository.GetAllAsDictionary();
 
         await CreateRoleIfMissing(SystemRoles.User, [
@@ -46,7 +47,7 @@ public sealed class RolePermissionSeeder : IModuleSeeder
             PermissionCatalog.PimAccess
         ], permissionMap);
     }
-    
+
     public async Task SeedPermissionsAsync()
     {
         var existing = await _permissionRepository.GetAllAsync();
@@ -86,12 +87,11 @@ public sealed class RolePermissionSeeder : IModuleSeeder
 
         foreach (var code in codes)
         {
-
             if (!permissionMap.TryGetValue(code, out var permission))
             {
                 throw new InvalidOperationException($"Permission '{code}' is missing in the DB.");
             }
-            
+
             role.AddPermission(permission.Id);
         }
 
