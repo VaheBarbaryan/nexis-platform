@@ -1,8 +1,9 @@
 # ADR-001: Start With Modular Monolith Architecture
 
-Date: 2026-01-30
+**Date:** 2026-01-30
+**Status:** Accepted
 
-Status: Accepted
+---
 
 ## Context
 
