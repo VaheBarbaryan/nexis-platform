@@ -10,6 +10,7 @@
     <ItemGroup>
       <PackageReference Include="Autofac" />
       <PackageReference Include="Autofac.Extensions.DependencyInjection" />
+      <PackageReference Include="Confluent.Kafka" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
       <PackageReference Include="Konscious.Security.Cryptography.Argon2" />
       <PackageReference Include="MediatR" />
