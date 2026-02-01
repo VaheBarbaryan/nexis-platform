@@ -2,8 +2,8 @@ using SharedKernel.Domain.Events;
 
 namespace SharedKernel.Infrastructure.EventBus;
 
-public interface IIntegrationEventProcessor<in TIntegrationEvent>
+public interface IIntegrationEventConsumer<in TIntegrationEvent>
     where TIntegrationEvent : IntegrationEvent
 {
-    Task Handle(TIntegrationEvent integrationEvent);
+    Task Consume(TIntegrationEvent integrationEvent);
 }
