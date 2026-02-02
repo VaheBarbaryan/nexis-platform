@@ -13,9 +13,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Modules.Emails.Infrastructure\Modules.Emails.Infrastructure.csproj" />
-      <ProjectReference Include="..\Modules.Users.Infrastructure\Modules.Users.Infrastructure.csproj" />
-      <ProjectReference Include="..\Modules.Users.Persistence\Modules.Users.Persistence.csproj" />
+      <ProjectReference Include="..\Modules\Emails\Modules.Emails.Infrastructure\Modules.Emails.Infrastructure.csproj" />
+      <ProjectReference Include="..\Modules\Users\Modules.Users.Infrastructure\Modules.Users.Infrastructure.csproj" />
+      <ProjectReference Include="..\Modules\Users\Modules.Users.Persistence\Modules.Users.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

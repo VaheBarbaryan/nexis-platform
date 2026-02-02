@@ -1,55 +1,27 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D5FD14EB-F497-41A7-AA7A-275B3363942F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "src\App\App.csproj", "{14E643B4-7494-4C92-B1ED-DB7C6123077E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{50E81A15-6004-4915-AA09-7F17F60B66E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Domain", "src\Modules\Users\Modules.Users.Domain\Modules.Users.Domain.csproj", "{CC5B0C40-F8B7-499C-9C29-C0D9581D8C57}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{7E1B0B57-2A8A-4ADD-B93F-EA5E9EBEDD78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Persistence", "src\Modules\Users\Modules.Users.Persistence\Modules.Users.Persistence.csproj", "{E88ED7C9-0BF4-451E-8323-C4D9162CB093}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{14E643B4-7494-4C92-B1ED-DB7C6123077E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Application", "src\Modules\Users\Modules.Users.Application\Modules.Users.Application.csproj", "{05DB9B04-F262-42C1-B703-3729ACAF1F1A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Users", "Users", "{EAA95334-2E7E-4063-8EF3-E0E3979001AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "src\Common\SharedKernel\SharedKernel.csproj", "{BE0E4FEB-A795-4415-8F8C-D058959367F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Domain", "Modules.Users.Domain\Modules.Users.Domain.csproj", "{CC5B0C40-F8B7-499C-9C29-C0D9581D8C57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Infrastructure", "src\Modules\Users\Modules.Users.Infrastructure\Modules.Users.Infrastructure.csproj", "{79B983E4-4392-444B-87F2-99FCB993A518}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Persistence", "Modules.Users.Persistence\Modules.Users.Persistence.csproj", "{E88ED7C9-0BF4-451E-8323-C4D9162CB093}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Endpoints", "src\Modules\Users\Modules.Users.Endpoints\Modules.Users.Endpoints.csproj", "{FD00E993-4CAF-48E0-A4C6-314E57585517}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Application", "Modules.Users.Application\Modules.Users.Application.csproj", "{05DB9B04-F262-42C1-B703-3729ACAF1F1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.IntegrationEvents", "src\Modules\Users\Modules.Users.IntegrationEvents\Modules.Users.IntegrationEvents.csproj", "{D7F2A588-0BC0-43B2-9F99-32EBD8A6DCAB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{1086D262-0341-48AC-A34E-2A320E39FFD7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "SharedKernel\SharedKernel.csproj", "{BE0E4FEB-A795-4415-8F8C-D058959367F3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Infrastructure", "Modules.Users.Infrastructure\Modules.Users.Infrastructure.csproj", "{79B983E4-4392-444B-87F2-99FCB993A518}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Endpoints", "Modules.Users.Endpoints\Modules.Users.Endpoints.csproj", "{FD00E993-4CAF-48E0-A4C6-314E57585517}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.IntegrationEvents", "Modules.Users.IntegrationEvents\Modules.Users.IntegrationEvents.csproj", "{D7F2A588-0BC0-43B2-9F99-32EBD8A6DCAB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Emails", "Emails", "{26507990-A023-4AD9-9817-DF9711A1E430}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Emails.Infrastructure", "Modules.Emails.Infrastructure\Modules.Emails.Infrastructure.csproj", "{35138322-C61D-4C2E-A9FF-6E5FA3A4F77A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Emails.Infrastructure", "src\Modules\Emails\Modules.Emails.Infrastructure\Modules.Emails.Infrastructure.csproj", "{35138322-C61D-4C2E-A9FF-6E5FA3A4F77A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{50E81A15-6004-4915-AA09-7F17F60B66E6} = {D5FD14EB-F497-41A7-AA7A-275B3363942F}
-		{7E1B0B57-2A8A-4ADD-B93F-EA5E9EBEDD78} = {D5FD14EB-F497-41A7-AA7A-275B3363942F}
-		{14E643B4-7494-4C92-B1ED-DB7C6123077E} = {D5FD14EB-F497-41A7-AA7A-275B3363942F}
-		{EAA95334-2E7E-4063-8EF3-E0E3979001AE} = {50E81A15-6004-4915-AA09-7F17F60B66E6}
-		{CC5B0C40-F8B7-499C-9C29-C0D9581D8C57} = {EAA95334-2E7E-4063-8EF3-E0E3979001AE}
-		{E88ED7C9-0BF4-451E-8323-C4D9162CB093} = {EAA95334-2E7E-4063-8EF3-E0E3979001AE}
-		{05DB9B04-F262-42C1-B703-3729ACAF1F1A} = {EAA95334-2E7E-4063-8EF3-E0E3979001AE}
-		{1086D262-0341-48AC-A34E-2A320E39FFD7} = {7E1B0B57-2A8A-4ADD-B93F-EA5E9EBEDD78}
-		{BE0E4FEB-A795-4415-8F8C-D058959367F3} = {1086D262-0341-48AC-A34E-2A320E39FFD7}
-		{79B983E4-4392-444B-87F2-99FCB993A518} = {EAA95334-2E7E-4063-8EF3-E0E3979001AE}
-		{FD00E993-4CAF-48E0-A4C6-314E57585517} = {EAA95334-2E7E-4063-8EF3-E0E3979001AE}
-		{D7F2A588-0BC0-43B2-9F99-32EBD8A6DCAB} = {EAA95334-2E7E-4063-8EF3-E0E3979001AE}
-		{26507990-A023-4AD9-9817-DF9711A1E430} = {50E81A15-6004-4915-AA09-7F17F60B66E6}
-		{35138322-C61D-4C2E-A9FF-6E5FA3A4F77A} = {26507990-A023-4AD9-9817-DF9711A1E430}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{14E643B4-7494-4C92-B1ED-DB7C6123077E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
