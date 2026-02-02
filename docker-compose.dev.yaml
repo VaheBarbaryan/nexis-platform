@@ -1,4 +1,10 @@
 services:
+  papercut:
+    image: changemakerstudiosus/papercut-smtp:latest
+    container_name: papercut
+    ports:
+      - "8085:8080"
+      - "2525:2525"
   kafka:
     image: apache/kafka:latest
     container_name: kafka

@@ -28,7 +28,9 @@ builder.Services.AddMediatR(cfg =>
 
 builder.Services.InstallModulesFromAssemblies(
     builder.Configuration,
-    Modules.Users.Infrastructure.UsersInfrastructureAssembly.Assembly);
+    Modules.Users.Infrastructure.UsersInfrastructureAssembly.Assembly,
+    Modules.Emails.Infrastructure.EmailsInfrastructureAssembly.Assembly
+);
 
 WebApplication app = builder.Build();
 
