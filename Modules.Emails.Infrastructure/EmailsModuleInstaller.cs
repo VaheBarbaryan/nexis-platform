@@ -1,20 +1,16 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Modules.Users.Application;
-using Modules.Users.Persistence;
 using SharedKernel.Infrastructure;
 using SharedKernel.Infrastructure.Extensions;
 
-namespace Modules.Users.Infrastructure;
+namespace Modules.Emails.Infrastructure;
 
-public sealed class UsersModuleInstaller : IModuleInstaller
+public sealed class EmailsModuleInstaller : IModuleInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services.InstallServicesFromAssemblies(
             configuration,
-            UsersInfrastructureAssembly.Assembly,
-            UsersApplicationAssembly.Assembly,
-            UsersPersistenceAssembly.Assembly);
+            EmailsInfrastructureAssembly.Assembly);
     }
 }

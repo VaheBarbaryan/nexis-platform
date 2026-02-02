@@ -8,7 +8,7 @@ using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Infrastructure.ServiceInstallers;
 
-public class ApplicationServiceInstaller : IServiceInstaller
+internal sealed class ApplicationServiceInstaller : IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {

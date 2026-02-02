@@ -25,6 +25,7 @@ generated_code = true
 dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.S3353.severity = none
 dotnet_diagnostic.CA1030.severity = suggestion
+dotnet_diagnostic.CA1812.severity = suggestion
 
 # Disable CA1062 only for migration files
 [**/Migrations/*.cs]

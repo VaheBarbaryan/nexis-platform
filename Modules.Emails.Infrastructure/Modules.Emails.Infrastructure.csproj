@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <PackageReference Include="Confluent.Kafka" />
+      <PackageReference Include="FluentEmail.Core" />
+      <PackageReference Include="FluentEmail.MailKit" />
+      <PackageReference Include="FluentEmail.Smtp" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="EmailSending\Templates\VerifyEmail\en.html" />
+      <EmbeddedResource Include="EmailSending\Templates\VerifyEmail\en.html" />
+    </ItemGroup>
+
+</Project>
