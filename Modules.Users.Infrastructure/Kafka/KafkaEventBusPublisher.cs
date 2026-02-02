@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SharedKernel.Domain.Events;
 using SharedKernel.Infrastructure.Exceptions;
+using SharedKernel.Infrastructure.Messaging.Logging;
 using SharedKernel.Infrastructure.Serialization;
 
 namespace Modules.Users.Infrastructure.Kafka;
@@ -15,7 +16,7 @@ public sealed class KafkaEventBusPublisher : IEventBusPublisher, IDisposable
     private readonly ILogger<KafkaEventBusPublisher> _logger;
 
     public KafkaEventBusPublisher(
-        IOptions<KafkaOptions> options,
+        IOptions<KafkaProducerOptions> options,
         ILogger<KafkaEventBusPublisher> logger)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -26,12 +27,20 @@ public sealed class KafkaEventBusPublisher : IEventBusPublisher, IDisposable
         {
             BootstrapServers = kafkaOptions.BootstrapServers,
             ClientId = kafkaOptions.ClientId,
-            Acks = Acks.All,
+            Acks = kafkaOptions.Acks.ToUpperInvariant() switch
+            {
+                "ALL" => Acks.All,
+                "1" => Acks.Leader,
+                "0" => Acks.None,
+                _ => Acks.All
+            },
             EnableIdempotence = true,
-            MessageSendMaxRetries = 5,
+            MessageSendMaxRetries = kafkaOptions.Retries,
             RetryBackoffMs = 500,
             LingerMs = 5,
             CompressionType = CompressionType.Lz4,
+            SocketTimeoutMs = 30000,
+            RequestTimeoutMs = 30000
         };
 
         _logger = logger;
@@ -41,7 +50,8 @@ public sealed class KafkaEventBusPublisher : IEventBusPublisher, IDisposable
             .Build();
     }
 
-    public async Task PublishAsync<T>(string topic, T integrationEvent, string? partitionKey = null) where T : IntegrationEvent
+    public async Task PublishAsync<T>(string topic, T integrationEvent, string? partitionKey = null)
+        where T : IntegrationEvent
     {
         ArgumentNullException.ThrowIfNull(integrationEvent);
 
@@ -64,7 +74,7 @@ public sealed class KafkaEventBusPublisher : IEventBusPublisher, IDisposable
         {
             var deliveryResult = await _producer.ProduceAsync(topic, message);
 
-            KafkaPublisherLog.PublishedSuccessfully(
+            KafkaPublishLog.PublishedSuccessfully(
                 _logger,
                 typeof(T).Name,
                 topic,

@@ -12,7 +12,7 @@ using SharedKernel.Infrastructure.Outbox;
 
 namespace Modules.Users.Infrastructure.ServiceInstallers;
 
-public class OutboxServiceInstaller : IServiceInstaller
+internal sealed class OutboxServiceInstaller : IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {

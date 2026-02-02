@@ -13,7 +13,7 @@ internal sealed class KafkaServiceInstaller : IServiceInstaller
         ArgumentNullException.ThrowIfNull(configuration);
 
         services
-            .AddOptions<KafkaOptions>()
+            .AddOptions<KafkaProducerOptions>()
             .Bind(configuration.GetSection("Kafka"))
             .ValidateDataAnnotations()
             .ValidateOnStart();

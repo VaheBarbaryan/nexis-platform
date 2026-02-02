@@ -9,7 +9,7 @@ using StackExchange.Redis;
 
 namespace Modules.Users.Infrastructure.ServiceInstallers;
 
-public class RedisServiceInstaller : IServiceInstaller
+internal sealed class RedisServiceInstaller : IServiceInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {

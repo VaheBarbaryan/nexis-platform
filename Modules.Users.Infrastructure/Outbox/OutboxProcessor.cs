@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Modules.Users.Persistence.Contexts;
 using Newtonsoft.Json;
 using SharedKernel.Application.Events;
-using SharedKernel.Domain.Events;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
 using SharedKernel.Infrastructure.Outbox;
 
@@ -83,11 +82,6 @@ public sealed class OutboxProcessor : BackgroundService
                     if (notification is IDomainEventNotification domainEventNotification)
                     {
                         await _mediator.Publish(domainEventNotification, ct);
-                    }
-                    else if (notification is IntegrationEvent integrationEvent)
-                    {
-                        Console.WriteLine(integrationEvent);
-                        // Publish integration event via Kafka/RabbitMQ
                     }
                     else
                     {

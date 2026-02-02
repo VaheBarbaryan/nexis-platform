@@ -1,4 +1,3 @@
-using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Modules.Users.Application;
@@ -13,7 +12,7 @@ public sealed class UsersModuleInstaller : IModuleInstaller
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
         services.InstallServicesFromAssemblies(
-            configuration, 
+            configuration,
             UsersInfrastructureAssembly.Assembly,
             UsersApplicationAssembly.Assembly,
             UsersPersistenceAssembly.Assembly);
