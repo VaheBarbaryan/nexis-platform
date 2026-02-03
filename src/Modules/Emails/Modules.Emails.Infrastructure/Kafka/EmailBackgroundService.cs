@@ -38,37 +38,41 @@ public class EmailBackgroundService : BackgroundService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                ConsumeResult<Ignore, string>? cr;
+
                 try
                 {
-                    var cr = consumer.Consume(stoppingToken);
-                    if (cr?.Message?.Value == null) continue;
-
-                    var command = JsonConvert.DeserializeObject<SendEmailIntegrationCommand>(cr.Message.Value);
-                    if (command == null) continue;
-
-                    var template = await _emailTemplateProvider.GetTemplateAsync(
-                        command.Template,
-                        command.Language,
-                        stoppingToken
-                    );
-
-                    var htmlBody = EmailTemplateRenderer.Render(template, command.Variables);
-
-                    await _emailSender.SendAsync(
-                        command.To,
-                        command.Subject,
-                        htmlBody,
-                        stoppingToken
-                    );
-
-                    consumer.Commit(cr);
-
-                    KafkaConsumeLog.Consumed(_logger, KafkaTopics.NotificationsEmailV1, cr.Message.Key?.ToString());
+                    cr = await Task.Run(() => consumer.Consume(stoppingToken), stoppingToken);
                 }
                 catch (ConsumeException ex)
                 {
                     KafkaConsumeLog.ConsumeError(_logger, KafkaTopics.NotificationsEmailV1, ex);
+                    continue;
                 }
+
+                if (cr?.Message?.Value == null) continue;
+
+                var command = JsonConvert.DeserializeObject<SendEmailIntegrationCommand>(cr.Message.Value);
+                if (command == null) continue;
+
+                var template = await _emailTemplateProvider.GetTemplateAsync(
+                    command.Template,
+                    command.Language,
+                    stoppingToken
+                );
+
+                var htmlBody = EmailTemplateRenderer.Render(template, command.Variables);
+
+                await _emailSender.SendAsync(
+                    command.To,
+                    command.Subject,
+                    htmlBody,
+                    stoppingToken
+                );
+
+                consumer.Commit(cr);
+
+                KafkaConsumeLog.Consumed(_logger, KafkaTopics.NotificationsEmailV1, cr.Message.Key?.ToString());
             }
         }
         finally
