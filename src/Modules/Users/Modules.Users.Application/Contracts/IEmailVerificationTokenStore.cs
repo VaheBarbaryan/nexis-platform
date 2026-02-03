@@ -8,11 +8,11 @@ public interface IEmailVerificationTokenStore
         TimeSpan ttl,
         CancellationToken ct);
 
-    Task<string?> GetAsync(
-        Guid userId,
+    Task<Guid?> GetAsync(
+        string tokenHash,
         CancellationToken ct);
 
     Task RemoveAsync(
-        Guid userId,
+        string tokenHash,
         CancellationToken ct);
 }

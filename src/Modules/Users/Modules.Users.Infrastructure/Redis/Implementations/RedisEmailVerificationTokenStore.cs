@@ -1,4 +1,3 @@
-
 using Modules.Users.Application.Contracts;
 using Modules.Users.Infrastructure.Redis.Keys;
 using StackExchange.Redis;
@@ -16,40 +15,39 @@ public sealed class RedisEmailVerificationTokenStore : IEmailVerificationTokenSt
 
         _database = redis.GetDatabase();
     }
+
     public async Task StoreAsync(
         Guid userId,
         string tokenHash,
         TimeSpan ttl,
         CancellationToken ct)
     {
-        var key = RedisKeys.EmailVerification(userId);
+        var key = RedisKeys.EmailVerification(tokenHash);
 
         await _database.StringSetAsync(
             key,
-            tokenHash,
+            userId.ToString(),
             expiry: ttl,
             when: When.Always);
     }
 
-    public async Task<string?> GetAsync(
-        Guid userId,
+    public async Task<Guid?> GetAsync(
+        string tokenHash,
         CancellationToken ct)
     {
-        var key = RedisKeys.EmailVerification(userId);
-
+        var key = RedisKeys.EmailVerification(tokenHash);
         var value = await _database.StringGetAsync(key);
 
         return value.HasValue
-            ? value.ToString()
+            ? Guid.Parse(value!)
             : null;
     }
 
     public async Task RemoveAsync(
-        Guid userId,
+        string tokenHash,
         CancellationToken ct)
     {
-        var key = RedisKeys.EmailVerification(userId);
-
+        var key = RedisKeys.EmailVerification(tokenHash);
         await _database.KeyDeleteAsync(key);
     }
 }
