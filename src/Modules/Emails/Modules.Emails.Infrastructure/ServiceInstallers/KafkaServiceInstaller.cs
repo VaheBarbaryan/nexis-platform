@@ -37,7 +37,5 @@ internal sealed class KafkaServiceInstaller : IServiceInstaller
                 }
             };
         });
-
-        services.AddHostedService<EmailBackgroundService>();
     }
 }

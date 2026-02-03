@@ -52,8 +52,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseAuthorization();
-
 app.MapEndpoints(UsersEndpointsAssembly.Assembly);
 
 await app.RunAsync();
