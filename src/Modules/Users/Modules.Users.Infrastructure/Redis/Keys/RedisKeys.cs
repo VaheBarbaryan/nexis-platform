@@ -4,6 +4,6 @@ public static class RedisKeys
 {
     private const string Prefix = "nexis";
 
-    public static string EmailVerification(Guid userId)
-        => $"{Prefix}:users:email-verification:{userId}";
+    public static string EmailVerification(string tokenHash)
+        => $"{Prefix}:users:email-verification:{tokenHash}";
 }
