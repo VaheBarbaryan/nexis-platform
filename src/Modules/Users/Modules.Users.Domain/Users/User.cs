@@ -73,4 +73,12 @@ public sealed class User : AggregateRoot<UserId>
         CheckRule(new UserCannotHaveDuplicateRoleRule(_roles, roleId));
         _roles.Add(new UserRole(Id, roleId));
     }
+
+    public void MarkEmailVerified()
+    {
+        CheckRule(new UserEmailMustNotBeAlreadyVerifiedRule(EmailVerifiedAt));
+
+        EmailVerifiedAt = DateTimeOffset.UtcNow;
+        UpdatedAt = DateTimeOffset.UtcNow;
+    }
 }

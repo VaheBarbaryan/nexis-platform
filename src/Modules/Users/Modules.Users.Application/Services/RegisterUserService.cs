@@ -15,17 +15,23 @@ public sealed class RegisterUserService : IRegisterUserService
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly ITokenGenerator _tokenGenerator;
+    private readonly IEmailVerificationTokenStore _emailVerificationTokenStore;
     private readonly IUnitOfWork _unitOfWork;
 
     public RegisterUserService(
         IUserRepository userRepository,
         IRoleRepository roleRepository,
         IPasswordHasher passwordHasher,
+        ITokenGenerator tokenGenerator,
+        IEmailVerificationTokenStore emailVerificationTokenStore,
         IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
         _passwordHasher = passwordHasher;
+        _tokenGenerator = tokenGenerator;
+        _emailVerificationTokenStore = emailVerificationTokenStore;
         _unitOfWork = unitOfWork;
     }
 
@@ -66,5 +72,39 @@ public sealed class RegisterUserService : IRegisterUserService
         await _unitOfWork.CommitAsync(ct);
 
         return user.Id.Value;
+    }
+
+    public async Task<User> VerifyEmailAsync(string token, CancellationToken ct = default)
+    {
+        if (string.IsNullOrEmpty(token))
+        {
+            throw new InvalidOperationException("Verification token missing.");
+        }
+
+        string tokenHash = _tokenGenerator.Hash(token);
+        Guid? userId = await _emailVerificationTokenStore.GetAsync(tokenHash, ct);
+
+        if (userId is null)
+        {
+            throw new InvalidOperationException("Token is invalid.");
+        }
+
+        var userIdVo = new UserId(userId.Value);
+        var user = await _userRepository.GetByIdAsync(userIdVo, ct);
+
+        if (user is null)
+        {
+            throw new UserNotFoundException("User not found.");
+        }
+
+        if (user.EmailVerifiedAt is not null)
+        {
+            return user;
+        }
+
+        user.MarkEmailVerified();
+        await _unitOfWork.CommitAsync(ct);
+
+        return user;
     }
 }

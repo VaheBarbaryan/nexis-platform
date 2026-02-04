@@ -36,7 +36,7 @@ public sealed class RedisEmailVerificationTokenStore : IEmailVerificationTokenSt
         CancellationToken ct)
     {
         var key = RedisKeys.EmailVerification(tokenHash);
-        var value = await _database.StringGetAsync(key);
+        var value = await _database.StringGetDeleteAsync(key);
 
         return value.HasValue
             ? Guid.Parse(value!)

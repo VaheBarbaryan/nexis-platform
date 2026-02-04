@@ -16,6 +16,11 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
+    public async Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Users.SingleOrDefaultAsync(x => x.Id == userId, cancellationToken: cancellationToken);
+    }
+
     public async Task<bool> EmailExistsAsync(Email email, CancellationToken ct = default)
     {
         return await _context.Users.AnyAsync(x => x.Email.Value == email.Value, ct);
