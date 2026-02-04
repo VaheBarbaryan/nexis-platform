@@ -2,7 +2,7 @@ using SharedKernel.Domain.Exceptions;
 
 namespace Modules.Users.Domain.Roles.Exceptions;
 
-public sealed class RoleNotFoundException : DomainException
+public sealed class RoleNotFoundException : NotFoundException
 {
     public RoleNotFoundException()
         : base("Role not found.") { }

@@ -2,7 +2,7 @@ using SharedKernel.Domain.Exceptions;
 
 namespace Modules.Users.Domain.Users.Exceptions;
 
-public class InvalidEmailException : DomainException
+public class InvalidEmailException : DomainValidationException
 {
     public InvalidEmailException() : base("Email is invalid.")
     {
