@@ -1,3 +1,4 @@
+using App.Exceptions;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Modules.Users.Endpoints;
@@ -5,6 +6,18 @@ using SharedKernel.Application;
 using SharedKernel.Infrastructure.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddProblemDetails(configure =>
+{
+    configure.CustomizeProblemDetails = context =>
+    {
+        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+        context.ProblemDetails.Extensions.TryAdd("instance",
+            $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path.Value}");
+    };
+});
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -47,6 +60,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
