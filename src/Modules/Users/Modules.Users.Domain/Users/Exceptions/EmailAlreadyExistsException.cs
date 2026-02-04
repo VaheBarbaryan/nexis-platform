@@ -2,7 +2,7 @@ using SharedKernel.Domain.Exceptions;
 
 namespace Modules.Users.Domain.Users.Exceptions;
 
-public sealed class EmailAlreadyExistsException : DomainException
+public sealed class EmailAlreadyExistsException : ConflictException
 {
     public EmailAlreadyExistsException() : base("User with the email already exists.")
     {

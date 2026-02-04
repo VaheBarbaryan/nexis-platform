@@ -1,0 +1,10 @@
+namespace SharedKernel.Domain.Exceptions;
+
+public abstract class NotFoundException : DomainException
+{
+    protected NotFoundException() : base("Entity not found") { }
+
+    protected NotFoundException(string message) : base(message) { }
+
+    protected NotFoundException(string message, Exception innerException) : base(message, innerException) { }
+}
