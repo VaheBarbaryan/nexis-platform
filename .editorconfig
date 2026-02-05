@@ -27,6 +27,11 @@ dotnet_diagnostic.S3353.severity = none
 dotnet_diagnostic.CA1030.severity = suggestion
 dotnet_diagnostic.CA1812.severity = suggestion
 
+# Test files
+[tests/**/*.cs]
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1859.severity = none
+
 # Disable CA1062 only for migration files
 [**/Migrations/*.cs]
 dotnet_diagnostic.CA1062.severity = none
