@@ -1,6 +1,7 @@
 # ADR-003: Use Apache Kafka for Asynchronous Integration Events
 
 **Date:** 2026-01-31
+
 **Status:** Accepted
 
 ---

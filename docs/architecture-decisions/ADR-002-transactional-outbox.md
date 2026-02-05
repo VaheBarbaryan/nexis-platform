@@ -1,6 +1,7 @@
 # ADR-002: Implement Transactional Outbox Pattern
 
 **Date:** 2026-01-30
+
 **Status:** Accepted
 
 ---
