@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.IntegrationEv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Emails.Infrastructure", "src\Modules\Emails\Modules.Emails.Infrastructure\Modules.Emails.Infrastructure.csproj", "{35138322-C61D-4C2E-A9FF-6E5FA3A4F77A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Application.UnitTests", "tests\Unit\Modules.Users.Application.UnitTests\Modules.Users.Application.UnitTests.csproj", "{974F2C39-87AD-4E4B-B028-C6D4E1173545}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{35138322-C61D-4C2E-A9FF-6E5FA3A4F77A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35138322-C61D-4C2E-A9FF-6E5FA3A4F77A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35138322-C61D-4C2E-A9FF-6E5FA3A4F77A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{974F2C39-87AD-4E4B-B028-C6D4E1173545}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{974F2C39-87AD-4E4B-B028-C6D4E1173545}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{974F2C39-87AD-4E4B-B028-C6D4E1173545}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{974F2C39-87AD-4E4B-B028-C6D4E1173545}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
