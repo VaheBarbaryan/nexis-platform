@@ -22,5 +22,6 @@ internal sealed class ApplicationServiceInstaller : IServiceInstaller
 
         services.AddScoped<IVerificationLinkBuilder, VerificationLinkBuilder>();
         services.AddScoped<IRegisterUserService, RegisterUserService>();
+        services.AddScoped<ILoginUserService, LoginUserService>();
     }
 }

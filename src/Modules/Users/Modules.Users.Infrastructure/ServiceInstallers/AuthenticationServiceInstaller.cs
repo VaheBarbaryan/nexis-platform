@@ -5,7 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Modules.Users.Application.Contracts;
+using Modules.Users.Application.Options;
 using Modules.Users.Infrastructure.Auth;
+using Modules.Users.Infrastructure.Redis.Implementations;
 using Modules.Users.Infrastructure.Security;
 using SharedKernel.Infrastructure;
 
@@ -25,6 +27,7 @@ internal sealed class AuthenticationServiceInstaller : IServiceInstaller
 
         services.AddSingleton<IPasswordHasher>(_ => new PasswordHasher(pepper));
         services.AddScoped<IJwtProvider, JwtProvider>();
+        services.AddScoped<IRefreshTokenStore, RefreshTokenStore>();
 
         services
             .AddOptions<JwtOptions>()

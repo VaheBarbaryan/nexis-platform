@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Authentication;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
@@ -23,6 +24,7 @@ internal sealed class GlobalExceptionHandler(
         {
             DomainValidationException => StatusCodes.Status400BadRequest,
             ValidationException => StatusCodes.Status400BadRequest,
+            InvalidCredentialException => StatusCodes.Status400BadRequest,
             NotFoundException => StatusCodes.Status404NotFound,
             ConflictException => StatusCodes.Status409Conflict,
             UnauthorizedAccessException => StatusCodes.Status401Unauthorized,

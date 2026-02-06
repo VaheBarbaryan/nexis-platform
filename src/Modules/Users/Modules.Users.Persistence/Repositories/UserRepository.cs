@@ -16,9 +16,14 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default)
+    public async Task<User?> GetByIdAsync(UserId userId, CancellationToken ct = default)
     {
-        return await _context.Users.SingleOrDefaultAsync(x => x.Id == userId, cancellationToken: cancellationToken);
+        return await _context.Users.SingleOrDefaultAsync(x => x.Id == userId, cancellationToken: ct);
+    }
+
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken ct = default)
+    {
+        return await _context.Users.SingleOrDefaultAsync(x => x.Email.Value == email, cancellationToken: ct);
     }
 
     public async Task<bool> EmailExistsAsync(Email email, CancellationToken ct = default)
