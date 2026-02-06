@@ -18,9 +18,9 @@ public sealed class TokenGenerator : ITokenGenerator
             config["Security:TokenPepper"] ?? string.Empty);
     }
 
-    public string Generate()
+    public string Generate(int size = 32)
     {
-        var bytes = RandomNumberGenerator.GetBytes(32);
+        var bytes = RandomNumberGenerator.GetBytes(size);
 
         return WebEncoders.Base64UrlEncode(bytes);
     }
@@ -36,5 +36,10 @@ public sealed class TokenGenerator : ITokenGenerator
     }
 
     public bool Verify(string token, string hash)
-        => Hash(token) == hash;
+    {
+        var computed = Convert.FromBase64String(Hash(token));
+        var provided = Convert.FromBase64String(hash);
+
+        return CryptographicOperations.FixedTimeEquals(computed, provided);
+    }
 }

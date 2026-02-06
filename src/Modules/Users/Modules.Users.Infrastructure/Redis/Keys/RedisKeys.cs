@@ -6,4 +6,7 @@ public static class RedisKeys
 
     public static string EmailVerification(string tokenHash)
         => $"{Prefix}:users:email-verification:{tokenHash}";
+
+    public static string RefreshToken(string tokenHash)
+    => $"{Prefix}:users:refresh-token:{tokenHash}";
 }

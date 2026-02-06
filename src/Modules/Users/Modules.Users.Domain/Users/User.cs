@@ -1,5 +1,6 @@
 using Modules.Users.Domain.Roles.ValueObjects;
 using Modules.Users.Domain.Users.Events;
+using Modules.Users.Domain.Users.Exceptions;
 using Modules.Users.Domain.Users.Rules;
 using Modules.Users.Domain.Users.ValueObjects;
 using SharedKernel.Domain.Aggregates;
@@ -80,5 +81,19 @@ public sealed class User : AggregateRoot<UserId>
 
         EmailVerifiedAt = DateTimeOffset.UtcNow;
         UpdatedAt = DateTimeOffset.UtcNow;
+    }
+
+    public void ChangePassword(string password)
+    {
+        Password = Password.Create(password);
+        UpdatedAt = DateTimeOffset.UtcNow;
+    }
+
+    public void EnsureEmailIsVerified()
+    {
+        if (EmailVerifiedAt is null)
+        {
+            throw new EmailNotVerifiedException();
+        }
     }
 }

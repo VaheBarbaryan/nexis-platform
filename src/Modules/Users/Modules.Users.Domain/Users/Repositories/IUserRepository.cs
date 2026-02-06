@@ -4,7 +4,9 @@ namespace Modules.Users.Domain.Users.Repositories;
 
 public interface IUserRepository
 {
-    Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default);
+    Task<User?> GetByIdAsync(UserId userId, CancellationToken ct = default);
+
+    Task<User?> GetByEmailAsync(string email, CancellationToken ct = default);
 
     Task<bool> EmailExistsAsync(Email email, CancellationToken ct = default);
 

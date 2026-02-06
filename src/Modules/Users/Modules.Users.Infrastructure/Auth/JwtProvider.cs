@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Modules.Users.Application.Contracts;
+using Modules.Users.Application.Options;
 using Modules.Users.Domain.Users;
 
 namespace Modules.Users.Infrastructure.Auth;
@@ -35,7 +36,7 @@ public sealed class JwtProvider : IJwtProvider
             SigningCredentials = _accessCredentials,
             Issuer = _jwtOptions.Issuer,
             Audience = _jwtOptions.Audience,
-            Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenMinutes)
+            Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenExpirationMinutes)
         };
 
         return new JsonWebTokenHandler().CreateToken(tokenDescriptor);
@@ -56,7 +57,7 @@ public sealed class JwtProvider : IJwtProvider
             SigningCredentials = _refreshCredentials,
             Issuer = _jwtOptions.Issuer,
             Audience = _jwtOptions.Audience,
-            Expires = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenDays)
+            Expires = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays)
         };
 
         return new JsonWebTokenHandler().CreateToken(tokenDescriptor);

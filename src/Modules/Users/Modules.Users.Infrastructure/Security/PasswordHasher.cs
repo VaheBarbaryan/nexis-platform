@@ -11,7 +11,7 @@ public sealed class PasswordHasher : IPasswordHasher
     private const int SaltSize = 24;
     private const int HashSize = 32;
     private const int Iterations = 4;
-    private const int MemoryKb = 65536; // 64MB
+    private const int MemoryKb = 65537; // 64MB
     private const int Parallelism = 2;
 
     private const string AlgorithmTag = "ARGON2ID";
