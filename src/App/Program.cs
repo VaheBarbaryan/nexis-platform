@@ -65,8 +65,6 @@ app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.MapEndpoints(UsersEndpointsAssembly.Assembly);
 
 await app.RunAsync();
