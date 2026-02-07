@@ -9,4 +9,6 @@ public interface IRefreshTokenStore
         CancellationToken ct = default);
 
     Task<Guid?> GetAsync(string refreshTokenHash, CancellationToken ct = default);
+
+    Task RemoveAsync(string refreshTokenHash, CancellationToken ct = default);
 }

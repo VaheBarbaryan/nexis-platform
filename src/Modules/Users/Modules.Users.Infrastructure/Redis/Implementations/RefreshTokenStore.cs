@@ -21,7 +21,7 @@ public sealed class RefreshTokenStore : IRefreshTokenStore
         TimeSpan expiresIn,
         CancellationToken ct = default)
     {
-        var key = RedisKeys.EmailVerification(refreshTokenHash);
+        var key = RedisKeys.RefreshToken(refreshTokenHash);
 
         await _database.StringSetAsync(
             key,
@@ -32,11 +32,17 @@ public sealed class RefreshTokenStore : IRefreshTokenStore
 
     public async Task<Guid?> GetAsync(string refreshTokenHash, CancellationToken ct = default)
     {
-        var key = RedisKeys.EmailVerification(refreshTokenHash);
+        var key = RedisKeys.RefreshToken(refreshTokenHash);
         var value = await _database.StringGetAsync(key);
 
         return value.HasValue
             ? Guid.Parse(value!)
             : null;
+    }
+
+    public async Task RemoveAsync(string refreshTokenHash, CancellationToken ct = default)
+    {
+        var key = RedisKeys.RefreshToken(refreshTokenHash);
+        await _database.KeyDeleteAsync(key);
     }
 }
