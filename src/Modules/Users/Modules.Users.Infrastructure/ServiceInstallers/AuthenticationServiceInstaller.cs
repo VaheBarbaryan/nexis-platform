@@ -42,6 +42,8 @@ internal sealed class AuthenticationServiceInstaller : IServiceInstaller
                     .GetSection("Jwt")
                     .Get<JwtOptions>()!;
 
+                options.MapInboundClaims = false;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -58,7 +60,24 @@ internal sealed class AuthenticationServiceInstaller : IServiceInstaller
                         new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(jwt.AccessSecret))
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Cookies["AccessToken"];
+
+                        if (!string.IsNullOrEmpty(accessToken))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
+
+        services.AddAuthentication();
         services.AddAuthorization();
     }
 }
