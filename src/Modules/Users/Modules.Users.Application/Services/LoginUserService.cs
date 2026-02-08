@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Modules.Users.Application.Contracts;
 using Modules.Users.Application.Options;
 using Modules.Users.Domain.Users.Repositories;
+using Modules.Users.Domain.Users.ValueObjects;
 using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Application.Services;
@@ -74,5 +75,37 @@ public sealed class LoginUserService : ILoginUserService
             ct);
 
         return new LoginResult(accessToken, refreshToken);
+    }
+
+    public async Task<LoginResult> RefreshTokenAsync(string refreshToken, CancellationToken ct = default)
+    {
+        var hashedRefreshToken = _tokenGenerator.Hash(refreshToken);
+        var userId = await _refreshTokenStore.GetAsync(hashedRefreshToken, ct);
+
+        if (!userId.HasValue)
+        {
+            throw new InvalidCredentialException("Invalid refresh token.");
+        }
+
+        var user = await _userRepository.GetByIdAsync(new UserId(userId.Value), ct);
+
+        if (user is null)
+        {
+            throw new InvalidCredentialException("Invalid refresh token.");
+        }
+
+        await _refreshTokenStore.RemoveAsync(hashedRefreshToken, ct);
+
+        var newAccessToken = _jwtProvider.GenerateAccessToken(user);
+        var newRefreshToken = _jwtProvider.GenerateRefreshToken(user);
+
+        var hashedNewRefreshToken = _tokenGenerator.Hash(newRefreshToken);
+        await _refreshTokenStore.StoreAsync(
+            user.Id.Value.ToString(),
+            hashedNewRefreshToken,
+            TimeSpan.FromDays(_jwtOptions.RefreshTokenExpirationDays),
+            ct);
+
+        return new LoginResult(newAccessToken, newRefreshToken);
     }
 }
