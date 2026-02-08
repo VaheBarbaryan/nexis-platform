@@ -6,7 +6,7 @@ using SharedKernel.Infrastructure.Messaging.Commands;
 
 namespace Modules.Users.Application.Notifications.Handlers;
 
-public class SendVerificationEmailHandler : INotificationHandler<UserCreatedNotification>
+public class SendVerificationEmailHandler : INotificationHandler<EmailVerificationRequestedNotification>
 {
     private readonly IEventBusPublisher _eventBusPublisher;
     private readonly IEmailVerificationTokenStore _emailVerificationTokenStore;
@@ -25,7 +25,7 @@ public class SendVerificationEmailHandler : INotificationHandler<UserCreatedNoti
         _tokenGenerator = tokenGenerator;
     }
 
-    public async Task Handle(UserCreatedNotification notification, CancellationToken cancellationToken)
+    public async Task Handle(EmailVerificationRequestedNotification notification, CancellationToken cancellationToken)
     {
         Console.WriteLine($"Send Verification Email Handler {notification}");
 

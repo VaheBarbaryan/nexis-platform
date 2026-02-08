@@ -13,7 +13,7 @@ public class VerifyUserEmailEndpoint : IEndpoint
     {
         app.MapPost("/api/verify-email", async (
                 [FromQuery] string token,
-                IRegisterUserService registerUserService,
+                IEmailVerificationService emailVerificationService,
                 CancellationToken cancellationToken) =>
             {
                 if (string.IsNullOrWhiteSpace(token))
@@ -26,7 +26,7 @@ public class VerifyUserEmailEndpoint : IEndpoint
 
                 try
                 {
-                    var user = await registerUserService.VerifyEmailAsync(token, cancellationToken);
+                    var user = await emailVerificationService.VerifyEmailAsync(token, cancellationToken);
 
                     return Results.Ok(new
                     {

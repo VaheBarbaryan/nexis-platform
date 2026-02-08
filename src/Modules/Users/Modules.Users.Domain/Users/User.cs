@@ -13,8 +13,8 @@ public sealed class User : AggregateRoot<UserId>
     public IReadOnlyCollection<UserRole> Roles => _roles.AsReadOnly();
 
     public Email Email { get; private set; } = null!;
-    public Username Username { get; private set; }  = null!;
-    public Password Password { get; private set; }  = null!;
+    public Username Username { get; private set; } = null!;
+    public Password Password { get; private set; } = null!;
     public DateTimeOffset? EmailVerifiedAt { get; private set; }
     public string? Bio { get; private set; }
     public string? Location { get; private set; }
@@ -23,7 +23,9 @@ public sealed class User : AggregateRoot<UserId>
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset UpdatedAt { get; private set; }
 
-    private User() {}
+    private User()
+    {
+    }
 
     private User(UserId id, Email email, Username username, Password password)
     {
@@ -42,21 +44,9 @@ public sealed class User : AggregateRoot<UserId>
         Email email,
         Username username,
         Password password,
-        RoleId defaultRoleId,
-        DateTime? emailVerifiedAt = null,
-        string? bio = null,
-        string? location = null,
-        string? website = null,
-        DateTime? birthDate = null)
+        RoleId defaultRoleId)
     {
-        var user = new User(userId, email, username, password)
-        {
-            EmailVerifiedAt = emailVerifiedAt,
-            Bio = bio,
-            Location = location,
-            Website = website,
-            BirthDate = birthDate
-        };
+        var user = new User(userId, email, username, password);
 
         user.AssignRole(defaultRoleId);
 
@@ -66,7 +56,22 @@ public sealed class User : AggregateRoot<UserId>
             user.Email.Value
         ));
 
+        user.RaiseDomainEvent(new EmailVerificationRequestedDomainEvent(
+            user.Id.Value,
+            user.Username.Value,
+            user.Email.Value
+        ));
+
         return user;
+    }
+
+    public void UpdateProfile(string? bio, string? location, string? website, DateTime? birthDate)
+    {
+        Bio = bio;
+        Location = location;
+        Website = website;
+        BirthDate = birthDate;
+        UpdatedAt = DateTimeOffset.UtcNow;
     }
 
     public void AssignRole(RoleId roleId)
@@ -95,5 +100,16 @@ public sealed class User : AggregateRoot<UserId>
         {
             throw new EmailNotVerifiedException();
         }
+    }
+
+    public void RequestEmailVerification()
+    {
+        if (EmailVerifiedAt is not null) return;
+
+        RaiseDomainEvent(new EmailVerificationRequestedDomainEvent(
+            Id.Value,
+            Username.Value,
+            Email.Value
+        ));
     }
 }
