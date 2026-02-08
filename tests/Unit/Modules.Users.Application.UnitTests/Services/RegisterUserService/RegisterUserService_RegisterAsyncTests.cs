@@ -19,8 +19,6 @@ public class RegisterUserService_RegisterAsyncTests
     private readonly Mock<IUserRepository> _userRepository = new();
     private readonly Mock<IRoleRepository> _roleRepository = new();
     private readonly Mock<IPasswordHasher> _passwordHasher = new();
-    private readonly Mock<ITokenGenerator> _tokenGenerator = new();
-    private readonly Mock<IEmailVerificationTokenStore> _tokenStore = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
     private IRegisterUserService CreateService()
@@ -28,8 +26,6 @@ public class RegisterUserService_RegisterAsyncTests
             _userRepository.Object,
             _roleRepository.Object,
             _passwordHasher.Object,
-            _tokenGenerator.Object,
-            _tokenStore.Object,
             _unitOfWork.Object);
 
     [Fact]

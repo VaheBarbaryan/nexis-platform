@@ -1,30 +1,25 @@
 using FluentAssertions;
-using Moq;
 using Modules.Users.Application.Contracts;
-using Modules.Users.Domain.Roles.Repositories;
 using Modules.Users.Domain.Roles.ValueObjects;
 using Modules.Users.Domain.Users;
 using Modules.Users.Domain.Users.Exceptions;
 using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;
+using Moq;
 using SharedKernel.Infrastructure;
 
-namespace Modules.Users.Application.UnitTests.Services.RegisterUserService;
+namespace Modules.Users.Application.UnitTests.Services.EmailVerificationService;
 
-public sealed class RegisterUserService_VerifyEmailTests
+public class EmailVerificationService_VerifyEmailTests
 {
     private readonly Mock<IUserRepository> _userRepository = new();
-    private readonly Mock<IRoleRepository> _roleRepository = new();
-    private readonly Mock<IPasswordHasher> _passwordHasher = new();
     private readonly Mock<ITokenGenerator> _tokenGenerator = new();
     private readonly Mock<IEmailVerificationTokenStore> _tokenStore = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
-    private IRegisterUserService CreateService()
-        => new Application.Services.RegisterUserService(
+    private Application.Services.EmailVerificationService CreateService()
+        => new(
             _userRepository.Object,
-            _roleRepository.Object,
-            _passwordHasher.Object,
             _tokenGenerator.Object,
             _tokenStore.Object,
             _unitOfWork.Object);
