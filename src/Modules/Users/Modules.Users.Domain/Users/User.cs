@@ -112,4 +112,13 @@ public sealed class User : AggregateRoot<UserId>
             Email.Value
         ));
     }
+
+    public void RequestPasswordReset()
+    {
+        RaiseDomainEvent(new PasswordResetRequestedDomainEvent(
+            Id.Value,
+            Username.Value,
+            Email.Value
+        ));
+    }
 }

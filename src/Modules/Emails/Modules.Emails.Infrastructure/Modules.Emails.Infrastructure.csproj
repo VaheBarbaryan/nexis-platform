@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <None Remove="EmailSending\Templates\VerifyEmail\en.html" />
-      <EmbeddedResource Include="EmailSending\Templates\VerifyEmail\en.html" />
+      <EmbeddedResource Include="EmailSending\Templates\**\*.html" />
     </ItemGroup>
 
     <ItemGroup>

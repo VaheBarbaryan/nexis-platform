@@ -7,53 +7,51 @@ using SharedKernel.Infrastructure.Messaging.Commands;
 
 namespace Modules.Users.Application.Notifications.Handlers;
 
-public class SendVerificationEmailHandler : INotificationHandler<EmailVerificationRequestedNotification>
+public class SendPasswordResetEmailHandler : INotificationHandler<PasswordResetRequestedNotification>
 {
     private readonly IEventBusPublisher _eventBusPublisher;
-    private readonly ITokenStore<Guid> _emailVerificationTokenStore;
-    private readonly IVerificationLinkBuilder _verificationLinkBuilder;
     private readonly ITokenGenerator _tokenGenerator;
+    private readonly ITokenStore<Guid> _passwordTokenStore;
+    private readonly IPasswordResetLinkBuilder _passwordResetLinkBuilder;
 
-    public SendVerificationEmailHandler(
+    public SendPasswordResetEmailHandler(
         IEventBusPublisher eventBusPublisher,
-        [FromKeyedServices(TokenStoreKey.EmailVerification)]
-        ITokenStore<Guid> emailVerificationTokenStore,
-        IVerificationLinkBuilder verificationLinkBuilder,
-        ITokenGenerator tokenGenerator)
+        ITokenGenerator tokenGenerator,
+        [FromKeyedServices(TokenStoreKey.PasswordReset)]
+        ITokenStore<Guid> passwordTokenStore,
+        IPasswordResetLinkBuilder passwordResetLinkBuilder)
     {
         _eventBusPublisher = eventBusPublisher;
-        _emailVerificationTokenStore = emailVerificationTokenStore;
-        _verificationLinkBuilder = verificationLinkBuilder;
         _tokenGenerator = tokenGenerator;
+        _passwordTokenStore = passwordTokenStore;
+        _passwordResetLinkBuilder = passwordResetLinkBuilder;
     }
 
-    public async Task Handle(EmailVerificationRequestedNotification notification, CancellationToken cancellationToken)
+    public async Task Handle(PasswordResetRequestedNotification notification, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"Send Verification Email Handler {notification}");
-
         ArgumentNullException.ThrowIfNull(notification);
 
         var token = _tokenGenerator.Generate();
-        var tokenHash = _tokenGenerator.Hash(token);
+        var hashedToken = _tokenGenerator.Hash(token);
 
-        await _emailVerificationTokenStore.StoreAsync(
-            notification.DomainEvent.UserId,
-            tokenHash,
+        await _passwordTokenStore.StoreAsync(
+            notification.Id,
+            hashedToken,
             TimeSpan.FromHours(24),
             cancellationToken);
 
-        var verificationUri = _verificationLinkBuilder.Build(token);
+        var resetUri = _passwordResetLinkBuilder.Build(token);
 
         var emailCommand = new SendEmailIntegrationCommand
         {
-            Template = EmailTemplates.VerifyEmail,
+            Template = EmailTemplates.PasswordReset,
             To = notification.DomainEvent.Email,
-            Subject = "Email Verification",
+            Subject = "Password Reset",
             Language = "en",
             Variables = new Dictionary<string, string>
             {
                 ["Username"] = notification.DomainEvent.Username,
-                ["VerificationUrl"] = verificationUri.AbsoluteUri,
+                ["ResetUrl"] = resetUri.AbsoluteUri,
                 ["ExpiryHours"] = "24"
             }
         };
