@@ -1,4 +1,5 @@
 using System.Security.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Modules.Users.Application.Contracts;
 using Modules.Users.Application.Options;
@@ -13,7 +14,7 @@ public sealed class LoginUserService : ILoginUserService
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtProvider _jwtProvider;
-    private readonly IRefreshTokenStore _refreshTokenStore;
+    private readonly ITokenStore<Guid> _refreshTokenStore;
     private readonly ITokenGenerator _tokenGenerator;
     private readonly IUnitOfWork _unitOfWork;
 
@@ -23,7 +24,8 @@ public sealed class LoginUserService : ILoginUserService
         IUserRepository userRepository,
         IPasswordHasher passwordHasher,
         IJwtProvider jwtProvider,
-        IRefreshTokenStore refreshTokenStore,
+        [FromKeyedServices(TokenStoreKey.RefreshToken)]
+        ITokenStore<Guid> refreshTokenStore,
         ITokenGenerator tokenGenerator,
         IUnitOfWork unitOfWork,
         IOptions<JwtOptions> jwtOptions)
@@ -69,7 +71,7 @@ public sealed class LoginUserService : ILoginUserService
 
         var hashedRefreshToken = _tokenGenerator.Hash(refreshToken);
         await _refreshTokenStore.StoreAsync(
-            user.Id.Value.ToString(),
+            user.Id.Value,
             hashedRefreshToken,
             TimeSpan.FromDays(_jwtOptions.RefreshTokenExpirationDays),
             ct);
@@ -80,7 +82,8 @@ public sealed class LoginUserService : ILoginUserService
     public async Task<LoginResult> RefreshTokenAsync(string refreshToken, CancellationToken ct = default)
     {
         var hashedRefreshToken = _tokenGenerator.Hash(refreshToken);
-        var userId = await _refreshTokenStore.GetAsync(hashedRefreshToken, ct);
+
+        Guid? userId = await _refreshTokenStore.GetDeleteAsync(hashedRefreshToken, ct);
 
         if (!userId.HasValue)
         {
@@ -101,7 +104,7 @@ public sealed class LoginUserService : ILoginUserService
 
         var hashedNewRefreshToken = _tokenGenerator.Hash(newRefreshToken);
         await _refreshTokenStore.StoreAsync(
-            user.Id.Value.ToString(),
+            user.Id.Value,
             hashedNewRefreshToken,
             TimeSpan.FromDays(_jwtOptions.RefreshTokenExpirationDays),
             ct);

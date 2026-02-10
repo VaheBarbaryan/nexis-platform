@@ -27,7 +27,6 @@ internal sealed class AuthenticationServiceInstaller : IServiceInstaller
 
         services.AddSingleton<IPasswordHasher>(_ => new PasswordHasher(pepper));
         services.AddScoped<IJwtProvider, JwtProvider>();
-        services.AddScoped<IRefreshTokenStore, RefreshTokenStore>();
 
         services
             .AddOptions<JwtOptions>()

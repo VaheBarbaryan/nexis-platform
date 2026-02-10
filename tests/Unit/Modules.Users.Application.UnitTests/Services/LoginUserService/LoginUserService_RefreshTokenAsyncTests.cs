@@ -16,7 +16,7 @@ public class LoginUserService_RefreshTokenAsyncTests
     private readonly Mock<IUserRepository> _userRepository = new();
     private readonly Mock<IPasswordHasher> _passwordHasher = new();
     private readonly Mock<IJwtProvider> _jwtProvider = new();
-    private readonly Mock<IRefreshTokenStore> _refreshTokenStore = new();
+    private readonly Mock<ITokenStore<Guid>> _refreshTokenStore = new();
     private readonly Mock<ITokenGenerator> _tokenGenerator = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
@@ -45,7 +45,7 @@ public class LoginUserService_RefreshTokenAsyncTests
         const string hashedRefreshToken = "hashedRefreshToken";
 
         _tokenGenerator.Setup(x => x.Hash(refreshToken)).Returns(hashedRefreshToken);
-        _refreshTokenStore.Setup(x => x.GetAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
+        _refreshTokenStore.Setup(x => x.GetDeleteAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
             .ReturnsAsync(Guid.Empty);
 
         // Act
@@ -65,7 +65,7 @@ public class LoginUserService_RefreshTokenAsyncTests
         var userId = Guid.NewGuid();
 
         _tokenGenerator.Setup(x => x.Hash(refreshToken)).Returns(hashedRefreshToken);
-        _refreshTokenStore.Setup(x => x.GetAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
+        _refreshTokenStore.Setup(x => x.GetDeleteAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userId);
         _userRepository.Setup(x => x.GetByIdAsync(new UserId(userId), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
@@ -90,9 +90,9 @@ public class LoginUserService_RefreshTokenAsyncTests
 
         _tokenGenerator.Setup(x => x.Hash(refreshToken)).Returns(hashedRefreshToken);
 
-        _refreshTokenStore.SetupSequence(x => x.GetAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
+        _refreshTokenStore.SetupSequence(x => x.GetDeleteAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userId) // first call: token exists -> valid
-            .ReturnsAsync((Guid?)null); // second call: token already used -> null
+            .ReturnsAsync(Guid.Empty); // second call: token already used -> null
 
         // Act: first refresh should succeed
         _refreshTokenStore.Setup(x => x.RemoveAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
@@ -137,13 +137,13 @@ public class LoginUserService_RefreshTokenAsyncTests
 
         _tokenGenerator.Setup(x => x.Hash(It.IsAny<string>()))
             .Returns<string>(token => token == refreshToken ? hashedRefreshToken : newHashedRefreshToken);
-        _refreshTokenStore.Setup(x => x.GetAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
+        _refreshTokenStore.Setup(x => x.GetDeleteAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userId);
         _refreshTokenStore.Setup(x => x.RemoveAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         _refreshTokenStore.Setup(x =>
             x.StoreAsync(
-                user.Id.Value.ToString(),
+                user.Id.Value,
                 newHashedRefreshToken,
                 TimeSpan.FromDays(_jwtOptions.Value.RefreshTokenExpirationDays),
                 It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
@@ -165,7 +165,7 @@ public class LoginUserService_RefreshTokenAsyncTests
         _tokenGenerator.Verify(x => x.Hash(newRefreshToken), Times.Once);
         _refreshTokenStore.Verify(x => x.RemoveAsync(hashedRefreshToken, It.IsAny<CancellationToken>()), Times.Once);
         _refreshTokenStore.Verify(x =>
-            x.StoreAsync(user.Id.Value.ToString(), newHashedRefreshToken, It.IsAny<TimeSpan>(),
+            x.StoreAsync(user.Id.Value, newHashedRefreshToken, It.IsAny<TimeSpan>(),
                 It.IsAny<CancellationToken>()), Times.Once);
     }
 }

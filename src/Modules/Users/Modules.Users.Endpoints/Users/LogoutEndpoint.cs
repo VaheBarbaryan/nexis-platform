@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Modules.Users.Application.Contracts;
 using SharedKernel.Domain.Endpoints;
@@ -14,7 +15,7 @@ public class LogoutEndpoint : IEndpoint
     {
         app.MapPost("/api/logout", async (
                 HttpContext httpContext,
-                IRefreshTokenStore refreshTokenStore,
+                [FromKeyedServices(TokenStoreKey.RefreshToken)] ITokenStore<Guid> refreshTokenStore,
                 ITokenGenerator tokenGenerator,
                 IWebHostEnvironment env,
                 CancellationToken cancellationToken = default) =>

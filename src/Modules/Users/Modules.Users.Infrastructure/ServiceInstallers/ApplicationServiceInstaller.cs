@@ -21,7 +21,10 @@ internal sealed class ApplicationServiceInstaller : IServiceInstaller
             .ValidateOnStart();
 
         services.AddScoped<IVerificationLinkBuilder, VerificationLinkBuilder>();
+        services.AddScoped<IPasswordResetLinkBuilder, PasswordResetLinkBuilder>();
         services.AddScoped<IRegisterUserService, RegisterUserService>();
         services.AddScoped<ILoginUserService, LoginUserService>();
+        services.AddScoped<IPasswordService, PasswordService>();
+        services.AddScoped<IEmailVerificationService, EmailVerificationService>();
     }
 }

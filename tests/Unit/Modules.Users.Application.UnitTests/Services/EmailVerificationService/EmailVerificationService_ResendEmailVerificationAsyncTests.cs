@@ -12,7 +12,7 @@ public class EmailVerificationService_ResendEmailVerificationAsyncTests
 {
     private readonly Mock<IUserRepository> _userRepository = new();
     private readonly Mock<ITokenGenerator> _tokenGenerator = new();
-    private readonly Mock<IEmailVerificationTokenStore> _tokenStore = new();
+    private readonly Mock<ITokenStore<Guid>> _tokenStore = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
     private Application.Services.EmailVerificationService CreateService()

@@ -30,6 +30,7 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterModule(new Modules.Users.Infrastructure.Outbox.OutboxModule());
+    containerBuilder.RegisterModule(new Modules.Users.Infrastructure.Redis.RedisModule());
 });
 
 builder.Services.AddMediatR(cfg =>
