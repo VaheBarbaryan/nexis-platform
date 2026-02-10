@@ -18,7 +18,7 @@ public class LoginUserService_LoginAsyncTests
     private readonly Mock<IUserRepository> _userRepository = new();
     private readonly Mock<IPasswordHasher> _passwordHasher = new();
     private readonly Mock<IJwtProvider> _jwtProvider = new();
-    private readonly Mock<IRefreshTokenStore> _refreshTokenStore = new();
+    private readonly Mock<ITokenStore<Guid>> _refreshTokenStore = new();
     private readonly Mock<ITokenGenerator> _tokenGenerator = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
@@ -133,7 +133,7 @@ public class LoginUserService_LoginAsyncTests
         _refreshTokenStore
             .Setup(x =>
                 x.StoreAsync(
-                    user.Id.Value.ToString(),
+                    user.Id.Value,
                     "hashed_refresh_token",
                     TimeSpan.FromDays(_jwtOptions.Value.RefreshTokenExpirationDays),
                     It.IsAny<CancellationToken>())
@@ -151,7 +151,7 @@ public class LoginUserService_LoginAsyncTests
 
         _refreshTokenStore.Verify(
             x => x.StoreAsync(
-                user.Id.Value.ToString(),
+                user.Id.Value,
                 "hashed_refresh_token",
                 It.IsAny<TimeSpan>(),
                 It.IsAny<CancellationToken>()),
@@ -188,7 +188,7 @@ public class LoginUserService_LoginAsyncTests
         _refreshTokenStore
             .Setup(x =>
                 x.StoreAsync(
-                    user.Id.Value.ToString(),
+                    user.Id.Value,
                     "hashed_refresh_token",
                     TimeSpan.FromDays(_jwtOptions.Value.RefreshTokenExpirationDays),
                     It.IsAny<CancellationToken>())
@@ -207,7 +207,7 @@ public class LoginUserService_LoginAsyncTests
 
         _refreshTokenStore.Verify(
             x => x.StoreAsync(
-                user.Id.Value.ToString(),
+                user.Id.Value,
                 "hashed_refresh_token",
                 It.IsAny<TimeSpan>(),
                 It.IsAny<CancellationToken>()),

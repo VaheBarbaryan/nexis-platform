@@ -14,7 +14,7 @@ public class EmailVerificationService_VerifyEmailTests
 {
     private readonly Mock<IUserRepository> _userRepository = new();
     private readonly Mock<ITokenGenerator> _tokenGenerator = new();
-    private readonly Mock<IEmailVerificationTokenStore> _tokenStore = new();
+    private readonly Mock<ITokenStore<Guid>> _tokenStore = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
     private Application.Services.EmailVerificationService CreateService()
@@ -47,8 +47,8 @@ public class EmailVerificationService_VerifyEmailTests
 
         _tokenGenerator.Setup(x => x.Hash("token")).Returns("hashed_token");
         _tokenStore
-            .Setup(x => x.GetAsync("hashed_token", It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Guid?)null);
+            .Setup(x => x.GetDeleteAsync("hashed_token", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Guid.Empty);
 
         // Act
         var act = () => service.VerifyEmailAsync("token");
@@ -66,7 +66,7 @@ public class EmailVerificationService_VerifyEmailTests
 
         _tokenGenerator.Setup(x => x.Hash("token")).Returns("hashed_token");
         _tokenStore
-            .Setup(x => x.GetAsync("hashed_token", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetDeleteAsync("hashed_token", It.IsAny<CancellationToken>()))
             .ReturnsAsync(userId);
         _userRepository
             .Setup(x => x.GetByIdAsync(It.IsAny<UserId>(), It.IsAny<CancellationToken>()))
@@ -96,7 +96,7 @@ public class EmailVerificationService_VerifyEmailTests
         user.MarkEmailVerified();
 
         _tokenGenerator.Setup(x => x.Hash("token")).Returns("hash");
-        _tokenStore.Setup(x => x.GetAsync("hash", It.IsAny<CancellationToken>()))
+        _tokenStore.Setup(x => x.GetDeleteAsync("hash", It.IsAny<CancellationToken>()))
             .ReturnsAsync(userId);
 
         _userRepository.Setup(x =>
@@ -128,7 +128,7 @@ public class EmailVerificationService_VerifyEmailTests
 
         _tokenGenerator.Setup(x => x.Hash("token")).Returns("hash");
         _tokenStore
-            .Setup(x => x.GetAsync("hash", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetDeleteAsync("hash", It.IsAny<CancellationToken>()))
             .ReturnsAsync(userId);
 
         _userRepository.Setup(x =>
