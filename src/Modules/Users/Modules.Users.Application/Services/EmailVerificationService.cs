@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Modules.Users.Application.Contracts;
 using Modules.Users.Domain.Users;
 using Modules.Users.Domain.Users.Exceptions;
@@ -12,12 +13,13 @@ public class EmailVerificationService : IEmailVerificationService
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenGenerator _tokenGenerator;
-    private readonly IEmailVerificationTokenStore _emailVerificationTokenStore;
+    private readonly ITokenStore<Guid> _emailVerificationTokenStore;
 
     public EmailVerificationService(
         IUserRepository userRepository,
         ITokenGenerator tokenGenerator,
-        IEmailVerificationTokenStore emailVerificationTokenStore,
+        [FromKeyedServices(TokenStoreKey.EmailVerification)]
+        ITokenStore<Guid> emailVerificationTokenStore,
         IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
@@ -34,9 +36,9 @@ public class EmailVerificationService : IEmailVerificationService
         }
 
         string tokenHash = _tokenGenerator.Hash(token);
-        Guid? userId = await _emailVerificationTokenStore.GetAsync(tokenHash, ct);
+        Guid? userId = await _emailVerificationTokenStore.GetDeleteAsync(tokenHash, ct);
 
-        if (userId is null)
+        if (!userId.HasValue || userId.Value == Guid.Empty)
         {
             throw new InvalidOperationException("Token is invalid.");
         }
