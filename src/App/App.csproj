@@ -18,4 +18,10 @@
       <ProjectReference Include="..\Modules\Users\Modules.Users.Persistence\Modules.Users.Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
 </Project>

@@ -33,7 +33,7 @@ internal sealed class PersistenceServiceInstaller : IServiceInstaller
             options.UseNpgsql(connectionString, npgsqlOptions =>
             {
                 npgsqlOptions.MigrationsAssembly(typeof(UsersDbContext).Assembly.FullName);
-                npgsqlOptions.EnableRetryOnFailure(5);
+                npgsqlOptions.EnableRetryOnFailure();
                 npgsqlOptions.CommandTimeout(30);
             });
 
