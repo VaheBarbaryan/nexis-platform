@@ -1,4 +1,5 @@
 using App.Exceptions;
+using App.Extensions;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Modules.Users.Endpoints;
@@ -48,18 +49,19 @@ builder.Services.InstallModulesFromAssemblies(
 
 WebApplication app = builder.Build();
 
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.ApplyMigrations();
+}
+
 using IServiceScope scope = app.Services.CreateScope();
 IEnumerable<IModuleSeeder> seeders = scope.ServiceProvider.GetServices<IModuleSeeder>();
 
 foreach (var seeder in seeders)
 {
     await seeder.SeedAsync();
-}
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
 }
 
 app.UseExceptionHandler();
