@@ -11,10 +11,18 @@ namespace Modules.Users.Application.UnitTests.Services.PasswordService;
 public class PasswordService_ForgotPasswordAsyncTests
 {
     private readonly Mock<IUserRepository> _userRepository = new();
+    private readonly Mock<ITokenGenerator> _tokenGenerator = new();
+    private readonly Mock<ITokenStore<Guid>> _passwordTokenStore = new();
+    private readonly Mock<IPasswordHasher> _passwordHasher = new();
     private readonly Mock<IUnitOfWork> _unitOfWork = new();
 
     private IPasswordService CreateService()
-        => new Application.Services.PasswordService(_userRepository.Object, _unitOfWork.Object);
+        => new Application.Services.PasswordService(
+            _userRepository.Object,
+            _tokenGenerator.Object,
+            _passwordTokenStore.Object,
+            _passwordHasher.Object,
+            _unitOfWork.Object);
 
     [Fact]
     public async Task ForgotPasswordAsync_Should_Not_Request_Password_Reset_When_User_Not_Found()
