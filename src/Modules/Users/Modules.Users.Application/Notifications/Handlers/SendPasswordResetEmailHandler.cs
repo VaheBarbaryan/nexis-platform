@@ -35,7 +35,7 @@ public class SendPasswordResetEmailHandler : INotificationHandler<PasswordResetR
         var hashedToken = _tokenGenerator.Hash(token);
 
         await _passwordTokenStore.StoreAsync(
-            notification.Id,
+            notification.DomainEvent.UserId,
             hashedToken,
             TimeSpan.FromHours(24),
             cancellationToken);

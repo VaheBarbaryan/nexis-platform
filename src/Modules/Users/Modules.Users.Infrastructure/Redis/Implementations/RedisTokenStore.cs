@@ -46,6 +46,20 @@ public sealed class RedisTokenStore<TIdentifier> : ITokenStore<TIdentifier>
             when: When.Always);
     }
 
+    public async Task<TIdentifier?> GetAsync(
+        string tokenHash,
+        CancellationToken ct = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(tokenHash);
+
+        var key = _keyFactory(tokenHash);
+        var value = await _database.StringGetAsync(key);
+
+        return value.HasValue
+            ? _tokenSerializer.Deserialize(value!)
+            : default;
+    }
+
     public async Task<TIdentifier?> GetDeleteAsync(
         string tokenHash,
         CancellationToken ct = default)
