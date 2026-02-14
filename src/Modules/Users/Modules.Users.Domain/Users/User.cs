@@ -90,6 +90,8 @@ public sealed class User : AggregateRoot<UserId>
 
     public void ChangePassword(string password)
     {
+        CheckRule(new NewPasswordMustBeDifferentFromCurrentRule(password, Password.Value));
+
         Password = Password.Create(password);
         UpdatedAt = DateTimeOffset.UtcNow;
     }

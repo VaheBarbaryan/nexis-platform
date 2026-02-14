@@ -8,6 +8,10 @@ public interface ITokenStore<TIdentifier>
         TimeSpan ttl,
         CancellationToken ct = default);
 
+    Task<TIdentifier?> GetAsync(
+        string tokenHash,
+        CancellationToken ct = default);
+
     Task<TIdentifier?> GetDeleteAsync(
         string tokenHash,
         CancellationToken ct = default);
