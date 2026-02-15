@@ -54,7 +54,9 @@ public sealed class PasswordHasher : IPasswordHasher
         ArgumentNullException.ThrowIfNull(passwordHash);
 
         if (!TryParseHash(passwordHash, out var parameters))
+        {
             return false;
+        }
 
         var passwordBytes = Encoding.UTF8.GetBytes(password);
         var pepperedPassword = Combine(passwordBytes, _pepper);
@@ -81,16 +83,24 @@ public sealed class PasswordHasher : IPasswordHasher
         ArgumentNullException.ThrowIfNull(storedHash);
 
         if (!TryParseHash(storedHash, out var parameters))
+        {
             return true;
+        }
 
         if (parameters.IterationsCount < Iterations)
+        {
             return true;
+        }
 
         if (parameters.MemoryKbSize < MemoryKb)
+        {
             return true;
+        }
 
         if (parameters.Parallelismlevel < Parallelism)
+        {
             return true;
+        }
 
         return false;
     }
@@ -145,19 +155,29 @@ public sealed class PasswordHasher : IPasswordHasher
         string[] parts = storedHash.Split('$');
 
         if (parts.Length != 6)
+        {
             return false;
+        }
 
         if (parts[0] != AlgorithmTag)
+        {
             return false;
+        }
 
         if (!int.TryParse(parts[1], NumberStyles.None, CultureInfo.InvariantCulture, out int iterations))
+        {
             return false;
+        }
 
         if (!int.TryParse(parts[2], NumberStyles.None, CultureInfo.InvariantCulture, out int memoryKb))
+        {
             return false;
+        }
 
         if (!int.TryParse(parts[3], NumberStyles.None, CultureInfo.InvariantCulture, out int parallelism))
+        {
             return false;
+        }
 
         byte[] salt;
         byte[] hash;

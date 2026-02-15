@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Modules.Users.Application.Contracts;
+using Modules.Users.Domain.Users.Exceptions;
 using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;
 using SharedKernel.Infrastructure;
@@ -44,11 +45,9 @@ public class PasswordService : IPasswordService
 
     public async Task<bool> ResetPasswordAsync(string token, string newPassword, CancellationToken ct = default)
     {
-        Console.WriteLine($"Token: {token}");
         var tokenHash = _tokenGenerator.Hash(token);
 
         Guid? userId = await _passwordTokenStore.GetAsync(tokenHash, ct);
-        Console.WriteLine($"User ID: {userId.Value}");
 
         if (!userId.HasValue)
         {
@@ -56,8 +55,6 @@ public class PasswordService : IPasswordService
         }
 
         var user = await _userRepository.GetByIdAsync(new UserId(userId.Value), ct);
-
-        Console.WriteLine($"User: {user}");
 
         if (user is null || _passwordHasher.Verify(newPassword, user.Password.Value))
         {
@@ -70,5 +67,32 @@ public class PasswordService : IPasswordService
         await _unitOfWork.CommitAsync(ct);
 
         return true;
+    }
+
+    public async Task ChangePasswordAsync(
+        Guid userId,
+        string currentPassword,
+        string newPassword,
+        CancellationToken ct = default)
+    {
+        var user = await _userRepository.GetByIdAsync(new UserId(userId), ct);
+
+        if (user is null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        if (_passwordHasher.Verify(newPassword, user.Password.Value))
+        {
+            throw new PasswordReuseException();
+        }
+
+        if (!_passwordHasher.Verify(currentPassword, user.Password.Value))
+        {
+            throw new IncorrectPasswordException();
+        }
+
+        user.ChangePassword(_passwordHasher.Hash(newPassword));
+        await _unitOfWork.CommitAsync(ct);
     }
 }
