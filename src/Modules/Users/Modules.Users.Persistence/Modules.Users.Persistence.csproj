@@ -15,4 +15,8 @@
       <ProjectReference Include="..\Modules.Users.Domain\Modules.Users.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+
 </Project>

@@ -17,6 +17,7 @@ namespace Modules.Users.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("users")
                 .HasAnnotation("ProductVersion", "9.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -41,7 +42,7 @@ namespace Modules.Users.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_permissions_name");
 
-                    b.ToTable("permissions", (string)null);
+                    b.ToTable("permissions", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Roles.Role", b =>
@@ -59,7 +60,7 @@ namespace Modules.Users.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_roles");
 
-                    b.ToTable("roles", (string)null);
+                    b.ToTable("roles", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Roles.RolePermission", b =>
@@ -78,7 +79,7 @@ namespace Modules.Users.Persistence.Migrations
                     b.HasIndex("PermissionId")
                         .HasDatabaseName("ix_role_permissions_permission_id");
 
-                    b.ToTable("role_permissions", (string)null);
+                    b.ToTable("role_permissions", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Users.User", b =>
@@ -93,7 +94,7 @@ namespace Modules.Users.Persistence.Migrations
                         .HasColumnName("bio");
 
                     b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("date")
                         .HasColumnName("birth_date");
 
                     b.Property<DateTimeOffset>("CreatedAt")
@@ -121,7 +122,7 @@ namespace Modules.Users.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_users");
 
-                    b.ToTable("users", (string)null);
+                    b.ToTable("users", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Users.UserRole", b =>
@@ -140,7 +141,10 @@ namespace Modules.Users.Persistence.Migrations
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_user_roles_role_id");
 
-                    b.ToTable("user_roles", (string)null);
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_user_roles_user_id");
+
+                    b.ToTable("user_roles", "users");
                 });
 
             modelBuilder.Entity("SharedKernel.Infrastructure.Outbox.OutboxMessage", b =>
@@ -189,7 +193,7 @@ namespace Modules.Users.Persistence.Migrations
                     b.HasIndex("ProcessedOnUtc")
                         .HasDatabaseName("ix_outbox_messages_processed_on_utc");
 
-                    b.ToTable("outbox_messages", (string)null);
+                    b.ToTable("outbox_messages", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Roles.RolePermission", b =>
@@ -225,7 +229,11 @@ namespace Modules.Users.Persistence.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("users");
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_users_email");
+
+                            b1.ToTable("users", "users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId")
@@ -246,7 +254,7 @@ namespace Modules.Users.Persistence.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("users");
+                            b1.ToTable("users", "users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId")
@@ -267,7 +275,11 @@ namespace Modules.Users.Persistence.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("users");
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_users_username");
+
+                            b1.ToTable("users", "users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId")
