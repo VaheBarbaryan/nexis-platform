@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Modules.Users.Application.Seed;
@@ -35,6 +36,7 @@ internal sealed class PersistenceServiceInstaller : IServiceInstaller
                 npgsqlOptions.MigrationsAssembly(typeof(UsersDbContext).Assembly.FullName);
                 npgsqlOptions.EnableRetryOnFailure();
                 npgsqlOptions.CommandTimeout(30);
+                npgsqlOptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName, UsersSchema.Name);
             });
 
             // Snake case naming

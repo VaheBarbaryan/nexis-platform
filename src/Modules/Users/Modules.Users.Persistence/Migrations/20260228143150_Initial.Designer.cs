@@ -12,14 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Modules.Users.Persistence.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20260125155111_AddEmailVerifiedAtToUsers")]
-    partial class AddEmailVerifiedAtToUsers
+    [Migration("20260228143150_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("users")
                 .HasAnnotation("ProductVersion", "9.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -44,7 +45,7 @@ namespace Modules.Users.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_permissions_name");
 
-                    b.ToTable("permissions", (string)null);
+                    b.ToTable("permissions", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Roles.Role", b =>
@@ -62,7 +63,7 @@ namespace Modules.Users.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_roles");
 
-                    b.ToTable("roles", (string)null);
+                    b.ToTable("roles", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Roles.RolePermission", b =>
@@ -81,7 +82,7 @@ namespace Modules.Users.Persistence.Migrations
                     b.HasIndex("PermissionId")
                         .HasDatabaseName("ix_role_permissions_permission_id");
 
-                    b.ToTable("role_permissions", (string)null);
+                    b.ToTable("role_permissions", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Users.User", b =>
@@ -96,14 +97,14 @@ namespace Modules.Users.Persistence.Migrations
                         .HasColumnName("bio");
 
                     b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("date")
                         .HasColumnName("birth_date");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<DateTime?>("EmailVerifiedAt")
+                    b.Property<DateTimeOffset?>("EmailVerifiedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("email_verified_at");
 
@@ -112,15 +113,9 @@ namespace Modules.Users.Persistence.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("location");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("username");
 
                     b.Property<string>("Website")
                         .HasMaxLength(200)
@@ -130,7 +125,7 @@ namespace Modules.Users.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_users");
 
-                    b.ToTable("users", (string)null);
+                    b.ToTable("users", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Users.UserRole", b =>
@@ -149,7 +144,59 @@ namespace Modules.Users.Persistence.Migrations
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_user_roles_role_id");
 
-                    b.ToTable("user_roles", (string)null);
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_user_roles_user_id");
+
+                    b.ToTable("user_roles", "users");
+                });
+
+            modelBuilder.Entity("SharedKernel.Infrastructure.Outbox.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<string>("Error")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("error");
+
+                    b.Property<DateTime>("OccurredOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("occurred_on_utc");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_on_utc");
+
+                    b.Property<int>("RetryCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("retry_count");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_outbox_messages");
+
+                    b.HasIndex("OccurredOnUtc")
+                        .HasDatabaseName("ix_outbox_messages_occurred_on_utc");
+
+                    b.HasIndex("ProcessedOnUtc")
+                        .HasDatabaseName("ix_outbox_messages_processed_on_utc");
+
+                    b.ToTable("outbox_messages", "users");
                 });
 
             modelBuilder.Entity("Modules.Users.Domain.Roles.RolePermission", b =>
@@ -185,7 +232,11 @@ namespace Modules.Users.Persistence.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("users");
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_users_email");
+
+                            b1.ToTable("users", "users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId")
@@ -206,7 +257,32 @@ namespace Modules.Users.Persistence.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("users");
+                            b1.ToTable("users", "users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId")
+                                .HasConstraintName("fk_users_users_id");
+                        });
+
+                    b.OwnsOne("Modules.Users.Domain.Users.ValueObjects.Username", "Username", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)")
+                                .HasColumnName("username");
+
+                            b1.HasKey("UserId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_users_username");
+
+                            b1.ToTable("users", "users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId")
@@ -217,6 +293,9 @@ namespace Modules.Users.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Password")
+                        .IsRequired();
+
+                    b.Navigation("Username")
                         .IsRequired();
                 });
 
