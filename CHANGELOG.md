@@ -66,3 +66,4 @@
 - Add Makefile for Docker development workflow
 - Add MIT license
 - Add external kafka listener for local development
+- Add git-cliff changelog automation
