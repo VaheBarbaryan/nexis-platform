@@ -72,3 +72,5 @@
 - Change .github files extensions to .yml
 - *(changelog)* Update changelog
 - Add commitlint workflow with husky local hook
+- *(changelog)* Update changelog
+- Add nuget vulnerability scan workflow
