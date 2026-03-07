@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 
-namespace Modules.Users.Persistence.Contexts;
+namespace Modules.Posts.Persistence.Contexts;
 
-public class UsersDbContextFactory
-    : IDesignTimeDbContextFactory<UsersDbContext>
+public class PostsDbContextFactory
+    : IDesignTimeDbContextFactory<PostsDbContext>
 {
-    public UsersDbContext CreateDbContext(string[] args)
+    public PostsDbContext CreateDbContext(string[] args)
     {
         // Build configuration manually
         var basePath = Directory.GetCurrentDirectory();
@@ -23,22 +23,22 @@ public class UsersDbContextFactory
         var connectionString = configuration.GetConnectionString("Database")
                                ?? "Host=localhost;Port=5432;Database=users;Username=postgres;Password=postgres;";
 
-        var optionsBuilder = new DbContextOptionsBuilder<UsersDbContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<PostsDbContext>();
 
         optionsBuilder.UseNpgsql(connectionString, npgsqlOptions =>
         {
-            npgsqlOptions.MigrationsAssembly(typeof(UsersDbContext).Assembly.FullName);
+            npgsqlOptions.MigrationsAssembly(typeof(PostsDbContext).Assembly.FullName);
             npgsqlOptions.EnableRetryOnFailure();
             npgsqlOptions.CommandTimeout(30);
 
             // Ensure __EFMigrationsHistory is inside users schema
             npgsqlOptions.MigrationsHistoryTable(
                 HistoryRepository.DefaultTableName,
-                UsersSchema.Name);
+                PostsSchema.Name);
         });
 
         optionsBuilder.UseSnakeCaseNamingConvention();
 
-        return new UsersDbContext(optionsBuilder.Options);
+        return new PostsDbContext(optionsBuilder.Options);
     }
 }

@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Common\SharedKernel\SharedKernel.csproj" />
+      <ProjectReference Include="..\Modules.Posts.Persistence\Modules.Posts.Persistence.csproj" />
+    </ItemGroup>
+
+</Project>

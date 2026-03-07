@@ -44,7 +44,8 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.InstallModulesFromAssemblies(
     builder.Configuration,
     Modules.Users.Infrastructure.UsersInfrastructureAssembly.Assembly,
-    Modules.Emails.Infrastructure.EmailsInfrastructureAssembly.Assembly
+    Modules.Emails.Infrastructure.EmailsInfrastructureAssembly.Assembly,
+    Modules.Posts.Infrastructure.PostsInfrastructureAssembly.Assembly
 );
 
 WebApplication app = builder.Build();
@@ -56,12 +57,15 @@ if (app.Environment.IsDevelopment())
     app.ApplyMigrations();
 }
 
-using IServiceScope scope = app.Services.CreateScope();
-IEnumerable<IModuleSeeder> seeders = scope.ServiceProvider.GetServices<IModuleSeeder>();
-
-foreach (var seeder in seeders)
+if (args.Contains("--seed"))
 {
-    await seeder.SeedAsync();
+    using IServiceScope scope = app.Services.CreateScope();
+    IEnumerable<IModuleSeeder> seeders = scope.ServiceProvider.GetServices<IModuleSeeder>();
+
+    foreach (var seeder in seeders)
+    {
+        await seeder.SeedAsync();
+    }
 }
 
 app.UseExceptionHandler();

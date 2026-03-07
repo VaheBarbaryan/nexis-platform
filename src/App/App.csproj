@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Modules\Emails\Modules.Emails.Infrastructure\Modules.Emails.Infrastructure.csproj" />
+      <ProjectReference Include="..\Modules\Posts\Modules.Posts.Infrastructure\Modules.Posts.Infrastructure.csproj" />
       <ProjectReference Include="..\Modules\Users\Modules.Users.Infrastructure\Modules.Users.Infrastructure.csproj" />
       <ProjectReference Include="..\Modules\Users\Modules.Users.Persistence\Modules.Users.Persistence.csproj" />
     </ItemGroup>

@@ -10,12 +10,10 @@ using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Infrastructure.Events;
 using Modules.Users.Persistence;
 using Modules.Users.Persistence.Contexts;
-using Modules.Users.Persistence.Outbox;
 using Modules.Users.Persistence.Repositories;
 using SharedKernel.Application;
 using SharedKernel.Infrastructure;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
-using SharedKernel.Infrastructure.Outbox;
 
 namespace Modules.Users.Infrastructure.ServiceInstallers;
 
@@ -29,7 +27,7 @@ internal sealed class PersistenceServiceInstaller : IServiceInstaller
         // DbContext
         services.AddDbContext<UsersDbContext>((sp, options) =>
         {
-            var connectionString = configuration.GetConnectionString("UsersDb");
+            var connectionString = configuration.GetConnectionString("Database");
 
             options.UseNpgsql(connectionString, npgsqlOptions =>
             {
