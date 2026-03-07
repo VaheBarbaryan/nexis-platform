@@ -67,3 +67,6 @@
 - Add MIT license
 - Add external kafka listener for local development
 - Add git-cliff changelog automation
+- *(changelog)* Update changelog
+- Add automated PR labeler
+- Change .github files extensions to .yml
