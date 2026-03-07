@@ -1,0 +1,34 @@
+feature:
+  - head-branch: ["^feature/"]
+
+bug:
+  - head-branch: ["^fix/", "^bugfix/"]
+
+chore:
+  - head-branch: ["^chore/"]
+
+refactor:
+  - head-branch: ["^refactor/"]
+
+documentation:
+  - head-branch: ["^doc/", "^docs/"]
+
+users-module:
+  - changed-files:
+      - any-glob-to-any-file: "src/Modules/Users/**"
+
+posts-module:
+  - changed-files:
+      - any-glob-to-any-file: "src/Modules/Posts/**"
+
+emails-module:
+  - changed-files:
+      - any-glob-to-any-file: "src/Modules/Emails/**"
+
+infrastructure:
+  - changed-files:
+      - any-glob-to-any-file: "src/Common/**"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: ".github/**"
