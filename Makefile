@@ -1,4 +1,4 @@
-.PHONY: dev-up dev-down dev-logs
+.PHONY: dev-up dev-down dev-logs infra
 
 dev-up:
 	docker compose -f docker-compose.dev.yaml up -d
@@ -14,3 +14,6 @@ dev-rebuild:
 
 dev-restart:
 	docker compose -f docker-compose.dev.yaml down && docker compose -f docker-compose.dev.yaml up -d --build
+
+infra:
+	docker compose -f docker-compose.dev.yaml up kafka papercut -d
