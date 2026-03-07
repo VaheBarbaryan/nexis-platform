@@ -70,3 +70,5 @@
 - *(changelog)* Update changelog
 - Add automated PR labeler
 - Change .github files extensions to .yml
+- *(changelog)* Update changelog
+- Add commitlint workflow with husky local hook
