@@ -21,6 +21,9 @@ COPY ["src/Modules/Users/Modules.Users.Domain/Modules.Users.Domain.csproj", "src
 COPY ["src/Modules/Users/Modules.Users.IntegrationEvents/Modules.Users.IntegrationEvents.csproj", "src/Modules/Users/Modules.Users.IntegrationEvents/"]
 COPY ["src/Modules/Users/Modules.Users.Endpoints/Modules.Users.Endpoints.csproj", "src/Modules/Users/Modules.Users.Endpoints/"]
 COPY ["src/Modules/Users/Modules.Users.Persistence/Modules.Users.Persistence.csproj", "src/Modules/Users/Modules.Users.Persistence/"]
+COPY ["src/Modules/Posts/Modules.Posts.Domain/Modules.Posts.Domain.csproj", "src/Modules/Posts/Modules.Posts.Domain/"]
+COPY ["src/Modules/Posts/Modules.Posts.Persistence/Modules.Posts.Persistence.csproj", "src/Modules/Posts/Modules.Posts.Persistence/"]
+COPY ["src/Modules/Posts/Modules.Posts.Infrastructure/Modules.Posts.Infrastructure.csproj", "src/Modules/Posts/Modules.Posts.Infrastructure/"]
 RUN dotnet restore "src/App/App.csproj"
 COPY . .
 WORKDIR "src/App"

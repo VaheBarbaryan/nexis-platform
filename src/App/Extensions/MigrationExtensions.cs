@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Modules.Posts.Persistence.Contexts;
 using Modules.Users.Persistence.Contexts;
 
 namespace App.Extensions;
@@ -13,6 +14,7 @@ internal static class MigrationExtensions
         var provider = scope.ServiceProvider;
 
         MigrateDb<UsersDbContext>(provider);
+        MigrateDb<PostsDbContext>(provider);
     }
 
     private static void MigrateDb<TContext>(IServiceProvider provider)
