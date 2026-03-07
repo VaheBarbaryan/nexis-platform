@@ -74,3 +74,5 @@
 - Add commitlint workflow with husky local hook
 - *(changelog)* Update changelog
 - Add nuget vulnerability scan workflow
+- *(changelog)* Update changelog
+- Add codeql security analysis workflow
