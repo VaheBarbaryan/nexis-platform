@@ -1,0 +1,39 @@
+name: Commitlint
+
+on:
+  push:
+    branches:
+      - development
+      - main
+  pull_request:
+    branches:
+      - development
+      - main
+
+jobs:
+  commitlint:
+    name: Commit Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Lint commit messages
+        run: |
+          BASE=${GITHUB_BASE_REF:-development}
+          git log --format="%s" origin/$BASE..HEAD | while IFS= read -r msg; do
+            echo "Linting: $msg"
+            echo "$msg" > /tmp/commit-msg.txt
+            dotnet commit-lint -c /tmp/commit-msg.txt -o .commitlintrc.json || exit 1
+          done
