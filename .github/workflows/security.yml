@@ -1,0 +1,29 @@
+name: Security
+
+on:
+  pull_request:
+    branches:
+      - development
+      - main
+  schedule:
+    - cron: '0 5 * * 1' # Every Monday at 9am Yerevan time (UTC+4)
+
+jobs:
+  vulnerability-scan:
+    name: NuGet Vulnerability Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+
+      - name: Restore dependencies
+        run: dotnet restore nexis-platform.sln
+
+      - name: Scan for vulnerable packages
+        run: dotnet list nexis-platform.sln package --vulnerable --include-transitive
