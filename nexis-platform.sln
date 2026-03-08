@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Posts.Domain", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Posts.Infrastructure", "src\Modules\Posts\Modules.Posts.Infrastructure\Modules.Posts.Infrastructure.csproj", "{12C6ED08-5D94-4FFB-A529-1B48BD706A49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Posts.Application", "src\Modules\Posts\Modules.Posts.Application\Modules.Posts.Application.csproj", "{754223E2-3AA7-4760-844A-34A8BF06FA59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,5 +86,9 @@ Global
 		{12C6ED08-5D94-4FFB-A529-1B48BD706A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12C6ED08-5D94-4FFB-A529-1B48BD706A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12C6ED08-5D94-4FFB-A529-1B48BD706A49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{754223E2-3AA7-4760-844A-34A8BF06FA59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{754223E2-3AA7-4760-844A-34A8BF06FA59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{754223E2-3AA7-4760-844A-34A8BF06FA59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{754223E2-3AA7-4760-844A-34A8BF06FA59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
