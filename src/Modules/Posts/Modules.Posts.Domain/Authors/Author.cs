@@ -11,15 +11,15 @@ public class Author : Entity<AuthorId>
     {
     }
 
-    private Author(string username)
+    private Author(AuthorId id, string username)
     {
-        Id = new AuthorId(Guid.NewGuid());
+        Id = id;
         Username = username;
     }
 
-    public static Author Create(string username)
+    public static Author Create(Guid id, string username)
     {
-        var author = new Author(username);
+        var author = new Author(new AuthorId(id), username);
 
         return author;
     }

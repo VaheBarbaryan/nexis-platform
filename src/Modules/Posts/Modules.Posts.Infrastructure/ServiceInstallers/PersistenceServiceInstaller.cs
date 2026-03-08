@@ -3,7 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Modules.Posts.Application.Contracts;
+using Modules.Posts.Application.Services;
+using Modules.Posts.Domain;
+using Modules.Posts.Domain.Authors.Repositories;
+using Modules.Posts.Persistence;
 using Modules.Posts.Persistence.Contexts;
+using Modules.Posts.Persistence.Repositories;
 using SharedKernel.Infrastructure;
 
 namespace Modules.Posts.Infrastructure.ServiceInstallers;
@@ -29,5 +35,9 @@ internal sealed class PersistenceServiceInstaller : IServiceInstaller
             // Snake case naming
             options.UseSnakeCaseNamingConvention();
         });
+
+        services.AddScoped<IAuthorRepository, AuthorRepository>();
+        services.AddScoped<IAuthorService, AuthorService>();
+        services.AddScoped<IPostUnitOfWork, PostUnitOfWork>();
     }
 }

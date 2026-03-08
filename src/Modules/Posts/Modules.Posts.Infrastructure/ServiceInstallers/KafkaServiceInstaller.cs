@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Modules.Emails.Infrastructure.Kafka;
+using Modules.Posts.Infrastructure.Kafka;
 using SharedKernel.Infrastructure;
 
-namespace Modules.Emails.Infrastructure.ServiceInstallers;
+namespace Modules.Posts.Infrastructure.ServiceInstallers;
 
 internal sealed class KafkaServiceInstaller : IServiceInstaller
 {
@@ -16,5 +16,7 @@ internal sealed class KafkaServiceInstaller : IServiceInstaller
             .Bind(configuration.GetSection("Kafka"))
             .ValidateDataAnnotations()
             .ValidateOnStart();
+
+        services.AddHostedService<AuthorBackgroundService>();
     }
 }
