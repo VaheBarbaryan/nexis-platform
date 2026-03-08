@@ -9,4 +9,10 @@
       <PackageReference Include="Newtonsoft.Json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Confluent.Kafka">
+        <HintPath>..\..\..\..\..\.nuget\packages\confluent.kafka\2.13.0\lib\net8.0\Confluent.Kafka.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
