@@ -23,6 +23,9 @@
 - *(users)* Implement password reset flow with token validation
 - *(users)* Implement change password flow
 - *(posts)* Add posts module with authors and posts table
+- *(shared)* Add `KafkaConsumerConfigFactory`, topics and consume logging
+- *(users)* Raise `UserEmailVerifiedDomainEvent` and publish `UserEventMessage` to kafka
+- *(posts)* Sync from user.events kafka topics
 
 ### 🐛 Bug Fixes
 
@@ -56,6 +59,7 @@
 - *(users)* Add unit tests for password service
 - *(users)* Add unit tests for reset password flow
 - *(users)* Add unit tests for change password flow
+- *(users)* Update unit tests to mock correct unit of work instance
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -76,3 +80,6 @@
 - Add nuget vulnerability scan workflow
 - *(changelog)* Update changelog
 - Add codeql security analysis workflow
+- *(changelog)* Update changelog
+- Add kafka-init topic creation and update solution
+- *(shared)* Add Confluent.Kafka nuget package
