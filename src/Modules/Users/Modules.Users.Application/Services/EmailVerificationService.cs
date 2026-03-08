@@ -1,17 +1,17 @@
 using Microsoft.Extensions.DependencyInjection;
 using Modules.Users.Application.Contracts;
+using Modules.Users.Domain;
 using Modules.Users.Domain.Users;
 using Modules.Users.Domain.Users.Exceptions;
 using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;
-using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Application.Services;
 
 public class EmailVerificationService : IEmailVerificationService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserUnitOfWork _unitOfWork;
     private readonly ITokenGenerator _tokenGenerator;
     private readonly ITokenStore<Guid> _emailVerificationTokenStore;
 
@@ -20,7 +20,7 @@ public class EmailVerificationService : IEmailVerificationService
         ITokenGenerator tokenGenerator,
         [FromKeyedServices(TokenStoreKey.EmailVerification)]
         ITokenStore<Guid> emailVerificationTokenStore,
-        IUnitOfWork unitOfWork)
+        IUserUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _tokenGenerator = tokenGenerator;

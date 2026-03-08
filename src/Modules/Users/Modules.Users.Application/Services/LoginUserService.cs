@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Modules.Users.Application.Contracts;
 using Modules.Users.Application.Options;
+using Modules.Users.Domain;
 using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;
-using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Application.Services;
 
@@ -16,7 +16,7 @@ public sealed class LoginUserService : ILoginUserService
     private readonly IJwtProvider _jwtProvider;
     private readonly ITokenStore<Guid> _refreshTokenStore;
     private readonly ITokenGenerator _tokenGenerator;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserUnitOfWork _unitOfWork;
 
     private readonly JwtOptions _jwtOptions;
 
@@ -27,7 +27,7 @@ public sealed class LoginUserService : ILoginUserService
         [FromKeyedServices(TokenStoreKey.RefreshToken)]
         ITokenStore<Guid> refreshTokenStore,
         ITokenGenerator tokenGenerator,
-        IUnitOfWork unitOfWork,
+        IUserUnitOfWork unitOfWork,
         IOptions<JwtOptions> jwtOptions)
     {
         ArgumentNullException.ThrowIfNull(jwtOptions);

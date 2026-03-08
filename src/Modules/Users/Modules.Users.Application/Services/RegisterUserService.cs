@@ -1,13 +1,12 @@
-using Microsoft.Extensions.Caching.Memory;
 using Modules.Users.Application.Contracts;
 using Modules.Users.Application.Security;
+using Modules.Users.Domain;
 using Modules.Users.Domain.Roles.Exceptions;
 using Modules.Users.Domain.Roles.Repositories;
 using Modules.Users.Domain.Users;
 using Modules.Users.Domain.Users.Exceptions;
 using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;
-using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Application.Services;
 
@@ -16,14 +15,13 @@ public sealed class RegisterUserService : IRegisterUserService
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
     private readonly IPasswordHasher _passwordHasher;
-
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserUnitOfWork _unitOfWork;
 
     public RegisterUserService(
         IUserRepository userRepository,
         IRoleRepository roleRepository,
         IPasswordHasher passwordHasher,
-        IUnitOfWork unitOfWork)
+        IUserUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
