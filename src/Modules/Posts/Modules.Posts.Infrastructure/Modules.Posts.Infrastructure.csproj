@@ -2,7 +2,13 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Common\SharedKernel\SharedKernel.csproj" />
+      <ProjectReference Include="..\..\Users\Modules.Users.IntegrationEvents\Modules.Users.IntegrationEvents.csproj" />
+      <ProjectReference Include="..\Modules.Posts.Application\Modules.Posts.Application.csproj" />
       <ProjectReference Include="..\Modules.Posts.Persistence\Modules.Posts.Persistence.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Confluent.Kafka" />
     </ItemGroup>
 
 </Project>

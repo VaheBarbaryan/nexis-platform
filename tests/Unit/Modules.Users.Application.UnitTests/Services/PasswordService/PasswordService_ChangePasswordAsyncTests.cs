@@ -1,12 +1,12 @@
 using FluentAssertions;
 using Modules.Users.Application.Contracts;
+using Modules.Users.Domain;
 using Modules.Users.Domain.Roles.ValueObjects;
 using Modules.Users.Domain.Users;
 using Modules.Users.Domain.Users.Exceptions;
 using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;
 using Moq;
-using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Application.UnitTests.Services.PasswordService;
 
@@ -16,7 +16,7 @@ public class PasswordService_ChangePasswordAsyncTests
     private readonly Mock<ITokenGenerator> _tokenGenerator = new();
     private readonly Mock<ITokenStore<Guid>> _passwordTokenStore = new();
     private readonly Mock<IPasswordHasher> _passwordHasher = new();
-    private readonly Mock<IUnitOfWork> _unitOfWork = new();
+    private readonly Mock<IUserUnitOfWork> _unitOfWork = new();
 
     private IPasswordService CreateService()
         => new Application.Services.PasswordService(

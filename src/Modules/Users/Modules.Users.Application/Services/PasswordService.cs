@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Modules.Users.Application.Contracts;
+using Modules.Users.Domain;
 using Modules.Users.Domain.Users.Exceptions;
 using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;
-using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Application.Services;
 
@@ -13,7 +13,7 @@ public class PasswordService : IPasswordService
     private readonly ITokenGenerator _tokenGenerator;
     private readonly ITokenStore<Guid> _passwordTokenStore;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserUnitOfWork _unitOfWork;
 
     public PasswordService(
         IUserRepository userRepository,
@@ -21,7 +21,7 @@ public class PasswordService : IPasswordService
         [FromKeyedServices(TokenStoreKey.PasswordReset)]
         ITokenStore<Guid> passwordTokenStore,
         IPasswordHasher passwordHasher,
-        IUnitOfWork unitOfWork)
+        IUserUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _tokenGenerator = tokenGenerator;

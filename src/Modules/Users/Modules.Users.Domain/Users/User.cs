@@ -86,6 +86,12 @@ public sealed class User : AggregateRoot<UserId>
 
         EmailVerifiedAt = DateTimeOffset.UtcNow;
         UpdatedAt = DateTimeOffset.UtcNow;
+
+        RaiseDomainEvent(new UserEmailVerifiedDomainEvent(
+            Id.Value,
+            Username.Value,
+            Email.Value
+        ));
     }
 
     public void ChangePassword(string password)

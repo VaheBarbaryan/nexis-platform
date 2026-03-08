@@ -1,15 +1,15 @@
+using Modules.Users.Domain;
 using Modules.Users.Persistence.Contexts;
-using SharedKernel.Infrastructure;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
 
 namespace Modules.Users.Persistence;
 
-public class UnitOfWork : IUnitOfWork
+public class UserUnitOfWork : IUserUnitOfWork
 {
     private readonly UsersDbContext _dbContext;
     private readonly IDomainEventsDispatcher _domainEventsDispatcher;
 
-    public UnitOfWork(UsersDbContext dbContext, IDomainEventsDispatcher domainEventsDispatcher)
+    public UserUnitOfWork(UsersDbContext dbContext, IDomainEventsDispatcher domainEventsDispatcher)
     {
         _dbContext = dbContext;
         _domainEventsDispatcher = domainEventsDispatcher;

@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Modules.Users.Application.Contracts;
 using Modules.Users.Domain.Users;
 using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;

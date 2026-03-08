@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Modules.Users.Application.Seed;
+using Modules.Users.Domain;
 using Modules.Users.Domain.Permissions.Repositories;
 using Modules.Users.Domain.Roles.Repositories;
 using Modules.Users.Domain.Users.Repositories;
@@ -44,7 +45,7 @@ internal sealed class PersistenceServiceInstaller : IServiceInstaller
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
 
         services.AddScoped<RolePermissionSeeder>();
 

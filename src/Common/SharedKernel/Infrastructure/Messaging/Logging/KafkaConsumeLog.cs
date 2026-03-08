@@ -16,6 +16,12 @@ public static class KafkaConsumeLog
             new EventId(1202, nameof(ConsumeError)),
             "Kafka consume error. Topic={Topic}");
 
+    private static readonly Action<ILogger, string, Exception?> _unkownTopic =
+        LoggerMessage.Define<string>(
+            LogLevel.Error,
+            new EventId(1203, nameof(UnknownTopic)),
+            "Topic not yet available. Topic={Topic}");
+
     public static void Consumed(ILogger logger, string topic, string? key)
     {
         _consumed(logger, topic, key, null);
@@ -24,5 +30,10 @@ public static class KafkaConsumeLog
     public static void ConsumeError(ILogger logger, string topic, Exception exception)
     {
         _consumeError(logger, topic, exception);
+    }
+
+    public static void UnknownTopic(ILogger logger, string topic, Exception exception)
+    {
+        _unkownTopic(logger, topic, exception);
     }
 }
