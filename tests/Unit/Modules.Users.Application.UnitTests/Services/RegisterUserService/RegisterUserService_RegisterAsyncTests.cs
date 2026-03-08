@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Modules.Users.Application.Contracts;
 using Modules.Users.Application.Security;
+using Modules.Users.Domain;
 using Modules.Users.Domain.Roles;
 using Modules.Users.Domain.Roles.Exceptions;
 using Modules.Users.Domain.Roles.Repositories;
@@ -10,7 +11,6 @@ using Modules.Users.Domain.Users.Exceptions;
 using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;
 using Moq;
-using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Application.UnitTests.Services.RegisterUserService;
 
@@ -19,7 +19,7 @@ public class RegisterUserService_RegisterAsyncTests
     private readonly Mock<IUserRepository> _userRepository = new();
     private readonly Mock<IRoleRepository> _roleRepository = new();
     private readonly Mock<IPasswordHasher> _passwordHasher = new();
-    private readonly Mock<IUnitOfWork> _unitOfWork = new();
+    private readonly Mock<IUserUnitOfWork> _unitOfWork = new();
 
     private IRegisterUserService CreateService()
         => new Application.Services.RegisterUserService(

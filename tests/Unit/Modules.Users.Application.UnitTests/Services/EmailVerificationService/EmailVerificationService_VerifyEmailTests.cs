@@ -1,12 +1,12 @@
 using FluentAssertions;
 using Modules.Users.Application.Contracts;
+using Modules.Users.Domain;
 using Modules.Users.Domain.Roles.ValueObjects;
 using Modules.Users.Domain.Users;
 using Modules.Users.Domain.Users.Exceptions;
 using Modules.Users.Domain.Users.Repositories;
 using Modules.Users.Domain.Users.ValueObjects;
 using Moq;
-using SharedKernel.Infrastructure;
 
 namespace Modules.Users.Application.UnitTests.Services.EmailVerificationService;
 
@@ -15,7 +15,7 @@ public class EmailVerificationService_VerifyEmailTests
     private readonly Mock<IUserRepository> _userRepository = new();
     private readonly Mock<ITokenGenerator> _tokenGenerator = new();
     private readonly Mock<ITokenStore<Guid>> _tokenStore = new();
-    private readonly Mock<IUnitOfWork> _unitOfWork = new();
+    private readonly Mock<IUserUnitOfWork> _unitOfWork = new();
 
     private Application.Services.EmailVerificationService CreateService()
         => new(
