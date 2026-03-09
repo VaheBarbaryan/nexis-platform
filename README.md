@@ -19,9 +19,15 @@ Nexis is a high-throughput social platform backend demonstrating production-grad
 ---
 
 ## Architecture
-The system is implemented as a modular monolith following DDD principles, designed to migrate to microservices as demand grows.
 
-Detailed architecture and design decisions are available in the `/docs` directory.
+The system is structured as a **modular monolith** with clear module boundaries, making it straightforward to extract individual services when needed.
+
+Key patterns in use:
+- **Domain-Driven Design** — aggregates, domain events, value objects
+- **Transactional Outbox** — reliable event publishing without dual-write issues
+- **Outbox + Kafka** — at-least-once delivery with idempotent consumers
+
+Detailed architecture diagrams and design decisions are available in the [`/docs`](./docs) directory.
 
 ---
 
