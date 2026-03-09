@@ -48,6 +48,7 @@
 - *(adr)* Add ADR-004 for Github CI pipeline
 - Add license badge to README
 - *(adr)* Add module-based database schema decision record
+- Add transactional outbox pattern diagram
 
 ### 🧪 Testing
 
@@ -83,3 +84,4 @@
 - *(changelog)* Update changelog
 - Add kafka-init topic creation and update solution
 - *(shared)* Add Confluent.Kafka nuget package
+- *(changelog)* Update changelog
