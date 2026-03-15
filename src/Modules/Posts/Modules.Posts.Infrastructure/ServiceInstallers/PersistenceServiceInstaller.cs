@@ -7,6 +7,7 @@ using Modules.Posts.Application.Contracts;
 using Modules.Posts.Application.Services;
 using Modules.Posts.Domain;
 using Modules.Posts.Domain.Authors.Repositories;
+using Modules.Posts.Domain.Posts.Repositories;
 using Modules.Posts.Persistence;
 using Modules.Posts.Persistence.Contexts;
 using Modules.Posts.Persistence.Repositories;
@@ -37,6 +38,9 @@ internal sealed class PersistenceServiceInstaller : IServiceInstaller
         });
 
         services.AddScoped<IAuthorRepository, AuthorRepository>();
+        services.AddScoped<IPostRepository, PostRepository>();
+
+        services.AddScoped<IPostService, PostService>();
         services.AddScoped<IAuthorService, AuthorService>();
         services.AddScoped<IPostUnitOfWork, PostUnitOfWork>();
     }

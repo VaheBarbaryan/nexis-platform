@@ -1,7 +1,9 @@
+using App;
 using App.Exceptions;
 using App.Extensions;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Modules.Posts.Endpoints;
 using Modules.Users.Endpoints;
 using SharedKernel.Application;
 using SharedKernel.Infrastructure.Extensions;
@@ -43,6 +45,7 @@ builder.Services.AddMediatR(cfg =>
 
 builder.Services.InstallModulesFromAssemblies(
     builder.Configuration,
+    AppAssembly.Assembly,
     Modules.Users.Infrastructure.UsersInfrastructureAssembly.Assembly,
     Modules.Emails.Infrastructure.EmailsInfrastructureAssembly.Assembly,
     Modules.Posts.Infrastructure.PostsInfrastructureAssembly.Assembly
@@ -72,6 +75,6 @@ app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
-app.MapEndpoints(UsersEndpointsAssembly.Assembly);
+app.MapEndpoints(UsersEndpointsAssembly.Assembly, PostsEndpointsAssembly.Assembly);
 
 await app.RunAsync();

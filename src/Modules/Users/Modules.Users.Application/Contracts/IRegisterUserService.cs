@@ -1,5 +1,3 @@
-using Modules.Users.Domain.Users;
-
 namespace Modules.Users.Application.Contracts;
 
 public interface IRegisterUserService

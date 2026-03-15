@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Common\SharedKernel\SharedKernel.csproj" />
+      <ProjectReference Include="..\Modules.Posts.Application\Modules.Posts.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" />
+    </ItemGroup>
+
+</Project>

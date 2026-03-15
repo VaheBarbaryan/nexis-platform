@@ -19,7 +19,8 @@ public class DomainEventsAccessor : IDomainEventsAccessor
     {
         var domainEntities = _dbContext.ChangeTracker
             .Entries<IAggregateRoot>()
-            .Where(x => x.Entity.DomainEvents.Count != 0).ToList();
+            .Where(x => x.Entity.DomainEvents.Count != 0)
+            .ToList();
 
         return domainEntities
             .SelectMany(x => x.Entity.DomainEvents)
