@@ -64,9 +64,11 @@ public sealed class Post : AggregateRoot<PostId>, ISoftDeletable
         RaiseDomainEvent(new PostUpdatedDomainEvent(Id.Value, AuthorId.Value, Content, UpdatedAt));
     }
 
-    public void Delete()
+    public void Delete(AuthorId requestingAuthorId)
     {
         if (IsDeleted) return;
+
+        CheckRule(new PostMustBelongToAuthorRule(AuthorId, requestingAuthorId));
 
         var now = DateTimeOffset.UtcNow;
         DeletedAt = now;
