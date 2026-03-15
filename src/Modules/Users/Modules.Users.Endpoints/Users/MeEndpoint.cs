@@ -13,15 +13,8 @@ public class MeEndpoint : IEndpoint
     {
         app.MapGet("/api/me", (ICurrentUser currentUser) =>
             {
-                if (currentUser.Id is null)
-                {
-                    return Results.Problem(
-                        statusCode: StatusCodes.Status401Unauthorized,
-                        title: "Unauthorized");
-                }
-
                 var response = new UserResponse(
-                    Id: currentUser.Id.Value.ToString(),
+                    Id: currentUser.Id!.Value.ToString(),
                     Email: currentUser.Email,
                     Username: currentUser.Username
                 );

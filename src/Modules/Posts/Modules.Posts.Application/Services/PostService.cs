@@ -48,4 +48,16 @@ public sealed class PostService : IPostService
 
         return post;
     }
+
+    public async Task DeleteAsync(Guid authorId, Guid postId, CancellationToken ct)
+    {
+        var post = await _postRepository.GetByIdAsync(new PostId(postId), ct);
+
+        if (post is null)
+            throw new PostNotFoundException();
+
+        post.Delete(new AuthorId(authorId));
+
+        await _unitOfWork.CommitAsync(ct);
+    }
 }

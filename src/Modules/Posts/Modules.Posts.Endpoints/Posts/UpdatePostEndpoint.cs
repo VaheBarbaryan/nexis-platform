@@ -29,15 +29,8 @@ public sealed class UpdatePostEndpoint : IEndpoint
                     return Results.ValidationProblem(validationResult.ToDictionary());
                 }
 
-                if (currentUser.Id is null)
-                {
-                    return Results.Problem(
-                        statusCode: StatusCodes.Status401Unauthorized,
-                        title: "Unauthorized");
-                }
-
                 var updatedPost =
-                    await service.UpdateAsync(currentUser.Id.Value, id, request.Content, cancellationToken);
+                    await service.UpdateAsync(currentUser.Id!.Value, id, request.Content, cancellationToken);
 
                 return Results.Ok(updatedPost);
             })

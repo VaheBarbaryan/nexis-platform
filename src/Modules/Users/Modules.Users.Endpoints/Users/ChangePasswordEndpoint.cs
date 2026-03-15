@@ -21,13 +21,6 @@ public class ChangePasswordEndpoint : IEndpoint
                 ICurrentUser currentUser,
                 CancellationToken cancellationToken) =>
             {
-                if (currentUser.Id is null)
-                {
-                    return Results.Problem(
-                        statusCode: StatusCodes.Status401Unauthorized,
-                        title: "Unauthorized");
-                }
-
                 var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
                 if (!validationResult.IsValid)
@@ -36,7 +29,7 @@ public class ChangePasswordEndpoint : IEndpoint
                 }
 
                 await passwordService.ChangePasswordAsync(
-                    currentUser.Id.Value,
+                    currentUser.Id!.Value,
                     request.CurrentPassword,
                     request.NewPassword,
                     cancellationToken);

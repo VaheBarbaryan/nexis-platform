@@ -28,14 +28,7 @@ public sealed class CreatePostEndpoint : IEndpoint
                     return Results.ValidationProblem(validationResult.ToDictionary());
                 }
 
-                if (currentUser.Id is null)
-                {
-                    return Results.Problem(
-                        statusCode: StatusCodes.Status401Unauthorized,
-                        title: "Unauthorized");
-                }
-
-                var result = await service.CreateAsync(currentUser.Id.Value, request.Content, cancellationToken);
+                var result = await service.CreateAsync(currentUser.Id!.Value, request.Content, cancellationToken);
 
                 return Results.Created("/api/posts", result);
             })
