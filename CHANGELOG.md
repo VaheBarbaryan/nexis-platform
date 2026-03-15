@@ -27,6 +27,7 @@
 - *(users)* Raise `UserEmailVerifiedDomainEvent` and publish `UserEventMessage` to kafka
 - *(posts)* Sync from user.events kafka topics
 - *(posts)* Add post create endpoint
+- *(posts)* Add update post endpoint with author ownership validation
 
 ### 🐛 Bug Fixes
 
@@ -66,6 +67,7 @@
 - *(users)* Add unit tests for change password flow
 - *(users)* Update unit tests to mock correct unit of work instance
 - *(posts)* Add post aggregate unit tests
+- *(posts)* Add unit tests for post update method
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -89,5 +91,6 @@
 - *(changelog)* Update changelog
 - Add kafka-init topic creation and update solution
 - *(shared)* Add Confluent.Kafka nuget package
+- *(changelog)* Update changelog
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
