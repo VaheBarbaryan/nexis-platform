@@ -123,7 +123,7 @@ public sealed class PostTests
         // Arrange
         var authorId = new AuthorId(Guid.NewGuid());
         var post = Post.Create(authorId, "Hello world");
-        post.Delete();
+        post.Delete(authorId);
         post.ClearDomainEvents();
 
         // Act
@@ -187,12 +187,13 @@ public sealed class PostTests
     public void Delete_Should_Set_DeletedAt_And_Mark_As_Deleted()
     {
         // Arrange
-        var post = Post.Create(new AuthorId(Guid.NewGuid()), "Hello world");
+        var authorId = new AuthorId(Guid.NewGuid());
+        var post = Post.Create(authorId, "Hello world");
         post.ClearDomainEvents();
 
         // Act
         var before = DateTimeOffset.UtcNow;
-        post.Delete();
+        post.Delete(authorId);
         var after = DateTimeOffset.UtcNow;
 
         // Assert
@@ -205,11 +206,12 @@ public sealed class PostTests
     public void Delete_Should_Raise_PostDeletedDomainEvent()
     {
         // Arrange
-        var post = Post.Create(new AuthorId(Guid.NewGuid()), "Hello world");
+        var authorId = new AuthorId(Guid.NewGuid());
+        var post = Post.Create(authorId, "Hello world");
         post.ClearDomainEvents();
 
         // Act
-        post.Delete();
+        post.Delete(authorId);
 
         // Assert
         post.DomainEvents
@@ -221,16 +223,31 @@ public sealed class PostTests
     public void Delete_Should_Be_Idempotent_When_Called_Twice()
     {
         // Arrange
-        var post = Post.Create(new AuthorId(Guid.NewGuid()), "Hello world");
+        var authorId = new AuthorId(Guid.NewGuid());
+        var post = Post.Create(authorId, "Hello world");
         post.ClearDomainEvents();
 
         // Act
-        post.Delete();
+        post.Delete(authorId);
         var firstDeletedAt = post.DeletedAt;
-        post.Delete();
+        post.Delete(authorId);
 
         // Assert
         post.DeletedAt.Should().Be(firstDeletedAt);
         post.DomainEvents.Should().HaveCount(1); // event raised only once
+    }
+
+    [Fact]
+    public void Delete_Should_Throw_When_Author_Does_Not_Own_Post()
+    {
+        // Arrange
+        var post = Post.Create(new AuthorId(Guid.NewGuid()), "Hello world");
+        var differentAuthorId = new AuthorId(Guid.NewGuid());
+
+        // Act
+        var action = () => post.Delete(differentAuthorId);
+
+        // Assert
+        action.Should().Throw<BusinessRuleValidationException>();
     }
 }
