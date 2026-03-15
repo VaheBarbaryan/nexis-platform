@@ -21,7 +21,19 @@ public sealed class PostService : IPostService
         _unitOfWork = postUnitOfWork;
     }
 
-    public async Task<Post> CreateAsync(Guid authorId, string content, CancellationToken ct)
+    public async Task<Post> GetByIdAsync(Guid postId, CancellationToken ct = default)
+    {
+        var post = await _postRepository.GetByIdAsync(new PostId(postId), ct);
+
+        if (post is null)
+        {
+            throw new PostNotFoundException();
+        }
+
+        return post;
+    }
+
+    public async Task<Post> CreateAsync(Guid authorId, string content, CancellationToken ct = default)
     {
         var post = Post.Create(new AuthorId(authorId), content);
         _postRepository.Add(post);
@@ -31,7 +43,7 @@ public sealed class PostService : IPostService
         return post;
     }
 
-    public async Task<Post> UpdateAsync(Guid authorId, Guid postId, string content, CancellationToken ct)
+    public async Task<Post> UpdateAsync(Guid authorId, Guid postId, string content, CancellationToken ct = default)
     {
         var postIdVo = new PostId(postId);
         var authorIdVo = new AuthorId(authorId);
@@ -49,7 +61,7 @@ public sealed class PostService : IPostService
         return post;
     }
 
-    public async Task DeleteAsync(Guid authorId, Guid postId, CancellationToken ct)
+    public async Task DeleteAsync(Guid authorId, Guid postId, CancellationToken ct = default)
     {
         var post = await _postRepository.GetByIdAsync(new PostId(postId), ct);
 

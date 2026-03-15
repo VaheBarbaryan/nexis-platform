@@ -4,9 +4,11 @@ namespace Modules.Posts.Application.Contracts;
 
 public interface IPostService
 {
-    Task<Post> CreateAsync(Guid authorId, string content, CancellationToken ct);
+    Task<Post> GetByIdAsync(Guid postId, CancellationToken ct = default);
 
-    Task<Post> UpdateAsync(Guid authorId, Guid postId, string content, CancellationToken ct);
+    Task<Post> CreateAsync(Guid authorId, string content, CancellationToken ct = default);
 
-    Task DeleteAsync(Guid authorId, Guid postId, CancellationToken ct);
+    Task<Post> UpdateAsync(Guid authorId, Guid postId, string content, CancellationToken ct = default);
+
+    Task DeleteAsync(Guid authorId, Guid postId, CancellationToken ct = default);
 }
