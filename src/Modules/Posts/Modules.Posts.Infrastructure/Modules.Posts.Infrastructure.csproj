@@ -2,13 +2,21 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\Common\SharedKernel\SharedKernel.csproj" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
       <ProjectReference Include="..\..\Users\Modules.Users.IntegrationEvents\Modules.Users.IntegrationEvents.csproj" />
       <ProjectReference Include="..\Modules.Posts.Application\Modules.Posts.Application.csproj" />
+      <ProjectReference Include="..\Modules.Posts.Endpoints\Modules.Posts.Endpoints.csproj" />
       <ProjectReference Include="..\Modules.Posts.Persistence\Modules.Posts.Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Confluent.Kafka" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="FluentValidation.DependencyInjectionExtensions">
+        <HintPath>..\..\..\..\..\..\.nuget\packages\fluentvalidation.dependencyinjectionextensions\12.1.1\lib\net8.0\FluentValidation.DependencyInjectionExtensions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

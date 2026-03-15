@@ -4,7 +4,6 @@
         <PackageReference Include="coverlet.collector" />
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="Moq" />
         <PackageReference Include="xunit" />
         <PackageReference Include="xunit.runner.visualstudio" />
     </ItemGroup>
@@ -14,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\src\Modules\Users\Modules.Users.Application\Modules.Users.Application.csproj" />
+      <ProjectReference Include="..\..\..\src\Modules\Posts\Modules.Posts.Domain\Modules.Posts.Domain.csproj" />
     </ItemGroup>
 
 </Project>
