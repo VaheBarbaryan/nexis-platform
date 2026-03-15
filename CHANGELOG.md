@@ -26,12 +26,16 @@
 - *(shared)* Add `KafkaConsumerConfigFactory`, topics and consume logging
 - *(users)* Raise `UserEmailVerifiedDomainEvent` and publish `UserEventMessage` to kafka
 - *(posts)* Sync from user.events kafka topics
+- *(posts)* Add post create endpoint
 
 ### 🐛 Bug Fixes
 
 - *(users)* Provide correct return types and params for IEmailVerificationTokenStore
 - *(users)* Prevent BackgroundService from blocking host startup
 - *(users)* Store userId instead of notification id in redis
+- *(posts)* Resolve central package management version conflict in unit test project
+- *(posts)* Remove xunit version from unit test csproj for central package management
+- *(posts)* Add missing FluentValidation DI extensions package reference
 
 ### 🚜 Refactor
 
@@ -61,6 +65,7 @@
 - *(users)* Add unit tests for reset password flow
 - *(users)* Add unit tests for change password flow
 - *(users)* Update unit tests to mock correct unit of work instance
+- *(posts)* Add post aggregate unit tests
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -84,4 +89,5 @@
 - *(changelog)* Update changelog
 - Add kafka-init topic creation and update solution
 - *(shared)* Add Confluent.Kafka nuget package
+- *(changelog)* Update changelog
 - *(changelog)* Update changelog
