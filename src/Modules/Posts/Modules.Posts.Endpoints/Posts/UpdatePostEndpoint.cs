@@ -10,14 +10,15 @@ using SharedKernel.Domain.Endpoints;
 
 namespace Modules.Posts.Endpoints.Posts;
 
-public sealed class CreatePostEndpoint : IEndpoint
+public sealed class UpdatePostEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/posts", async (
+        app.MapPut("/api/posts/{id:guid}", async (
+                Guid id,
                 ICurrentUser currentUser,
-                [FromBody] CreatePostRequest request,
-                IValidator<CreatePostRequest> validator,
+                [FromBody] UpdatePostRequest request,
+                IValidator<UpdatePostRequest> validator,
                 IPostService service,
                 CancellationToken cancellationToken) =>
             {
@@ -35,12 +36,13 @@ public sealed class CreatePostEndpoint : IEndpoint
                         title: "Unauthorized");
                 }
 
-                var result = await service.CreateAsync(currentUser.Id.Value, request.Content, cancellationToken);
+                var updatedPost =
+                    await service.UpdateAsync(currentUser.Id.Value, id, request.Content, cancellationToken);
 
-                return Results.Created("/api/posts", result);
+                return Results.Ok(updatedPost);
             })
             .RequireAuthorization()
             .WithTags(Tags.Posts)
-            .WithName("CreatePost");
+            .WithName("UpdatePost");
     }
 }

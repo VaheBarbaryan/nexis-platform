@@ -80,6 +80,107 @@ public sealed class PostTests
         action.Should().Throw<BusinessRuleValidationException>();
     }
 
+    // -- Update -----------------------------------------------
+
+    [Fact]
+    public void Update_Should_Update_Content_And_UpdatedAt()
+    {
+        // Arrange
+        var authorId = new AuthorId(Guid.NewGuid());
+        var post = Post.Create(authorId, "Hello world");
+        post.ClearDomainEvents();
+
+        // Act
+        var before = DateTimeOffset.UtcNow;
+        post.Update(authorId, "Updated content");
+        var after = DateTimeOffset.UtcNow;
+
+        // Assert
+        post.Content.Should().Be("Updated content");
+        post.UpdatedAt.Should().BeOnOrAfter(before).And.BeOnOrBefore(after);
+    }
+
+    [Fact]
+    public void Update_Should_Raise_PostUpdatedDomainEvent()
+    {
+        // Arrange
+        var authorId = new AuthorId(Guid.NewGuid());
+        var post = Post.Create(authorId, "Hello world");
+        post.ClearDomainEvents();
+
+        // Act
+        post.Update(authorId, "Updated content");
+
+        // Assert
+        post.DomainEvents
+            .Should().ContainSingle()
+            .Which.Should().BeOfType<PostUpdatedDomainEvent>();
+    }
+
+    [Fact]
+    public void Update_Should_Throw_When_Post_Is_Deleted()
+    {
+        // Arrange
+        var authorId = new AuthorId(Guid.NewGuid());
+        var post = Post.Create(authorId, "Hello world");
+        post.Delete();
+        post.ClearDomainEvents();
+
+        // Act
+        var action = () => post.Update(authorId, "Updated content");
+
+        // Assert
+        action.Should().Throw<BusinessRuleValidationException>();
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void Update_Should_Throw_When_Content_Is_Empty(string content)
+    {
+        // Arrange
+        var authorId = new AuthorId(Guid.NewGuid());
+        var post = Post.Create(authorId, "Hello world");
+        post.ClearDomainEvents();
+
+        // Act
+        var action = () => post.Update(authorId, content);
+
+        // Assert
+        action.Should().Throw<BusinessRuleValidationException>();
+    }
+
+    [Fact]
+    public void Update_Should_Throw_When_Content_Exceeds_Max_Length()
+    {
+        // Arrange
+        var authorId = new AuthorId(Guid.NewGuid());
+        var post = Post.Create(authorId, "Hello world");
+        post.ClearDomainEvents();
+        var content = new string('a', 501);
+
+        // Act
+        var action = () => post.Update(authorId, content);
+
+        // Assert
+        action.Should().Throw<BusinessRuleValidationException>();
+    }
+
+    [Fact]
+    public void Update_Should_Throw_When_Author_Does_Not_Own_Post()
+    {
+        // Arrange
+        var post = Post.Create(new AuthorId(Guid.NewGuid()), "Hello world");
+        post.ClearDomainEvents();
+        var differentAuthorId = new AuthorId(Guid.NewGuid());
+
+        // Act
+        var action = () => post.Update(differentAuthorId, "Updated content");
+
+        // Assert
+        action.Should().Throw<BusinessRuleValidationException>();
+    }
+
     // -- Delete -----------------------------------------------
 
     [Fact]

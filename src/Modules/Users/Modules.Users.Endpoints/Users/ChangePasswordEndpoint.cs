@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Modules.Users.Application.Contracts;
 using Modules.Users.Endpoints.Users.Contracts;
+using SharedKernel.Application.Auth;
 using SharedKernel.Domain.Endpoints;
 
 namespace Modules.Users.Endpoints.Users;
@@ -18,26 +18,14 @@ public class ChangePasswordEndpoint : IEndpoint
                 [FromBody] ChangePasswordRequest request,
                 IValidator<ChangePasswordRequest> validator,
                 IPasswordService passwordService,
-                ClaimsPrincipal user,
+                ICurrentUser currentUser,
                 CancellationToken cancellationToken) =>
             {
-                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier)
-                             ?? user.FindFirstValue("sub");
-
-                if (string.IsNullOrEmpty(userId))
+                if (currentUser.Id is null)
                 {
                     return Results.Problem(
                         statusCode: StatusCodes.Status401Unauthorized,
-                        title: "User identification failed",
-                        detail: "Unable to extract user identifier from authentication token");
-                }
-
-                if (!Guid.TryParse(userId, out var parsedUserId))
-                {
-                    return Results.Problem(
-                        statusCode: StatusCodes.Status400BadRequest,
-                        title: "Invalid user identifier",
-                        detail: "User identifier is not a valid GUID");
+                        title: "Unauthorized");
                 }
 
                 var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -48,7 +36,7 @@ public class ChangePasswordEndpoint : IEndpoint
                 }
 
                 await passwordService.ChangePasswordAsync(
-                    parsedUserId,
+                    currentUser.Id.Value,
                     request.CurrentPassword,
                     request.NewPassword,
                     cancellationToken);

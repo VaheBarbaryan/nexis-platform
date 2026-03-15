@@ -25,6 +25,7 @@ internal sealed class GlobalExceptionHandler(
             DomainValidationException => StatusCodes.Status400BadRequest,
             ValidationException => StatusCodes.Status400BadRequest,
             InvalidCredentialException => StatusCodes.Status400BadRequest,
+            BusinessRuleValidationException => StatusCodes.Status403Forbidden,
             NotFoundException => StatusCodes.Status404NotFound,
             ConflictException => StatusCodes.Status409Conflict,
             UnauthorizedAccessException => StatusCodes.Status401Unauthorized,

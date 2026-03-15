@@ -1,8 +1,8 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Modules.Users.Endpoints.Users.Contracts;
+using SharedKernel.Application.Auth;
 using SharedKernel.Domain.Endpoints;
 
 namespace Modules.Users.Endpoints.Users;
@@ -11,23 +11,19 @@ public class MeEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/me", (ClaimsPrincipal user) =>
+        app.MapGet("/api/me", (ICurrentUser currentUser) =>
             {
-                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier)
-                             ?? user.FindFirstValue("sub");
-
-                if (string.IsNullOrEmpty(userId))
+                if (currentUser.Id is null)
                 {
                     return Results.Problem(
                         statusCode: StatusCodes.Status401Unauthorized,
-                        title: "User identification failed",
-                        detail: "Unable to extract user identifier from authentication token");
+                        title: "Unauthorized");
                 }
 
                 var response = new UserResponse(
-                    Id: userId,
-                    Email: user.FindFirstValue("email"),
-                    Username: user.FindFirstValue("username")
+                    Id: currentUser.Id.Value.ToString(),
+                    Email: currentUser.Email,
+                    Username: currentUser.Username
                 );
                 return Results.Ok(response);
             })
