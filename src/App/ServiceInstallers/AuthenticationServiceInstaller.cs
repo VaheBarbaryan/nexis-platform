@@ -2,7 +2,9 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Modules.Users.Application.Options;
+using SharedKernel.Application.Auth;
 using SharedKernel.Infrastructure;
+using SharedKernel.Infrastructure.Auth;
 
 namespace App.ServiceInstallers;
 
@@ -10,12 +12,7 @@ internal sealed class AuthenticationServiceInstaller : IModuleInstaller
 {
     public void Install(IServiceCollection services, IConfiguration configuration)
     {
-        var pepper = configuration["Security:PasswordPepper"];
-
-        if (string.IsNullOrWhiteSpace(pepper))
-        {
-            throw new InvalidOperationException("Security:PasswordPepper configuration value is missing.");
-        }
+        services.AddScoped<ICurrentUser, CurrentUser>();
 
         services
             .AddOptions<JwtOptions>()

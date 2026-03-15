@@ -51,6 +51,19 @@ public sealed class Post : AggregateRoot<PostId>, ISoftDeletable
         return post;
     }
 
+    public void Update(AuthorId requestingAuthorId, string content)
+    {
+        CheckRule(new DeletedPostCannotBeModifiedRule(IsDeleted));
+        CheckRule(new PostMustBelongToAuthorRule(AuthorId, requestingAuthorId));
+        CheckRule(new ContentCannotBeEmptyRule(content));
+        CheckRule(new ContentMaxLengthRule(content));
+
+        Content = content;
+        UpdatedAt = DateTimeOffset.UtcNow;
+
+        RaiseDomainEvent(new PostUpdatedDomainEvent(Id.Value, AuthorId.Value, Content, UpdatedAt));
+    }
+
     public void Delete()
     {
         if (IsDeleted) return;
