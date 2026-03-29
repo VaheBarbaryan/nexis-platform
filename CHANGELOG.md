@@ -30,6 +30,7 @@
 - *(posts)* Add update post endpoint with author ownership validation
 - *(posts)* Add delete post endpoint with author ownership validation
 - *(posts)* Add get post by id endpoint
+- *(posts)* Implement cursor-based paginated get posts endpoint
 
 ### 🐛 Bug Fixes
 
@@ -94,6 +95,7 @@
 - *(changelog)* Update changelog
 - Add kafka-init topic creation and update solution
 - *(shared)* Add Confluent.Kafka nuget package
+- *(changelog)* Update changelog
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
