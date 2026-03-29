@@ -5,6 +5,7 @@ using Modules.Posts.Domain.Posts;
 using Modules.Posts.Domain.Posts.Exceptions;
 using Modules.Posts.Domain.Posts.Repositories;
 using Modules.Posts.Domain.Posts.ValueObjects;
+using SharedKernel.Application.Pagination;
 
 namespace Modules.Posts.Application.Services;
 
@@ -19,6 +20,18 @@ public sealed class PostService : IPostService
     {
         _postRepository = postRepository;
         _unitOfWork = postUnitOfWork;
+    }
+
+    public async Task<CursorResponse<PostSummary>> GetPostsAsync(string? cursor, int limit = 10,
+        CancellationToken ct = default)
+    {
+        var posts = await _postRepository.GetPostsAsync(cursor, limit, ct);
+
+        return CursorResponse.From(
+            posts,
+            limit,
+            p => new PostSummary(p.Id.Value, p.AuthorId.Value, p.Content, p.CreatedAt),
+            p => new Cursor(p.CreatedAt, p.Id.Value).Encode());
     }
 
     public async Task<Post> GetByIdAsync(Guid postId, CancellationToken ct = default)
