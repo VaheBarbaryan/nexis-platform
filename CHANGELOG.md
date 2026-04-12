@@ -31,6 +31,7 @@
 - *(posts)* Add delete post endpoint with author ownership validation
 - *(posts)* Add get post by id endpoint
 - *(posts)* Implement cursor-based paginated get posts endpoint
+- *(posts)* Implement like/unlike endpoints with likes count on get
 
 ### 🐛 Bug Fixes
 
@@ -72,6 +73,7 @@
 - *(posts)* Add post aggregate unit tests
 - *(posts)* Add unit tests for post update method
 - *(posts)* Add unit tests for post delete method
+- *(posts)* Add unit tests for post like/unlike logic
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -101,3 +103,5 @@
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
+- *(changelog)* Update changelog
+- Update tests solution folder
