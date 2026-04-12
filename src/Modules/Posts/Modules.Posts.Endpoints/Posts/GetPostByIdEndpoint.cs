@@ -19,11 +19,12 @@ public sealed class GetPostByIdEndpoint : IEndpoint
                 var post = await service.GetByIdAsync(id, cancellationToken);
 
                 return Results.Ok(new PostResponse(
-                    post.Id.Value,
-                    post.AuthorId.Value,
+                    post.Id,
+                    post.AuthorId,
                     post.Content,
                     post.CreatedAt,
-                    post.UpdatedAt));
+                    post.UpdatedAt,
+                    post.LikesCount));
             })
             .WithTags(Tags.Posts)
             .WithName("GetPostById");

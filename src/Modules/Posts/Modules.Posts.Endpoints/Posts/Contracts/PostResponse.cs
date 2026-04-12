@@ -5,4 +5,5 @@ public sealed record PostResponse(
     Guid AuthorId,
     string Content,
     DateTimeOffset CreatedAt,
-    DateTimeOffset UpdatedAt);
+    DateTimeOffset UpdatedAt,
+    long LikesCount);

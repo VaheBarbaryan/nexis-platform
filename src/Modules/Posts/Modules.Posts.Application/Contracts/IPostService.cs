@@ -7,11 +7,14 @@ public interface IPostService
 {
     Task<CursorResponse<PostSummary>> GetPostsAsync(string? cursor, int limit = 10, CancellationToken ct = default);
 
-    Task<Post> GetByIdAsync(Guid postId, CancellationToken ct = default);
+    Task<PostDetail> GetByIdAsync(Guid postId, CancellationToken ct = default);
 
     Task<Post> CreateAsync(Guid authorId, string content, CancellationToken ct = default);
 
     Task<Post> UpdateAsync(Guid authorId, Guid postId, string content, CancellationToken ct = default);
 
     Task DeleteAsync(Guid authorId, Guid postId, CancellationToken ct = default);
+
+    Task LikeAsync(Guid authorId, Guid postId, CancellationToken ct = default);
+    Task UnlikeAsync(Guid authorId, Guid postId, CancellationToken ct = default);
 }

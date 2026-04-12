@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Modules.Posts.Domain.Authors;
+using Modules.Posts.Domain.Likes;
 using Modules.Posts.Domain.Posts;
 using SharedKernel.Domain.Entities;
 
@@ -10,6 +11,8 @@ public sealed class PostsDbContext : DbContext
     public DbSet<Author> Authors { get; set; }
 
     public DbSet<Post> Posts { get; set; }
+
+    public DbSet<PostLike> PostLikes { get; set; }
 
     public PostsDbContext(DbContextOptions<PostsDbContext> options) : base(options)
     {
