@@ -1,0 +1,28 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Modules.Posts.Application.Contracts;
+using SharedKernel.Application.Auth;
+using SharedKernel.Domain.Endpoints;
+
+namespace Modules.Posts.Endpoints.Posts;
+
+public sealed class UnlikePostEndpoint : IEndpoint
+{
+    public void MapEndpoint(IEndpointRouteBuilder app)
+    {
+        app.MapDelete("/api/posts/{id:guid}/like", async (
+                ICurrentUser currentUser,
+                Guid id,
+                IPostService service,
+                CancellationToken cancellationToken) =>
+            {
+                await service.UnlikeAsync(currentUser.Id!.Value, id, cancellationToken);
+
+                return Results.NoContent();
+            })
+            .RequireAuthorization()
+            .WithTags(Tags.Posts)
+            .WithName("UnlikePost");
+    }
+}
