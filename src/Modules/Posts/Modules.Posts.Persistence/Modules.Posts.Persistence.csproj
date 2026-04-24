@@ -10,6 +10,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\SharedKernel\SharedKernel.csproj" />
     <ProjectReference Include="..\Modules.Posts.Domain\Modules.Posts.Domain.csproj"/>
   </ItemGroup>
 </Project>

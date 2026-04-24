@@ -34,13 +34,16 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterModule(new Modules.Users.Infrastructure.Outbox.OutboxModule());
     containerBuilder.RegisterModule(new Modules.Users.Infrastructure.Redis.RedisModule());
+    containerBuilder.RegisterModule(new Modules.Posts.Infrastructure.Outbox.OutboxModule());
 });
 
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblies(
         Modules.Users.Application.UsersApplicationAssembly.Assembly,
-        Modules.Users.Infrastructure.UsersInfrastructureAssembly.Assembly);
+        Modules.Users.Infrastructure.UsersInfrastructureAssembly.Assembly,
+        Modules.Posts.Application.PostsApplicationAssembly.Assembly,
+        Modules.Posts.Infrastructure.PostsInfrastructureAssembly.Assembly);
 });
 
 builder.Services.InstallModulesFromAssemblies(

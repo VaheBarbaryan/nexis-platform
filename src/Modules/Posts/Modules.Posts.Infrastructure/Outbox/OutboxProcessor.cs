@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Modules.Users.Persistence.Contexts;
+using Modules.Posts.Persistence.Contexts;
 using Newtonsoft.Json;
 using SharedKernel.Application.Events;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
 using SharedKernel.Infrastructure.Outbox;
 
-namespace Modules.Users.Infrastructure.Outbox;
+namespace Modules.Posts.Infrastructure.Outbox;
 
 public sealed class OutboxProcessor : BackgroundService
 {
@@ -34,7 +34,7 @@ public sealed class OutboxProcessor : BackgroundService
     public OutboxProcessor(
         IServiceScopeFactory serviceScopeFactory,
         IMediator mediator,
-        [FromKeyedServices("users")] IDomainNotificationsMapper domainNotificationsMapper,
+        [FromKeyedServices("posts")] IDomainNotificationsMapper domainNotificationsMapper,
         ILogger<OutboxProcessor> logger)
     {
         _serviceScopeFactory = serviceScopeFactory;
@@ -55,7 +55,7 @@ public sealed class OutboxProcessor : BackgroundService
     private async Task ProcessAsync(CancellationToken ct)
     {
         using var scope = _serviceScopeFactory.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+        var db = scope.ServiceProvider.GetRequiredService<PostsDbContext>();
 
         var messages = await db.Set<OutboxMessage>()
             .Where(x => x.ProcessedOnUtc == null)
@@ -95,7 +95,6 @@ public sealed class OutboxProcessor : BackgroundService
                     success = true;
                     break;
                 }
-
                 catch (HttpRequestException ex)
                 {
                     message.RetryCount = attempt + 1;
@@ -111,21 +110,15 @@ public sealed class OutboxProcessor : BackgroundService
 
                 if (attempt < MaxRetries - 1)
                 {
-                    // Log and wait for retry
                     await Task.Delay(RetryDelays[attempt], ct);
                 }
                 else
                 {
-                    // Max retries reached → mark as dead-letter
                     message.ProcessedOnUtc = DateTime.UtcNow;
-                    // Optional: move to DeadLetter table
                 }
             }
 
-            if (!success && message.RetryCount >= MaxRetries)
-            {
-                // optional: move message to dead-letter table
-            }
+            _ = success;
         }
 
         await db.SaveChangesAsync(ct);

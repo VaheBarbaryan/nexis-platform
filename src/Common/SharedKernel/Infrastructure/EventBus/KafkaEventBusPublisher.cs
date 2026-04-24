@@ -1,14 +1,14 @@
 using Confluent.Kafka;
-using Microsoft.Extensions.Options;
-using SharedKernel.Infrastructure.EventBus;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SharedKernel.Domain.Events;
 using SharedKernel.Infrastructure.Exceptions;
+using SharedKernel.Infrastructure.Messaging;
 using SharedKernel.Infrastructure.Messaging.Logging;
 using SharedKernel.Infrastructure.Serialization;
 
-namespace Modules.Users.Infrastructure.Kafka;
+namespace SharedKernel.Infrastructure.EventBus;
 
 public sealed class KafkaEventBusPublisher : IEventBusPublisher, IDisposable
 {
@@ -83,7 +83,6 @@ public sealed class KafkaEventBusPublisher : IEventBusPublisher, IDisposable
         }
         catch (ProduceException<string, string> ex)
         {
-            // In outbox pattern this exception should bubble up → job will retry whole message
             throw new KafkaPublishException($"Failed to publish {typeof(T).Name} to {topic}", ex);
         }
     }

@@ -1,15 +1,15 @@
-using Modules.Users.Persistence.Contexts;
+using Modules.Posts.Persistence.Contexts;
 using SharedKernel.Domain.Aggregates;
 using SharedKernel.Domain.Events;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
 
-namespace Modules.Users.Infrastructure.Events;
+namespace Modules.Posts.Infrastructure.Events;
 
 public class DomainEventsAccessor : IDomainEventsAccessor
 {
-    private readonly UsersDbContext _dbContext;
+    private readonly PostsDbContext _dbContext;
 
-    public DomainEventsAccessor(UsersDbContext dbContext)
+    public DomainEventsAccessor(PostsDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -30,9 +30,9 @@ public class DomainEventsAccessor : IDomainEventsAccessor
     {
         var domainEntities = _dbContext.ChangeTracker
             .Entries<IAggregateRoot>()
-            .Where(x =>  x.Entity.DomainEvents.Count != 0).ToList();
+            .Where(x => x.Entity.DomainEvents.Count != 0)
+            .ToList();
 
-        domainEntities
-            .ForEach(entity => entity.Entity.ClearDomainEvents());
+        domainEntities.ForEach(entity => entity.Entity.ClearDomainEvents());
     }
 }

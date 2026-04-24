@@ -2,9 +2,9 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using Autofac.Core.Activators.Reflection;
 
-namespace Modules.Users.Infrastructure.Configuration;
+namespace SharedKernel.Infrastructure.Autofac;
 
-internal sealed class AllConstructorFinder : IConstructorFinder
+public sealed class AllConstructorFinder : IConstructorFinder
 {
     private static readonly ConcurrentDictionary<Type, ConstructorInfo[]> Cache = new();
 

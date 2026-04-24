@@ -5,7 +5,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Autofac" />
       <PackageReference Include="Confluent.Kafka" />
+      <PackageReference Include="MediatR" />
       <PackageReference Include="MediatR.Contracts" />
       <PackageReference Include="Newtonsoft.Json" />
     </ItemGroup>
