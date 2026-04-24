@@ -32,6 +32,7 @@
 - *(posts)* Add get post by id endpoint
 - *(posts)* Implement cursor-based paginated get posts endpoint
 - *(posts)* Implement like/unlike endpoints with likes count on get
+- *(infra)* Extract shared infra and wire outbox + events for Posts module
 
 ### 🐛 Bug Fixes
 
@@ -105,3 +106,5 @@
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
 - Update tests solution folder
+- *(changelog)* Update changelog
+- Add CLAUDE.md with project guidance for Claude Code
