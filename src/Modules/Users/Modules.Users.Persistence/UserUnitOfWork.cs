@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Modules.Users.Domain;
 using Modules.Users.Persistence.Contexts;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
@@ -9,7 +10,9 @@ public class UserUnitOfWork : IUserUnitOfWork
     private readonly UsersDbContext _dbContext;
     private readonly IDomainEventsDispatcher _domainEventsDispatcher;
 
-    public UserUnitOfWork(UsersDbContext dbContext, IDomainEventsDispatcher domainEventsDispatcher)
+    public UserUnitOfWork(
+        UsersDbContext dbContext,
+        [FromKeyedServices("users")] IDomainEventsDispatcher domainEventsDispatcher)
     {
         _dbContext = dbContext;
         _domainEventsDispatcher = domainEventsDispatcher;

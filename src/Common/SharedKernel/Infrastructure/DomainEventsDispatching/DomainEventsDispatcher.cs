@@ -4,11 +4,10 @@ using MediatR;
 using Newtonsoft.Json;
 using SharedKernel.Application.Events;
 using SharedKernel.Domain.Events;
-using SharedKernel.Infrastructure.DomainEventsDispatching;
 using SharedKernel.Infrastructure.Outbox;
 using SharedKernel.Infrastructure.Serialization;
 
-namespace Modules.Users.Infrastructure.Events;
+namespace SharedKernel.Infrastructure.DomainEventsDispatching;
 
 public sealed class DomainEventsDispatcher : IDomainEventsDispatcher
 {

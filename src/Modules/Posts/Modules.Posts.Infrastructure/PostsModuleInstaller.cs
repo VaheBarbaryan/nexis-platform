@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Modules.Posts.Application;
 using Modules.Posts.Persistence;
 using SharedKernel.Infrastructure;
 using SharedKernel.Infrastructure.Extensions;
@@ -13,6 +14,7 @@ public sealed class PostsModuleInstaller : IModuleInstaller
         services.InstallServicesFromAssemblies(
             configuration,
             PostsInfrastructureAssembly.Assembly,
+            PostsApplicationAssembly.Assembly,
             PostsPersistenceAssembly.Assembly);
     }
 }

@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Modules.Users.Infrastructure.Kafka;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using SharedKernel.Infrastructure;
 using SharedKernel.Infrastructure.EventBus;
+using SharedKernel.Infrastructure.Messaging;
 
 namespace Modules.Users.Infrastructure.ServiceInstallers;
 
@@ -18,6 +19,6 @@ internal sealed class KafkaServiceInstaller : IServiceInstaller
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        services.AddSingleton<IEventBusPublisher, KafkaEventBusPublisher>();
+        services.TryAddSingleton<IEventBusPublisher, KafkaEventBusPublisher>();
     }
 }

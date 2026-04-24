@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using Autofac;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +17,7 @@ using Modules.Users.Persistence.Repositories;
 using SharedKernel.Application;
 using SharedKernel.Infrastructure;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
+using SharedKernel.Infrastructure.Outbox;
 
 namespace Modules.Users.Infrastructure.ServiceInstallers;
 
@@ -49,7 +52,14 @@ internal sealed class PersistenceServiceInstaller : IServiceInstaller
 
         services.AddScoped<RolePermissionSeeder>();
 
-        services.AddScoped<IDomainEventsAccessor, DomainEventsAccessor>();
-        services.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>();
+        services.AddKeyedScoped<IDomainEventsDispatcher>("users", (sp, _) =>
+        {
+            var mediator = sp.GetRequiredService<IMediator>();
+            var scope = sp.GetRequiredService<ILifetimeScope>();
+            var mapper = sp.GetRequiredKeyedService<IDomainNotificationsMapper>("users");
+            var outbox = sp.GetRequiredKeyedService<IOutbox>("users");
+            var dbContext = sp.GetRequiredService<UsersDbContext>();
+            return new DomainEventsDispatcher(mediator, scope, new DomainEventsAccessor(dbContext), mapper, outbox);
+        });
     }
 }

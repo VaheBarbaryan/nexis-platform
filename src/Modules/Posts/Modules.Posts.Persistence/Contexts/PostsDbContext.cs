@@ -3,6 +3,7 @@ using Modules.Posts.Domain.Authors;
 using Modules.Posts.Domain.Likes;
 using Modules.Posts.Domain.Posts;
 using SharedKernel.Domain.Entities;
+using SharedKernel.Infrastructure.Outbox;
 
 namespace Modules.Posts.Persistence.Contexts;
 
@@ -13,6 +14,8 @@ public sealed class PostsDbContext : DbContext
     public DbSet<Post> Posts { get; set; }
 
     public DbSet<PostLike> PostLikes { get; set; }
+
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     public PostsDbContext(DbContextOptions<PostsDbContext> options) : base(options)
     {

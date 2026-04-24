@@ -10,7 +10,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Confluent.Kafka" />
+      <PackageReference Include="Autofac" />
+      <PackageReference Include="Autofac.Extensions.DependencyInjection" />
+      <PackageReference Include="MediatR" />
     </ItemGroup>
 
     <ItemGroup>

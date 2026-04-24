@@ -1,13 +1,13 @@
 using Autofac;
-using Modules.Users.Application;
-using Modules.Users.Persistence.Outbox;
+using Modules.Posts.Application;
+using Modules.Posts.Persistence.Outbox;
 using SharedKernel.Application.Events;
 using SharedKernel.Infrastructure;
 using SharedKernel.Infrastructure.Autofac;
 using SharedKernel.Infrastructure.DomainEventsDispatching;
 using SharedKernel.Infrastructure.Outbox;
 
-namespace Modules.Users.Infrastructure.Outbox;
+namespace Modules.Posts.Infrastructure.Outbox;
 
 public sealed class OutboxModule : Module
 {
@@ -15,13 +15,13 @@ public sealed class OutboxModule : Module
 
     protected override void Load(ContainerBuilder builder)
     {
-        builder.RegisterAssemblyTypes(UsersApplicationAssembly.Assembly)
+        builder.RegisterAssemblyTypes(PostsApplicationAssembly.Assembly)
             .AsClosedTypesOf(typeof(IDomainEventNotification<>))
             .InstancePerDependency()
             .FindConstructorsWith(new AllConstructorFinder());
 
         builder.RegisterType<OutboxAccessor>()
-            .Keyed<IOutbox>("users")
+            .Keyed<IOutbox>("posts")
             .FindConstructorsWith(new AllConstructorFinder())
             .InstancePerLifetimeScope();
 
@@ -29,7 +29,7 @@ public sealed class OutboxModule : Module
         CheckMappings();
 
         builder.RegisterType<DomainNotificationsMapper>()
-            .Keyed<IDomainNotificationsMapper>("users")
+            .Keyed<IDomainNotificationsMapper>("posts")
             .FindConstructorsWith(new AllConstructorFinder())
             .WithParameter("domainNotificationsMap", _domainNotificationsMap)
             .SingleInstance();
@@ -37,7 +37,7 @@ public sealed class OutboxModule : Module
 
     private void CheckMappings()
     {
-        var domainEventNotifications = UsersApplicationAssembly.Assembly
+        var domainEventNotifications = PostsApplicationAssembly.Assembly
             .GetTypes()
             .Where(x => x.GetInterfaces().Contains(typeof(IDomainEventNotification)))
             .ToList();
@@ -64,7 +64,7 @@ public sealed class OutboxModule : Module
 
     private void PopulateDomainNotificationsMap()
     {
-        var domainEventNotifications = UsersApplicationAssembly.Assembly
+        var domainEventNotifications = PostsApplicationAssembly.Assembly
             .GetTypes()
             .Where(t =>
                 !t.IsAbstract &&
