@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Modules.Posts.Domain.Authors;
+using Modules.Posts.Domain.Comments;
 using Modules.Posts.Domain.Likes;
 using Modules.Posts.Domain.Posts;
 using SharedKernel.Domain.Entities;
@@ -14,6 +15,8 @@ public sealed class PostsDbContext : DbContext
     public DbSet<Post> Posts { get; set; }
 
     public DbSet<PostLike> PostLikes { get; set; }
+
+    public DbSet<Comment> Comments { get; set; }
 
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
