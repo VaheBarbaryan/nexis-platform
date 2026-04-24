@@ -33,6 +33,7 @@
 - *(posts)* Implement cursor-based paginated get posts endpoint
 - *(posts)* Implement like/unlike endpoints with likes count on get
 - *(infra)* Extract shared infra and wire outbox + events for Posts module
+- *(posts)* Add Comments aggregate with full CRUD and Kafka events
 
 ### 🐛 Bug Fixes
 
@@ -75,6 +76,7 @@
 - *(posts)* Add unit tests for post update method
 - *(posts)* Add unit tests for post delete method
 - *(posts)* Add unit tests for post like/unlike logic
+- *(posts)* Add unit tests for Comment domain and CommentService
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -108,3 +110,4 @@
 - Update tests solution folder
 - *(changelog)* Update changelog
 - Add CLAUDE.md with project guidance for Claude Code
+- *(changelog)* Update changelog
