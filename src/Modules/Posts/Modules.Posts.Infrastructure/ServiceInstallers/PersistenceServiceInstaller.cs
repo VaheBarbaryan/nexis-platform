@@ -9,6 +9,7 @@ using Modules.Posts.Application.Contracts;
 using Modules.Posts.Application.Services;
 using Modules.Posts.Domain;
 using Modules.Posts.Domain.Authors.Repositories;
+using Modules.Posts.Domain.Comments.Repositories;
 using Modules.Posts.Domain.Likes.Repositories;
 using Modules.Posts.Domain.Posts.Repositories;
 using Modules.Posts.Infrastructure.Events;
@@ -46,9 +47,11 @@ internal sealed class PersistenceServiceInstaller : IServiceInstaller
         services.AddScoped<IAuthorRepository, AuthorRepository>();
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<IPostLikeRepository, PostLikeRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
 
         services.AddScoped<IPostService, PostService>();
         services.AddScoped<IAuthorService, AuthorService>();
+        services.AddScoped<ICommentService, CommentService>();
         services.AddScoped<IPostUnitOfWork, PostUnitOfWork>();
 
         services.AddKeyedScoped<IDomainEventsDispatcher>("posts", (sp, _) =>
