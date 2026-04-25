@@ -60,8 +60,45 @@ public sealed class CommentRepository : ICommentRepository
         return await _context.Comments.SingleOrDefaultAsync(c => c.Id == commentId, ct);
     }
 
+    public async Task<long> GetCountAsync(PostId postId, CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(postId);
+
+        return await _context.Database
+            .SqlQuery<long>($"""
+                             SELECT count AS "Value" FROM posts.post_comment_counts
+                             WHERE post_id = {postId.Value}
+                             """)
+            .SingleOrDefaultAsync(ct);
+    }
+
+    public async Task<Dictionary<Guid, long>> GetCountsAsync(
+        IEnumerable<PostId> postIds,
+        CancellationToken ct = default)
+    {
+        var ids = postIds.Select(p => p.Value).ToArray();
+
+        if (ids.Length == 0) return [];
+
+        return await _context.Database
+            .SqlQuery<PostCommentCountRow>($"""
+                                            SELECT post_id, count
+                                            FROM posts.post_comment_counts
+                                            WHERE post_id = ANY({ids})
+                                            """)
+            .ToDictionaryAsync(r => r.post_id, r => r.count, ct);
+    }
+
+    public async Task RefreshCountsAsync(CancellationToken ct = default)
+    {
+        await _context.Database.ExecuteSqlRawAsync(
+            "REFRESH MATERIALIZED VIEW CONCURRENTLY posts.post_comment_counts", ct);
+    }
+
     public void Add(Comment comment)
     {
         _context.Comments.Add(comment);
     }
+
+    private sealed record PostCommentCountRow(Guid post_id, long count);
 }

@@ -5,7 +5,7 @@ namespace Modules.Posts.Endpoints.Comments.Contracts;
 public sealed record CommentResponse(
     Guid Id,
     Guid PostId,
-    CommentAuthor Author,
+    PostAuthor Author,
     string Content,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt);

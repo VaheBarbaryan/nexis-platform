@@ -9,5 +9,11 @@ public interface ICommentRepository
 
     Task<Comment?> GetByIdAsync(CommentId commentId, CancellationToken ct = default);
 
+    Task<long> GetCountAsync(PostId postId, CancellationToken ct = default);
+
+    Task<Dictionary<Guid, long>> GetCountsAsync(IEnumerable<PostId> postIds, CancellationToken ct = default);
+
+    Task RefreshCountsAsync(CancellationToken ct = default);
+
     void Add(Comment comment);
 }
