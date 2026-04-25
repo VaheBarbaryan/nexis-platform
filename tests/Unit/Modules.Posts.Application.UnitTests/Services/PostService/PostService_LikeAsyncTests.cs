@@ -1,6 +1,8 @@
 using FluentAssertions;
 using Modules.Posts.Domain;
+using Modules.Posts.Domain.Authors.Repositories;
 using Modules.Posts.Domain.Authors.ValueObjects;
+using Modules.Posts.Domain.Comments.Repositories;
 using Modules.Posts.Domain.Likes;
 using Modules.Posts.Domain.Likes.Repositories;
 using Modules.Posts.Domain.Posts;
@@ -14,11 +16,14 @@ namespace Modules.Posts.Application.UnitTests.Services.PostService;
 public sealed class PostService_LikeAsyncTests
 {
     private readonly Mock<IPostRepository> _postRepository = new();
+    private readonly Mock<IAuthorRepository> _authorRepository = new();
     private readonly Mock<IPostLikeRepository> _postLikeRepository = new();
+    private readonly Mock<ICommentRepository> _commentRepository = new();
     private readonly Mock<IPostUnitOfWork> _unitOfWork = new();
 
     private Application.Services.PostService CreateService()
-        => new(_postRepository.Object, _postLikeRepository.Object, _unitOfWork.Object);
+        => new(_postRepository.Object, _authorRepository.Object, _postLikeRepository.Object, _commentRepository.Object,
+            _unitOfWork.Object);
 
     [Fact]
     public async Task LikeAsync_Should_Throw_When_Post_Not_Found()

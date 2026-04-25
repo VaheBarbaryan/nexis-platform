@@ -55,11 +55,15 @@ public sealed class CommentService_CreateAsyncTests
         _authorRepository
             .Setup(x => x.GetByIdAsync(It.IsAny<AuthorId>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(author);
+        _commentRepository
+            .Setup(x => x.RefreshCountsAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
         await service.CreateAsync(authorId.Value, post.Id.Value, "A comment");
 
         _commentRepository.Verify(x => x.Add(It.IsAny<Domain.Comments.Comment>()), Times.Once);
         _unitOfWork.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _commentRepository.Verify(x => x.RefreshCountsAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -79,6 +83,9 @@ public sealed class CommentService_CreateAsyncTests
         _authorRepository
             .Setup(x => x.GetByIdAsync(It.IsAny<AuthorId>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(author);
+        _commentRepository
+            .Setup(x => x.RefreshCountsAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
         var result = await service.CreateAsync(authorId.Value, post.Id.Value, "A comment");
 

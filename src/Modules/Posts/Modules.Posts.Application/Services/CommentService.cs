@@ -48,7 +48,7 @@ public sealed class CommentService : ICommentService
                 return new CommentSummary(
                     c.Id.Value,
                     c.PostId.Value,
-                    new CommentAuthor(c.AuthorId.Value, author?.Username ?? string.Empty),
+                    new PostAuthor(c.AuthorId.Value, author?.Username ?? string.Empty),
                     c.Content,
                     c.CreatedAt,
                     c.UpdatedAt);
@@ -65,13 +65,14 @@ public sealed class CommentService : ICommentService
         _commentRepository.Add(comment);
 
         await _unitOfWork.CommitAsync(ct);
+        await _commentRepository.RefreshCountsAsync(ct);
 
         var author = await _authorRepository.GetByIdAsync(comment.AuthorId, ct);
 
         return new CommentSummary(
             comment.Id.Value,
             comment.PostId.Value,
-            new CommentAuthor(comment.AuthorId.Value, author?.Username ?? string.Empty),
+            new PostAuthor(comment.AuthorId.Value, author?.Username ?? string.Empty),
             comment.Content,
             comment.CreatedAt,
             comment.UpdatedAt);
@@ -91,7 +92,7 @@ public sealed class CommentService : ICommentService
         return new CommentSummary(
             comment.Id.Value,
             comment.PostId.Value,
-            new CommentAuthor(comment.AuthorId.Value, author?.Username ?? string.Empty),
+            new PostAuthor(comment.AuthorId.Value, author?.Username ?? string.Empty),
             comment.Content,
             comment.CreatedAt,
             comment.UpdatedAt);
@@ -105,5 +106,6 @@ public sealed class CommentService : ICommentService
         comment.Delete(new AuthorId(authorId));
 
         await _unitOfWork.CommitAsync(ct);
+        await _commentRepository.RefreshCountsAsync(ct);
     }
 }

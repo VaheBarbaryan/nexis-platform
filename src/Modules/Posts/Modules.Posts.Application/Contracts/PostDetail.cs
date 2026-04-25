@@ -2,8 +2,9 @@ namespace Modules.Posts.Application.Contracts;
 
 public sealed record PostDetail(
     Guid Id,
-    Guid AuthorId,
+    PostAuthor Author,
     string Content,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt,
-    long LikesCount);
+    long LikesCount,
+    long CommentsCount);

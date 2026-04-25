@@ -49,11 +49,15 @@ public sealed class CommentService_DeleteAsyncTests
         _unitOfWork
             .Setup(x => x.CommitAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
+        _commentRepository
+            .Setup(x => x.RefreshCountsAsync(It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
         await service.DeleteAsync(authorId.Value, comment.Id.Value);
 
         comment.IsDeleted.Should().BeTrue();
         _unitOfWork.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _commentRepository.Verify(x => x.RefreshCountsAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

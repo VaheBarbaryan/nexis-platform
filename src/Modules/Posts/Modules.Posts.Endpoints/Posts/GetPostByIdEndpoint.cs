@@ -20,11 +20,12 @@ public sealed class GetPostByIdEndpoint : IEndpoint
 
                 return Results.Ok(new PostResponse(
                     post.Id,
-                    post.AuthorId,
+                    post.Author,
                     post.Content,
                     post.CreatedAt,
                     post.UpdatedAt,
-                    post.LikesCount));
+                    post.LikesCount,
+                    post.CommentsCount));
             })
             .WithTags(Tags.Posts)
             .WithName("GetPostById");
