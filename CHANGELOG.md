@@ -34,6 +34,7 @@
 - *(posts)* Implement like/unlike endpoints with likes count on get
 - *(infra)* Extract shared infra and wire outbox + events for Posts module
 - *(posts)* Add Comments aggregate with full CRUD and Kafka events
+- *(posts)* Add comments count and author info to posts
 
 ### 🐛 Bug Fixes
 
@@ -110,4 +111,5 @@
 - Update tests solution folder
 - *(changelog)* Update changelog
 - Add CLAUDE.md with project guidance for Claude Code
+- *(changelog)* Update changelog
 - *(changelog)* Update changelog
