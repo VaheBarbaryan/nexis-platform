@@ -4,4 +4,5 @@ public static class Tags
 {
     public const string Posts = "Posts";
     public const string Comments = "Comments";
+    public const string Follows = "Follows";
 }
