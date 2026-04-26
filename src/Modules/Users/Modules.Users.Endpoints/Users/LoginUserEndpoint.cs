@@ -17,7 +17,7 @@ public class LoginUserEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/login", async (
+        app.MapPost("login", async (
                 HttpContext httpContext,
                 [FromBody] LoginUserRequest request,
                 IValidator<LoginUserRequest> validator,

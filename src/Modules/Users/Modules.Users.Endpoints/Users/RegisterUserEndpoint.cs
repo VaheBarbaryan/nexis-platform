@@ -15,7 +15,7 @@ public class RegisterUserEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/register", async (
+        app.MapPost("register", async (
                 [FromBody] RegisterUserRequest request,
                 IValidator<RegisterUserRequest> validator,
                 IRegisterUserService registerUserService,
@@ -36,7 +36,7 @@ public class RegisterUserEndpoint : IEndpoint
                         request.Password,
                         cancellationToken);
 
-                    return Results.Created("/api/register", id);
+                    return Results.Created("/register", id);
                 }
                 catch (EmailAlreadyExistsException ex)
                 {

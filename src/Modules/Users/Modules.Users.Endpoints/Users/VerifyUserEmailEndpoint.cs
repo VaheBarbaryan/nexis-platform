@@ -11,7 +11,7 @@ public class VerifyUserEmailEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/verify-email", async (
+        app.MapPost("verify-email", async (
                 [FromQuery] string token,
                 IEmailVerificationService emailVerificationService,
                 CancellationToken cancellationToken) =>

@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Modules.Posts.Domain;
+using Modules.Posts.Domain.Authors.Repositories;
 using Modules.Posts.Domain.Authors.ValueObjects;
 using Modules.Posts.Domain.Follows;
 using Modules.Posts.Domain.Follows.Exceptions;
@@ -11,9 +12,11 @@ namespace Modules.Posts.Application.UnitTests.Services.FollowService;
 public sealed class FollowService_FollowAsyncTests
 {
     private readonly Mock<IFollowRepository> _followRepository = new();
+    private readonly Mock<IAuthorRepository> _authorRepository = new();
     private readonly Mock<IPostUnitOfWork> _unitOfWork = new();
 
-    private Application.Services.FollowService CreateService() => new(_followRepository.Object, _unitOfWork.Object);
+    private Application.Services.FollowService CreateService() =>
+        new(_followRepository.Object, _authorRepository.Object, _unitOfWork.Object);
 
     [Fact]
     public async Task FollowAsync_Should_Throw_AlreadyFollowException_When_Already_Following()

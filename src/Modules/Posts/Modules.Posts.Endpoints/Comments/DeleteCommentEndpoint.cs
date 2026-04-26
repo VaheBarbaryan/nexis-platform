@@ -11,7 +11,7 @@ public sealed class DeleteCommentEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/api/comments/{commentId:guid}", async (
+        app.MapDelete("comments/{commentId:guid}", async (
                 Guid commentId,
                 ICurrentUser currentUser,
                 ICommentService service,

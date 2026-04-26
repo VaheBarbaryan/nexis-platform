@@ -11,7 +11,7 @@ public sealed class FollowEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/follows/{followeeId:guid}", async (
+        app.MapPost("follows/{followeeId:guid}", async (
                 Guid followeeId,
                 ICurrentUser currentUser,
                 IFollowService service,

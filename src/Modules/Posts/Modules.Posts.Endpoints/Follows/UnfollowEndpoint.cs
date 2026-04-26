@@ -11,7 +11,7 @@ public sealed class UnfollowEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/api/follows/{followeeId:guid}", async (
+        app.MapDelete("follows/{followeeId:guid}", async (
                 Guid followeeId,
                 ICurrentUser currentUser,
                 IFollowService service,

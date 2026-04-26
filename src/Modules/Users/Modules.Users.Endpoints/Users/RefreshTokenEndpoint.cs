@@ -14,7 +14,7 @@ public class RefreshTokenEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/refresh-token", async (
+        app.MapPost("refresh-token", async (
                 HttpContext httpContext,
                 ILoginUserService loginUserService,
                 IOptions<JwtOptions> jwtOptions,

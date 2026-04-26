@@ -11,7 +11,7 @@ public sealed class LikePostEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/posts/{id:guid}/like", async (
+        app.MapPost("posts/{id:guid}/like", async (
                 ICurrentUser currentUser,
                 Guid id,
                 IPostService service,

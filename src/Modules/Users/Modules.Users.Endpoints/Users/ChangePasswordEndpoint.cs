@@ -14,7 +14,7 @@ public class ChangePasswordEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("/api/password", async (
+        app.MapPut("password", async (
                 [FromBody] ChangePasswordRequest request,
                 IValidator<ChangePasswordRequest> validator,
                 IPasswordService passwordService,
