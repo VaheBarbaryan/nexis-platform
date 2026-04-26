@@ -13,7 +13,7 @@ public class ResendVerificationEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/resend-verification", async (
+        app.MapPost("resend-verification", async (
                 [FromBody] ResendVerificationRequest request,
                 IValidator<ResendVerificationRequest> validator,
                 IEmailVerificationService emailVerificationService,

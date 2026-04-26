@@ -11,7 +11,7 @@ public class MeEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/me", (ICurrentUser currentUser) =>
+        app.MapGet("me", (ICurrentUser currentUser) =>
             {
                 var response = new UserResponse(
                     Id: currentUser.Id!.Value.ToString(),

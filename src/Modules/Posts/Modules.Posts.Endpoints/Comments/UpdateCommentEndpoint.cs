@@ -14,7 +14,7 @@ public sealed class UpdateCommentEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("/api/comments/{commentId:guid}", async (
+        app.MapPut("comments/{commentId:guid}", async (
                 Guid commentId,
                 ICurrentUser currentUser,
                 [FromBody] UpdateCommentRequest request,

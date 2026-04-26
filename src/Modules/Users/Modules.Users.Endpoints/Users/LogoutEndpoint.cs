@@ -13,7 +13,7 @@ public class LogoutEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/logout", async (
+        app.MapPost("logout", async (
                 HttpContext httpContext,
                 [FromKeyedServices(TokenStoreKey.RefreshToken)] ITokenStore<Guid> refreshTokenStore,
                 ITokenGenerator tokenGenerator,

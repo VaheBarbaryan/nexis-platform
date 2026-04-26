@@ -13,7 +13,7 @@ public class ForgotPasswordEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/forgot-password", async (
+        app.MapPost("forgot-password", async (
                 [FromBody] ForgotPasswordRequest request,
                 IValidator<ForgotPasswordRequest> validator,
                 IPasswordService passwordService,

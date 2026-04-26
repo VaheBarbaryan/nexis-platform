@@ -14,7 +14,7 @@ public sealed class UpdatePostEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("/api/posts/{id:guid}", async (
+        app.MapPut("posts/{id:guid}", async (
                 Guid id,
                 ICurrentUser currentUser,
                 [FromBody] UpdatePostRequest request,

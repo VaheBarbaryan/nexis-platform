@@ -14,7 +14,7 @@ public sealed class CreateCommentEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/posts/{postId:guid}/comments", async (
+        app.MapPost("posts/{postId:guid}/comments", async (
                 Guid postId,
                 ICurrentUser currentUser,
                 [FromBody] CreateCommentRequest request,
@@ -32,7 +32,7 @@ public sealed class CreateCommentEndpoint : IEndpoint
                 var result = await service.CreateAsync(currentUser.Id!.Value, postId, request.Content, cancellationToken);
 
                 return Results.Created(
-                    $"/api/posts/{postId}/comments/{result.Id}",
+                    $"/posts/{postId}/comments/{result.Id}",
                     new CommentResponse(result.Id, result.PostId, result.Author, result.Content, result.CreatedAt, result.UpdatedAt));
             })
             .RequireAuthorization()

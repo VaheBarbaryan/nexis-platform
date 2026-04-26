@@ -11,7 +11,7 @@ public sealed class DeletePostEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/api/posts/{id:guid}", async (
+        app.MapDelete("posts/{id:guid}", async (
                 Guid id,
                 ICurrentUser currentUser,
                 IPostService service,

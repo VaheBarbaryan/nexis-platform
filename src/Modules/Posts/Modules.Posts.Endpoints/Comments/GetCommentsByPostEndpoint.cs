@@ -10,7 +10,7 @@ public sealed class GetCommentsByPostEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/posts/{postId:guid}/comments", async (
+        app.MapGet("posts/{postId:guid}/comments", async (
                 Guid postId,
                 ICommentService service,
                 string? cursor,

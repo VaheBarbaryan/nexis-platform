@@ -11,7 +11,7 @@ public sealed class UnlikePostEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/api/posts/{id:guid}/like", async (
+        app.MapDelete("posts/{id:guid}/like", async (
                 ICurrentUser currentUser,
                 Guid id,
                 IPostService service,

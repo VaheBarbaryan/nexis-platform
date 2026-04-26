@@ -14,7 +14,7 @@ public sealed class CreatePostEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/posts", async (
+        app.MapPost("posts", async (
                 ICurrentUser currentUser,
                 [FromBody] CreatePostRequest request,
                 IValidator<CreatePostRequest> validator,
@@ -30,7 +30,7 @@ public sealed class CreatePostEndpoint : IEndpoint
 
                 var result = await service.CreateAsync(currentUser.Id!.Value, request.Content, cancellationToken);
 
-                return Results.Created("/api/posts", result);
+                return Results.Created("/posts", result);
             })
             .RequireAuthorization()
             .WithTags(Tags.Posts)

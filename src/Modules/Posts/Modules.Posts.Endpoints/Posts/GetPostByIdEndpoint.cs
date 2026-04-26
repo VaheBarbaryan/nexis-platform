@@ -11,7 +11,7 @@ public sealed class GetPostByIdEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/posts/{id:guid}", async (
+        app.MapGet("posts/{id:guid}", async (
                 Guid id,
                 IPostService service,
                 CancellationToken cancellationToken) =>

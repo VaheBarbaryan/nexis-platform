@@ -15,7 +15,7 @@ public class ResetPasswordEndpoint : IEndpoint
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/reset-password", async (
+        app.MapPost("reset-password", async (
                 [FromBody] ResetPasswordRequest request,
                 IValidator<ResetPasswordRequest> validator,
                 IPasswordService passwordService,

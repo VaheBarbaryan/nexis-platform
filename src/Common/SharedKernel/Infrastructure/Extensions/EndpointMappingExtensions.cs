@@ -15,10 +15,11 @@ public static class EndpointMappingExtensions
 
         // Resolve all registered IEndpoint implementations
         var endpoints = app.Services.GetServices<IEndpoint>();
+        var group = app.MapGroup("/api");
 
         foreach (var endpoint in endpoints)
         {
-            endpoint.MapEndpoint(app);
+            endpoint.MapEndpoint(group);
         }
 
         return app;

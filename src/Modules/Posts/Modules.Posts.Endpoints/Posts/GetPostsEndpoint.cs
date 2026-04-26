@@ -10,7 +10,7 @@ public sealed class GetPostsEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/posts", async (
+        app.MapGet("posts", async (
                 IPostService service,
                 string? cursor,
                 CancellationToken cancellationToken,
