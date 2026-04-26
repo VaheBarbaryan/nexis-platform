@@ -36,6 +36,7 @@
 - *(posts)* Add Comments aggregate with full CRUD and Kafka events
 - *(posts)* Add comments count and author info to posts
 - *(posts)* Add follow/unfollow feature
+- *(posts)* Add followers/following endpoints and global /api prefix
 
 ### 🐛 Bug Fixes
 
@@ -113,6 +114,7 @@
 - Update tests solution folder
 - *(changelog)* Update changelog
 - Add CLAUDE.md with project guidance for Claude Code
+- *(changelog)* Update changelog
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
