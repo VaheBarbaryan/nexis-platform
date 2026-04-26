@@ -35,6 +35,7 @@
 - *(infra)* Extract shared infra and wire outbox + events for Posts module
 - *(posts)* Add Comments aggregate with full CRUD and Kafka events
 - *(posts)* Add comments count and author info to posts
+- *(posts)* Add follow/unfollow feature
 
 ### 🐛 Bug Fixes
 
@@ -78,6 +79,7 @@
 - *(posts)* Add unit tests for post delete method
 - *(posts)* Add unit tests for post like/unlike logic
 - *(posts)* Add unit tests for Comment domain and CommentService
+- *(posts)* Add unit tests for Follow aggregate and FollowService
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -111,5 +113,6 @@
 - Update tests solution folder
 - *(changelog)* Update changelog
 - Add CLAUDE.md with project guidance for Claude Code
+- *(changelog)* Update changelog
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
