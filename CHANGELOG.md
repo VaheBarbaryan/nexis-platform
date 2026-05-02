@@ -37,6 +37,7 @@
 - *(posts)* Add comments count and author info to posts
 - *(posts)* Add follow/unfollow feature
 - *(posts)* Add followers/following endpoints and global /api prefix
+- *(posts)* Add GET /posts/feed endpoint for personalized feed
 
 ### 🐛 Bug Fixes
 
@@ -120,3 +121,4 @@
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
 - Add Claude Code project skills for code generation
+- *(changelog)* Update changelog
