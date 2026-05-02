@@ -1,6 +1,8 @@
-namespace Modules.Posts.Application.Contracts;
+using Modules.Posts.Application.Contracts;
 
-public sealed record PostSummary(
+namespace Modules.Posts.Endpoints.Posts.Contracts;
+
+public sealed record GetFeedResponse(
     Guid Id,
     PostAuthor Author,
     string Content,

@@ -7,6 +7,9 @@ public interface IPostService
 {
     Task<CursorResponse<PostSummary>> GetPostsAsync(string? cursor, int limit = 10, CancellationToken ct = default);
 
+    /// <summary>Returns paginated posts from authors the specified user follows.</summary>
+    Task<CursorResponse<PostSummary>> GetFeedAsync(Guid userId, string? cursor, int limit = 10, CancellationToken ct = default);
+
     Task<PostDetail> GetByIdAsync(Guid postId, CancellationToken ct = default);
 
     Task<Post> CreateAsync(Guid authorId, string content, CancellationToken ct = default);

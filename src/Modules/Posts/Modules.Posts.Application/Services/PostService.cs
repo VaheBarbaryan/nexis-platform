@@ -59,7 +59,39 @@ public sealed class PostService : IPostService
                     p.Content,
                     p.CreatedAt,
                     likeCounts.GetValueOrDefault(p.Id.Value),
-                    commentCounts.GetValueOrDefault(p.Id.Value));
+                    commentCounts.GetValueOrDefault(p.Id.Value),
+                    IsLiked: false);
+            },
+            p => new Cursor(p.CreatedAt, p.Id.Value).Encode());
+    }
+
+    public async Task<CursorResponse<PostSummary>> GetFeedAsync(Guid userId, string? cursor, int limit = 10,
+        CancellationToken ct = default)
+    {
+        var authorId = new AuthorId(userId);
+        var posts = await _postRepository.GetFeedAsync(authorId, cursor, limit, ct);
+        var postIds = posts.Select(p => p.Id).ToList();
+
+        var likeCounts = await _postLikeRepository.GetCountsAsync(postIds, ct);
+        var commentCounts = await _commentRepository.GetCountsAsync(postIds, ct);
+        var likedSet = await _postLikeRepository.GetLikedByUserAsync(postIds, authorId, ct);
+
+        var authors = await _authorRepository.GetByIdsAsync(posts.Select(c => c.AuthorId), ct);
+
+        return CursorResponse.From(
+            posts,
+            limit,
+            p =>
+            {
+                authors.TryGetValue(p.AuthorId, out var author);
+                return new PostSummary(
+                    p.Id.Value,
+                    new PostAuthor(p.AuthorId.Value, author?.Username ?? string.Empty),
+                    p.Content,
+                    p.CreatedAt,
+                    likeCounts.GetValueOrDefault(p.Id.Value),
+                    commentCounts.GetValueOrDefault(p.Id.Value),
+                    IsLiked: likedSet.Contains(p.Id.Value));
             },
             p => new Cursor(p.CreatedAt, p.Id.Value).Encode());
     }

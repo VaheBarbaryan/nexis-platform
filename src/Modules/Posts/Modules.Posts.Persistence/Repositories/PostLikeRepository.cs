@@ -52,6 +52,28 @@ public sealed class PostLikeRepository : IPostLikeRepository
             .ToDictionaryAsync(r => r.post_id, r => r.count, ct);
     }
 
+    public async Task<HashSet<Guid>> GetLikedByUserAsync(
+        IEnumerable<PostId> postIds,
+        AuthorId authorId,
+        CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(authorId);
+
+        var ids = postIds.Select(p => p.Value).ToArray();
+
+        if (ids.Length == 0) return [];
+
+        var authorIdValue = authorId.Value;
+
+        return await _context.Database
+            .SqlQuery<Guid>($"""
+                SELECT post_id AS "Value" FROM posts.post_likes
+                WHERE author_id = {authorIdValue}
+                  AND post_id = ANY({ids})
+                """)
+            .ToHashSetAsync(ct);
+    }
+
     public async Task RefreshCountsAsync(CancellationToken ct = default)
     {
         await _context.Database.ExecuteSqlRawAsync(
