@@ -31,5 +31,22 @@ Detailed architecture diagrams and design decisions are available in the [`/docs
 
 ---
 
+## Claude Code Skills
+
+Project-specific slash commands for code generation. Run from Claude Code CLI.
+
+| Skill | Args | Generates |
+|-------|------|-----------|
+| `/gen-endpoint` | `POST posts CreatePost Posts --auth --body --response` | Endpoint class + Request/Response records + Validator |
+| `/gen-domain-event` | `PostCreated Posts Post` | DomainEvent record + Notification + NotificationHandler (Kafka) |
+| `/gen-entity` | `Story Posts aggregate` | Aggregate/Entity class + ValueObject Id + NotFoundException |
+| `/gen-repository` | `Story Posts` | Repository interface + EF implementation + IEntityTypeConfiguration |
+| `/gen-business-rule` | `ContentMaxLength Posts Post` | IBusinessRule implementation |
+| `/gen-integration-event` | `StoryPublished Posts` | IntegrationEvent message record + optional consumer |
+| `/gen-migration` | `AddStoryTable Posts` | Runs `dotnet ef migrations add` with correct flags for the module |
+| `/gen-module` | `Notifications` | Full 6-layer module scaffold with all boilerplate |
+
+---
+
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
