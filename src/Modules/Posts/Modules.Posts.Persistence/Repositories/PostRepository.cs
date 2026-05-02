@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Modules.Posts.Domain.Authors.ValueObjects;
 using Modules.Posts.Domain.Posts;
 using Modules.Posts.Domain.Posts.Repositories;
 using Modules.Posts.Domain.Posts.ValueObjects;
@@ -46,6 +47,47 @@ public sealed class PostRepository : IPostRepository
                                   LIMIT {limit + 1}
                                   """)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<Post>> GetFeedAsync(
+        AuthorId userId,
+        string? cursor,
+        int limit = 10,
+        CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(userId);
+
+        var userIdValue = userId.Value;
+        var decodedCursor = Cursor.Decode(cursor);
+
+        if (decodedCursor is null)
+        {
+            return await _context.Posts
+                .FromSqlInterpolated($"""
+                                      SELECT p.* FROM posts.posts p
+                                      INNER JOIN posts.follows f ON p.author_id = f.followee_id
+                                      WHERE p.deleted_at IS NULL
+                                        AND f.follower_id = {userIdValue}
+                                      ORDER BY p.created_at DESC, p.id DESC
+                                      LIMIT {limit + 1}
+                                      """)
+                .ToListAsync(ct);
+        }
+
+        var lastDate = decodedCursor.Date;
+        var lastId = decodedCursor.LastId;
+
+        return await _context.Posts
+            .FromSqlInterpolated($"""
+                                  SELECT p.* FROM posts.posts p
+                                  INNER JOIN posts.follows f ON p.author_id = f.followee_id
+                                  WHERE p.deleted_at IS NULL
+                                    AND f.follower_id = {userIdValue}
+                                    AND (p.created_at, p.id) < ({lastDate}, {lastId})
+                                  ORDER BY p.created_at DESC, p.id DESC
+                                  LIMIT {limit + 1}
+                                  """)
+            .ToListAsync(ct);
     }
 
     public async Task<Post?> GetByIdAsync(PostId postId, CancellationToken ct = default)
