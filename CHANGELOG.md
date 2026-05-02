@@ -118,3 +118,5 @@
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
 - *(changelog)* Update changelog
+- *(changelog)* Update changelog
+- Add Claude Code project skills for code generation
