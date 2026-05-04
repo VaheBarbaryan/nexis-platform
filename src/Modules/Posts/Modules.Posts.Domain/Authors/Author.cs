@@ -19,8 +19,6 @@ public class Author : Entity<AuthorId>
 
     public static Author Create(Guid id, string username)
     {
-        var author = new Author(new AuthorId(id), username);
-
-        return author;
+        return new Author(new AuthorId(id), username);
     }
 }

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Common\SharedKernel\SharedKernel.csproj" />
+      <ProjectReference Include="..\Modules.Notifications.Application\Modules.Notifications.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" />
+    </ItemGroup>
+
+</Project>

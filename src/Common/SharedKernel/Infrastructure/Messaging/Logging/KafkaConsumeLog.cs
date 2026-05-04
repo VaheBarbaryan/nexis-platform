@@ -22,6 +22,12 @@ public static class KafkaConsumeLog
             new EventId(1203, nameof(UnknownTopic)),
             "Topic not yet available. Topic={Topic}");
 
+    private static readonly Action<ILogger, string, Exception?> _processingError =
+        LoggerMessage.Define<string>(
+            LogLevel.Error,
+            new EventId(1204, nameof(ProcessingError)),
+            "Error processing Kafka message. Topic={Topic}");
+
     public static void Consumed(ILogger logger, string topic, string? key)
     {
         _consumed(logger, topic, key, null);
@@ -35,5 +41,10 @@ public static class KafkaConsumeLog
     public static void UnknownTopic(ILogger logger, string topic, Exception exception)
     {
         _unkownTopic(logger, topic, exception);
+    }
+
+    public static void ProcessingError(ILogger logger, string topic, Exception exception)
+    {
+        _processingError(logger, topic, exception);
     }
 }
