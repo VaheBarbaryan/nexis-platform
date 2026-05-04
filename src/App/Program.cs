@@ -3,6 +3,7 @@ using App.Exceptions;
 using App.Extensions;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Modules.Notifications.Endpoints;
 using Modules.Posts.Endpoints;
 using Modules.Users.Endpoints;
 using SharedKernel.Application;
@@ -35,6 +36,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterModule(new Modules.Users.Infrastructure.Outbox.OutboxModule());
     containerBuilder.RegisterModule(new Modules.Users.Infrastructure.Redis.RedisModule());
     containerBuilder.RegisterModule(new Modules.Posts.Infrastructure.Outbox.OutboxModule());
+    containerBuilder.RegisterModule(new Modules.Notifications.Infrastructure.Outbox.OutboxModule());
 });
 
 builder.Services.AddMediatR(cfg =>
@@ -43,7 +45,9 @@ builder.Services.AddMediatR(cfg =>
         Modules.Users.Application.UsersApplicationAssembly.Assembly,
         Modules.Users.Infrastructure.UsersInfrastructureAssembly.Assembly,
         Modules.Posts.Application.PostsApplicationAssembly.Assembly,
-        Modules.Posts.Infrastructure.PostsInfrastructureAssembly.Assembly);
+        Modules.Posts.Infrastructure.PostsInfrastructureAssembly.Assembly,
+        Modules.Notifications.Application.NotificationsApplicationAssembly.Assembly,
+        Modules.Notifications.Infrastructure.NotificationsInfrastructureAssembly.Assembly);
 });
 
 builder.Services.InstallModulesFromAssemblies(
@@ -51,7 +55,8 @@ builder.Services.InstallModulesFromAssemblies(
     AppAssembly.Assembly,
     Modules.Users.Infrastructure.UsersInfrastructureAssembly.Assembly,
     Modules.Emails.Infrastructure.EmailsInfrastructureAssembly.Assembly,
-    Modules.Posts.Infrastructure.PostsInfrastructureAssembly.Assembly
+    Modules.Posts.Infrastructure.PostsInfrastructureAssembly.Assembly,
+    Modules.Notifications.Infrastructure.NotificationsInfrastructureAssembly.Assembly
 );
 
 WebApplication app = builder.Build();
@@ -78,6 +83,6 @@ app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
-app.MapEndpoints(UsersEndpointsAssembly.Assembly, PostsEndpointsAssembly.Assembly);
+app.MapEndpoints(UsersEndpointsAssembly.Assembly, PostsEndpointsAssembly.Assembly, NotificationsEndpointsAssembly.Assembly);
 
 await app.RunAsync();

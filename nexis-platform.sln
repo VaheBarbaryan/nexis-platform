@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
+#
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "src\App\App.csproj", "{14E643B4-7494-4C92-B1ED-DB7C6123077E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Domain", "src\Modules\Users\Modules.Users.Domain\Modules.Users.Domain.csproj", "{CC5B0C40-F8B7-499C-9C29-C0D9581D8C57}"
@@ -40,6 +40,18 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit", "Unit", "{51FFF0FA-CD4F-4ABD-8D66-7DEEF23B1EBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Posts.Application.UnitTests", "tests\Unit\Modules.Posts.Application.UnitTests\Modules.Posts.Application.UnitTests.csproj", "{1DA64844-0E8D-4B82-A202-039F3C62D1DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Notifications.Domain", "src\Modules\Notifications\Modules.Notifications.Domain\Modules.Notifications.Domain.csproj", "{D1DD134C-0111-4EE4-94FB-D3F587C39764}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Notifications.Persistence", "src\Modules\Notifications\Modules.Notifications.Persistence\Modules.Notifications.Persistence.csproj", "{8BBAB72F-EE05-46AA-AF7E-9D4FC22A441D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Notifications.Infrastructure", "src\Modules\Notifications\Modules.Notifications.Infrastructure\Modules.Notifications.Infrastructure.csproj", "{5A683CEC-4D5C-459C-90E7-02DC865ACE33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Notifications.Application", "src\Modules\Notifications\Modules.Notifications.Application\Modules.Notifications.Application.csproj", "{74A3B4FF-6BF5-4191-99FC-798E23F3D8DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Notifications.Endpoints", "src\Modules\Notifications\Modules.Notifications.Endpoints\Modules.Notifications.Endpoints.csproj", "{A9C1D2E3-F4B5-6789-ABCD-EF0123456789}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Notifications.IntegrationEvents", "src\Modules\Notifications\Modules.Notifications.IntegrationEvents\Modules.Notifications.IntegrationEvents.csproj", "{B0C2D3E4-F5A6-7890-BCDE-F01234567890}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +131,30 @@ Global
 		{3F5E8B92-D4A1-4C7F-B3E0-91A2D6C854F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F5E8B92-D4A1-4C7F-B3E0-91A2D6C854F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F5E8B92-D4A1-4C7F-B3E0-91A2D6C854F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1DD134C-0111-4EE4-94FB-D3F587C39764}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1DD134C-0111-4EE4-94FB-D3F587C39764}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1DD134C-0111-4EE4-94FB-D3F587C39764}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1DD134C-0111-4EE4-94FB-D3F587C39764}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BBAB72F-EE05-46AA-AF7E-9D4FC22A441D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BBAB72F-EE05-46AA-AF7E-9D4FC22A441D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BBAB72F-EE05-46AA-AF7E-9D4FC22A441D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BBAB72F-EE05-46AA-AF7E-9D4FC22A441D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A683CEC-4D5C-459C-90E7-02DC865ACE33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A683CEC-4D5C-459C-90E7-02DC865ACE33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A683CEC-4D5C-459C-90E7-02DC865ACE33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A683CEC-4D5C-459C-90E7-02DC865ACE33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74A3B4FF-6BF5-4191-99FC-798E23F3D8DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74A3B4FF-6BF5-4191-99FC-798E23F3D8DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74A3B4FF-6BF5-4191-99FC-798E23F3D8DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74A3B4FF-6BF5-4191-99FC-798E23F3D8DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9C1D2E3-F4B5-6789-ABCD-EF0123456789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9C1D2E3-F4B5-6789-ABCD-EF0123456789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9C1D2E3-F4B5-6789-ABCD-EF0123456789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9C1D2E3-F4B5-6789-ABCD-EF0123456789}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0C2D3E4-F5A6-7890-BCDE-F01234567890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0C2D3E4-F5A6-7890-BCDE-F01234567890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0C2D3E4-F5A6-7890-BCDE-F01234567890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0C2D3E4-F5A6-7890-BCDE-F01234567890}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{51FFF0FA-CD4F-4ABD-8D66-7DEEF23B1EBC} = {57D41805-36E5-495C-98BE-26934E6AE846}
