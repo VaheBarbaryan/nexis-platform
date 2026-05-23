@@ -46,7 +46,7 @@ public class LoginUserService_RefreshTokenAsyncTests
 
         _tokenGenerator.Setup(x => x.Hash(refreshToken)).Returns(hashedRefreshToken);
         _refreshTokenStore.Setup(x => x.GetDeleteAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Guid.Empty);
+            .ReturnsAsync(Guid.NewGuid()); // no user in repo -> InvalidCredentialException
 
         // Act
         var act = () => service.RefreshTokenAsync(refreshToken);
@@ -67,7 +67,7 @@ public class LoginUserService_RefreshTokenAsyncTests
         _tokenGenerator.Setup(x => x.Hash(refreshToken)).Returns(hashedRefreshToken);
         _refreshTokenStore.Setup(x => x.GetDeleteAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userId);
-        _userRepository.Setup(x => x.GetByIdAsync(new UserId(userId), It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByIdAsync(UserId.From(userId), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
 
         // Act
@@ -86,25 +86,24 @@ public class LoginUserService_RefreshTokenAsyncTests
         const string refreshToken = "refreshToken";
         const string hashedRefreshToken = "hashedRefreshToken";
 
-        var userId = Guid.NewGuid();
+        var user = User.Create(
+            Email.From("test@gmail.com"),
+            Username.From("username"),
+            Password.From("hashed_password"),
+            RoleId.New()
+        );
 
         _tokenGenerator.Setup(x => x.Hash(refreshToken)).Returns(hashedRefreshToken);
 
         _refreshTokenStore.SetupSequence(x => x.GetDeleteAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userId) // first call: token exists -> valid
-            .ReturnsAsync(Guid.Empty); // second call: token already used -> null
+            .ReturnsAsync(user.Id.Value)          // first call: token exists -> valid
+            .ReturnsAsync(Guid.NewGuid()); // second call: token already used -> no user in repo -> InvalidCredentialException
 
         // Act: first refresh should succeed
         _refreshTokenStore.Setup(x => x.RemoveAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        _userRepository.Setup(x => x.GetByIdAsync(new UserId(userId), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(User.Create(
-                new UserId(userId),
-                Email.Create("test@gmail.com"),
-                Username.Create("username"),
-                Password.Create("hashed_password"),
-                new RoleId(Guid.NewGuid())
-            ));
+        _userRepository.Setup(x => x.GetByIdAsync(UserId.From(user.Id.Value), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user);
         _jwtProvider.Setup(x => x.GenerateAccessToken(It.IsAny<User>())).Returns("newAccessToken");
         _jwtProvider.Setup(x => x.GenerateRefreshToken(It.IsAny<User>())).Returns("newRefreshToken");
 
@@ -127,18 +126,16 @@ public class LoginUserService_RefreshTokenAsyncTests
         const string newHashedRefreshToken = "newHashedRefreshToken";
         const string newAccessToken = "newAccessToken";
         const string newRefreshToken = "newRefreshToken";
-        var userId = Guid.NewGuid();
         var user = User.Create(
-            new UserId(userId),
-            Email.Create("test@gmail.com"),
-            Username.Create("username"),
-            Password.Create("hashed_password"),
-            new RoleId(Guid.NewGuid()));
+            Email.From("test@gmail.com"),
+            Username.From("username"),
+            Password.From("hashed_password"),
+            RoleId.New());
 
         _tokenGenerator.Setup(x => x.Hash(It.IsAny<string>()))
             .Returns<string>(token => token == refreshToken ? hashedRefreshToken : newHashedRefreshToken);
         _refreshTokenStore.Setup(x => x.GetDeleteAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userId);
+            .ReturnsAsync(user.Id.Value);
         _refreshTokenStore.Setup(x => x.RemoveAsync(hashedRefreshToken, It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
         _refreshTokenStore.Setup(x =>
@@ -147,7 +144,7 @@ public class LoginUserService_RefreshTokenAsyncTests
                 newHashedRefreshToken,
                 TimeSpan.FromDays(_jwtOptions.Value.RefreshTokenExpirationDays),
                 It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-        _userRepository.Setup(x => x.GetByIdAsync(new UserId(userId), It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByIdAsync(UserId.From(user.Id.Value), It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         _jwtProvider.Setup(x => x.GenerateAccessToken(user)).Returns(newAccessToken);
         _jwtProvider.Setup(x => x.GenerateRefreshToken(user)).Returns(newRefreshToken);

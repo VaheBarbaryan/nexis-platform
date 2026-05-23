@@ -30,7 +30,7 @@ public sealed class CommentService_CreateAsyncTests
         var postId = Guid.NewGuid();
 
         _postRepository
-            .Setup(x => x.GetByIdAsync(new PostId(postId), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetByIdAsync(PostId.From(postId), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Post?)null);
 
         var act = () => service.CreateAsync(Guid.NewGuid(), postId, "A comment");
@@ -42,9 +42,9 @@ public sealed class CommentService_CreateAsyncTests
     public async Task CreateAsync_Should_Add_Comment_And_Commit()
     {
         var service = CreateService();
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Post content");
-        var author = Author.Create(authorId.Value, "testuser");
+        var authorId = AuthorId.New();
+        var post = Post.Create(authorId, PostContent.From("Post content"));
+        var author = Author.Create(authorId, Username.From("testuser"));
 
         _postRepository
             .Setup(x => x.GetByIdAsync(post.Id, It.IsAny<CancellationToken>()))
@@ -70,9 +70,9 @@ public sealed class CommentService_CreateAsyncTests
     public async Task CreateAsync_Should_Return_CommentSummary_With_Author_Info()
     {
         var service = CreateService();
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Post content");
-        var author = Author.Create(authorId.Value, "testuser");
+        var authorId = AuthorId.New();
+        var post = Post.Create(authorId, PostContent.From("Post content"));
+        var author = Author.Create(authorId, Username.From("testuser"));
 
         _postRepository
             .Setup(x => x.GetByIdAsync(post.Id, It.IsAny<CancellationToken>()))

@@ -35,8 +35,8 @@ public sealed class RegisterUserService : IRegisterUserService
         string password,
         CancellationToken ct = default)
     {
-        var emailVo = Email.Create(email);
-        var usernameVo = Username.Create(username);
+        var emailVo = Email.From(email);
+        var usernameVo = Username.From(username);
 
         if (await _userRepository.EmailExistsAsync(emailVo, ct))
         {
@@ -49,7 +49,7 @@ public sealed class RegisterUserService : IRegisterUserService
         }
 
         var hash = _passwordHasher.Hash(password);
-        var passwordVo = Password.Create(hash);
+        var passwordVo = Password.From(hash);
 
         var role = await _roleRepository.GetByNameAsync(SystemRoles.User);
 
@@ -58,8 +58,7 @@ public sealed class RegisterUserService : IRegisterUserService
             throw new RoleNotFoundException();
         }
 
-        var userId = new UserId(Guid.NewGuid());
-        var user = User.Create(userId, emailVo, usernameVo, passwordVo, role.Id);
+        var user = User.Create(emailVo, usernameVo, passwordVo, role.Id);
 
         _userRepository.Add(user);
 

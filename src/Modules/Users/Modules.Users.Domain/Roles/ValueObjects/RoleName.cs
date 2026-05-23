@@ -6,12 +6,9 @@ public sealed record RoleName
 {
     public string Value { get; }
 
-    private RoleName(string value)
-    {
-        Value = value;
-    }
+    private RoleName(string value) => Value = value;
 
-    public static RoleName Create(string value)
+    public static RoleName From(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw new RoleCannotBeEmptyException();

@@ -15,7 +15,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Id)
             .HasConversion(
                 id => id.Value,
-                value => new UserId(value))
+                value => UserId.From(value))
             .ValueGeneratedNever();
 
         builder.OwnsOne(x => x.Username, username =>
@@ -47,15 +47,31 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         });
 
         builder.Property(x => x.Bio)
+            .HasConversion(
+                bio => bio!.Value,
+                value => Bio.From(value)
+            )
             .HasColumnName("bio")
             .HasMaxLength(500);
         builder.Property(x => x.Location)
+            .HasConversion(
+                location => location!.Value,
+                value => Location.From(value)
+            )
             .HasColumnName("location")
             .HasMaxLength(100);
         builder.Property(x => x.Website)
+            .HasConversion(
+                website => website!.Value,
+                value => Website.From(value)
+            )
             .HasColumnName("website")
             .HasMaxLength(200);
         builder.Property(x => x.BirthDate)
+            .HasConversion(
+                birthDate => birthDate!.Value,
+                value => BirthDate.From(value)
+            )
             .HasColumnName("birth_date")
             .HasColumnType("date")
             .IsRequired(false);

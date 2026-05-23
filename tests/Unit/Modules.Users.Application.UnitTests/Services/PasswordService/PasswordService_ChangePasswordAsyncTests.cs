@@ -31,14 +31,13 @@ public class PasswordService_ChangePasswordAsyncTests
     {
         // Arrange
         var service = CreateService();
-        var userId = Guid.NewGuid();
-        var userIdVo = new UserId(userId);
+        var userId = UserId.New();
 
-        _userRepository.Setup(x => x.GetByIdAsync(userIdVo, It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByIdAsync(userId, It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
 
         // Act
-        var act = () => service.ChangePasswordAsync(userId, "initialPassword", "newPassword");
+        var act = () => service.ChangePasswordAsync(userId.Value, "initialPassword", "newPassword");
 
         // Assert
         await act.Should().ThrowAsync<UserNotFoundException>();
@@ -51,17 +50,15 @@ public class PasswordService_ChangePasswordAsyncTests
     {
         // Arrange
         var service = CreateService();
-        var userId = Guid.NewGuid();
-        var userIdVo = new UserId(userId);
         var initialPassword = "my_password";
-        var user = CreateTestUser(userId, initialPassword);
+        var user = CreateTestUser(initialPassword);
 
-        _userRepository.Setup(x => x.GetByIdAsync(userIdVo, It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByIdAsync(user.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => user);
         _passwordHasher.Setup(x => x.Verify(initialPassword, user.Password.Value)).Returns(true);
 
         // Act
-        var act = () => service.ChangePasswordAsync(userId, initialPassword, initialPassword);
+        var act = () => service.ChangePasswordAsync(user.Id.Value, initialPassword, initialPassword);
 
         // Assert
         await act.Should().ThrowAsync<PasswordReuseException>();
@@ -74,22 +71,20 @@ public class PasswordService_ChangePasswordAsyncTests
     {
         // Arrange
         var service = CreateService();
-        var userId = Guid.NewGuid();
-        var userIdVo = new UserId(userId);
         var initialPassword = "my_password";
-        var user = CreateTestUser(userId, initialPassword);
+        var user = CreateTestUser(initialPassword);
 
 #pragma warning disable CA1861
         var passwordHasherResultsQueue = new Queue<bool>(new[] { true, false });
 #pragma warning restore CA1861
 
-        _userRepository.Setup(x => x.GetByIdAsync(userIdVo, It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByIdAsync(user.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => user);
         _passwordHasher.Setup(x => x.Verify(initialPassword, user.Password.Value))
             .Returns(() => passwordHasherResultsQueue.Dequeue());
 
         // Act
-        var act = () => service.ChangePasswordAsync(userId, "some_password", "new_password");
+        var act = () => service.ChangePasswordAsync(user.Id.Value, "some_password", "new_password");
 
         // Assert
         await act.Should().ThrowAsync<IncorrectPasswordException>();
@@ -101,14 +96,12 @@ public class PasswordService_ChangePasswordAsyncTests
     {
         // Arrange
         var service = CreateService();
-        var userId = Guid.NewGuid();
-        var userIdVo = new UserId(userId);
         var initialPassword = "my_password";
         var newPassword = "new_password";
         var newPasswordHash = "new_password_hash";
-        var user = CreateTestUser(userId, initialPassword);
+        var user = CreateTestUser(initialPassword);
 
-        _userRepository.Setup(x => x.GetByIdAsync(userIdVo, It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByIdAsync(user.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => user);
         _passwordHasher.Setup(x => x.Verify(newPassword, user.Password.Value))
             .Returns(false);
@@ -117,7 +110,7 @@ public class PasswordService_ChangePasswordAsyncTests
         _passwordHasher.Setup(x => x.Hash(newPassword)).Returns(newPasswordHash);
 
         // Act
-        await service.ChangePasswordAsync(userId, initialPassword, newPassword);
+        await service.ChangePasswordAsync(user.Id.Value, initialPassword, newPassword);
 
         // Assert
         user.Password.Value.Should().Be(newPasswordHash);
@@ -127,11 +120,10 @@ public class PasswordService_ChangePasswordAsyncTests
         _unitOfWork.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    private static User CreateTestUser(Guid id, string password = "password") =>
+    private static User CreateTestUser(string password = "password") =>
         User.Create(
-            new UserId(id),
-            Email.Create("test@gmail.com"),
-            Username.Create("username"),
-            Password.Create(password),
-            new RoleId(Guid.NewGuid()));
+            Email.From("test@gmail.com"),
+            Username.From("username"),
+            Password.From(password),
+            RoleId.New());
 }

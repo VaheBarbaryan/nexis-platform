@@ -10,7 +10,7 @@ namespace Modules.Posts.Domain.Posts;
 public sealed class Post : AggregateRoot<PostId>, ISoftDeletable
 {
     public AuthorId AuthorId { get; private set; } = null!;
-    public string Content { get; private set; } = null!;
+    public PostContent Content { get; private set; } = null!;
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset UpdatedAt { get; private set; }
     public DateTimeOffset? DeletedAt { get; private set; }
@@ -21,12 +21,9 @@ public sealed class Post : AggregateRoot<PostId>, ISoftDeletable
     {
     }
 
-    private Post(AuthorId authorId, string content)
+    private Post(AuthorId authorId, PostContent content)
     {
-        CheckRule(new ContentCannotBeEmptyRule(content));
-        CheckRule(new ContentMaxLengthRule(content));
-
-        Id = new PostId(Guid.NewGuid());
+        Id = PostId.New();
         AuthorId = authorId;
         Content = content;
 
@@ -35,7 +32,7 @@ public sealed class Post : AggregateRoot<PostId>, ISoftDeletable
         UpdatedAt = now;
     }
 
-    public static Post Create(AuthorId authorId, string content)
+    public static Post Create(AuthorId authorId, PostContent content)
     {
         var post = new Post(authorId, content);
 
@@ -43,7 +40,7 @@ public sealed class Post : AggregateRoot<PostId>, ISoftDeletable
             new PostCreatedDomainEvent(
                 post.Id.Value,
                 post.AuthorId.Value,
-                post.Content,
+                post.Content.Value,
                 post.CreatedAt
             )
         );
@@ -51,17 +48,15 @@ public sealed class Post : AggregateRoot<PostId>, ISoftDeletable
         return post;
     }
 
-    public void Update(AuthorId requestingAuthorId, string content)
+    public void Update(AuthorId requestingAuthorId, PostContent content)
     {
         CheckRule(new DeletedPostCannotBeModifiedRule(IsDeleted));
         CheckRule(new PostMustBelongToAuthorRule(AuthorId, requestingAuthorId));
-        CheckRule(new ContentCannotBeEmptyRule(content));
-        CheckRule(new ContentMaxLengthRule(content));
 
         Content = content;
         UpdatedAt = DateTimeOffset.UtcNow;
 
-        RaiseDomainEvent(new PostUpdatedDomainEvent(Id.Value, AuthorId.Value, Content, UpdatedAt));
+        RaiseDomainEvent(new PostUpdatedDomainEvent(Id.Value, AuthorId.Value, Content.Value, UpdatedAt));
     }
 
     public void Delete(AuthorId requestingAuthorId)

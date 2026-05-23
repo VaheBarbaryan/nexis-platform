@@ -13,8 +13,8 @@ public sealed class FollowTests
     [Fact]
     public void Create_Should_Return_Follow_With_Correct_Properties()
     {
-        var followerId = new AuthorId(Guid.NewGuid());
-        var followeeId = new AuthorId(Guid.NewGuid());
+        var followerId = AuthorId.New();
+        var followeeId = AuthorId.New();
 
         var follow = Follow.Create(followerId, followeeId);
 
@@ -27,7 +27,7 @@ public sealed class FollowTests
     public void Create_Should_Set_CreatedAt_To_UtcNow()
     {
         var before = DateTimeOffset.UtcNow;
-        var follow = Follow.Create(new AuthorId(Guid.NewGuid()), new AuthorId(Guid.NewGuid()));
+        var follow = Follow.Create(AuthorId.New(), AuthorId.New());
         var after = DateTimeOffset.UtcNow;
 
         follow.CreatedAt.Should().BeOnOrAfter(before).And.BeOnOrBefore(after);
@@ -36,7 +36,7 @@ public sealed class FollowTests
     [Fact]
     public void Create_Should_Raise_AuthorFollowedDomainEvent()
     {
-        var follow = Follow.Create(new AuthorId(Guid.NewGuid()), new AuthorId(Guid.NewGuid()));
+        var follow = Follow.Create(AuthorId.New(), AuthorId.New());
 
         follow.DomainEvents
             .Should().ContainSingle()
@@ -46,8 +46,8 @@ public sealed class FollowTests
     [Fact]
     public void Create_Should_Raise_Event_With_Correct_Ids()
     {
-        var followerId = new AuthorId(Guid.NewGuid());
-        var followeeId = new AuthorId(Guid.NewGuid());
+        var followerId = AuthorId.New();
+        var followeeId = AuthorId.New();
 
         var follow = Follow.Create(followerId, followeeId);
 
@@ -65,7 +65,7 @@ public sealed class FollowTests
     [Fact]
     public void Create_Should_Throw_When_FollowerId_Equals_FolloweeId()
     {
-        var authorId = new AuthorId(Guid.NewGuid());
+        var authorId = AuthorId.New();
 
         var act = () => Follow.Create(authorId, authorId);
 
@@ -78,7 +78,7 @@ public sealed class FollowTests
     [Fact]
     public void Unfollow_Should_Raise_AuthorUnfollowedDomainEvent()
     {
-        var follow = Follow.Create(new AuthorId(Guid.NewGuid()), new AuthorId(Guid.NewGuid()));
+        var follow = Follow.Create(AuthorId.New(), AuthorId.New());
         follow.ClearDomainEvents();
 
         follow.Unfollow();
@@ -91,8 +91,8 @@ public sealed class FollowTests
     [Fact]
     public void Unfollow_Should_Raise_Event_With_Correct_Ids()
     {
-        var followerId = new AuthorId(Guid.NewGuid());
-        var followeeId = new AuthorId(Guid.NewGuid());
+        var followerId = AuthorId.New();
+        var followeeId = AuthorId.New();
         var follow = Follow.Create(followerId, followeeId);
         follow.ClearDomainEvents();
 

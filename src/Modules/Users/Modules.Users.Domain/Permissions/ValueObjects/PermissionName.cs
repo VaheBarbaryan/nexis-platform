@@ -11,7 +11,7 @@ public sealed record PermissionName
         Value = value;
     }
 
-    public static PermissionName Create(string value)
+    public static PermissionName From(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {

@@ -8,20 +8,17 @@ public sealed record Email
 {
     public string Value { get; } = null!;
 
-    private Email() { }
-
-    private Email(string value)
+    private Email()
     {
-        Value = value;
     }
 
-    public static Email Create(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new InvalidEmailException();
+    private Email(string value) => Value = value;
 
-        if (!value.Contains('@', StringComparison.Ordinal))
-            throw new InvalidEmailException();
+    public static Email From(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) throw new InvalidEmailException();
+
+        if (!value.Contains('@', StringComparison.Ordinal)) throw new InvalidEmailException();
 
         return new Email(value.Trim().ToLowerInvariant());
     }

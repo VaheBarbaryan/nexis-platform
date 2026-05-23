@@ -44,9 +44,10 @@ public class LoginUserService_LoginAsyncTests
     {
         // Arrange
         var service = CreateService();
+        var email = Email.From("test@gmail.com");
 
         _userRepository
-            .Setup(x => x.GetByEmailAsync("test@gmail.com", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
 
         // Act
@@ -61,15 +62,15 @@ public class LoginUserService_LoginAsyncTests
     {
         // Arrange
         var service = CreateService();
+        var email = Email.From("test@gmail.com");
         var user = User.Create(
-            new UserId(Guid.NewGuid()),
-            Email.Create("test@gmail.com"),
-            Username.Create("user"),
-            Password.Create("hashed_password"),
-            new RoleId(Guid.NewGuid()));
+            email,
+            Username.From("user"),
+            Password.From("hashed_password"),
+            RoleId.New());
 
         _userRepository
-            .Setup(x => x.GetByEmailAsync("test@gmail.com", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
         // Act
@@ -84,17 +85,17 @@ public class LoginUserService_LoginAsyncTests
     {
         // Arrange
         var service = CreateService();
+        var email = Email.From("test@gmail.com");
         var user = User.Create(
-            new UserId(Guid.NewGuid()),
-            Email.Create("test@gmail.com"),
-            Username.Create("username"),
-            Password.Create("hashed_password"),
-            new RoleId(Guid.NewGuid()));
+            email,
+            Username.From("username"),
+            Password.From("hashed_password"),
+            RoleId.New());
 
         user.MarkEmailVerified();
 
         _userRepository
-            .Setup(x => x.GetByEmailAsync("test@gmail.com", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         _passwordHasher
             .Setup(x => x.Verify("123456789", "hashed_password"))
@@ -112,17 +113,17 @@ public class LoginUserService_LoginAsyncTests
     {
         // Arrange
         var service = CreateService();
+        var email = Email.From("test@gmail.com");
         var user = User.Create(
-            new UserId(Guid.NewGuid()),
-            Email.Create("test@gmail.com"),
-            Username.Create("username"),
-            Password.Create("hashed_password"),
-            new RoleId(Guid.NewGuid()));
+            email,
+            Username.From("username"),
+            Password.From("hashed_password"),
+            RoleId.New());
 
         user.MarkEmailVerified();
 
         _userRepository
-            .Setup(x => x.GetByEmailAsync("test@gmail.com", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         _passwordHasher
             .Setup(x => x.Verify("123456789", "hashed_password"))
@@ -166,17 +167,17 @@ public class LoginUserService_LoginAsyncTests
     {
         // Arrange
         var service = CreateService();
+        var email = Email.From("test@gmail.com");
         var user = User.Create(
-            new UserId(Guid.NewGuid()),
-            Email.Create("test@gmail.com"),
-            Username.Create("username"),
-            Password.Create("hashed_password"),
-            new RoleId(Guid.NewGuid()));
+            email,
+            Username.From("username"),
+            Password.From("hashed_password"),
+            RoleId.New());
 
         user.MarkEmailVerified();
 
         _userRepository
-            .Setup(x => x.GetByEmailAsync("test@gmail.com", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         _passwordHasher
             .Setup(x => x.Verify("123456789", "hashed_password"))

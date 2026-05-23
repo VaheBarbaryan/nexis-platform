@@ -2,6 +2,7 @@ using Modules.Posts.Application.Contracts;
 using Modules.Posts.Domain;
 using Modules.Posts.Domain.Authors;
 using Modules.Posts.Domain.Authors.Repositories;
+using Modules.Posts.Domain.Authors.ValueObjects;
 
 namespace Modules.Posts.Application.Services;
 
@@ -21,7 +22,7 @@ public sealed class AuthorService : IAuthorService
 
     public async Task<Author> CreateAsync(Guid userId, string username, CancellationToken ct)
     {
-        var author = Author.Create(userId, username);
+        var author = Author.Create(AuthorId.From(userId), Username.From(username));
 
         _authorRepository.Add(author);
 

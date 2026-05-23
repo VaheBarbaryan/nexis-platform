@@ -2,26 +2,29 @@ using FluentAssertions;
 using Modules.Posts.Domain.Authors.ValueObjects;
 using Modules.Posts.Domain.Posts;
 using Modules.Posts.Domain.Posts.Events;
+using Modules.Posts.Domain.Posts.ValueObjects;
 using SharedKernel.Domain.Exceptions;
 
 namespace Modules.Posts.Domain.UnitTests;
 
 public sealed class PostTests
 {
+    private static readonly AuthorId AuthorId = AuthorId.New();
+
     // -- Create -----------------------------------------------
 
     [Fact]
     public void Create_Should_Return_Post_When_Valid_Arguments()
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
+        var postContent = PostContent.From("Hello world");
 
         // Act
-        var post = Post.Create(authorId, "Hello world");
+        var post = Post.Create(AuthorId, postContent);
 
         // Assert
-        post.AuthorId.Should().Be(authorId);
-        post.Content.Should().Be("Hello world");
+        post.AuthorId.Should().Be(AuthorId);
+        post.Content.Should().Be(postContent);
         post.IsDeleted.Should().BeFalse();
     }
 
@@ -29,10 +32,10 @@ public sealed class PostTests
     public void Create_Should_Raise_PostCreatedDomainEvent()
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
+        var postContent = PostContent.From("Hello world");
 
         // Act
-        var post = Post.Create(authorId, "Hello world");
+        var post = Post.Create(AuthorId, postContent);
 
         // Assert
         post.DomainEvents
@@ -48,7 +51,7 @@ public sealed class PostTests
         var before = DateTimeOffset.UtcNow;
 
         // Act
-        var post = Post.Create(new AuthorId(Guid.NewGuid()), "Hello world");
+        var post = Post.Create(AuthorId, PostContent.From("Hello world"));
         var after = DateTimeOffset.UtcNow;
 
         // Assert
@@ -61,9 +64,9 @@ public sealed class PostTests
     [InlineData("   ")]
     public void Create_Should_Throw_When_Content_Is_Empty(string content)
     {
-        var action = () => Post.Create(new AuthorId(Guid.NewGuid()), content);
+        var action = () => Post.Create(AuthorId, PostContent.From(content));
 
-        action.Should().Throw<BusinessRuleValidationException>()
+        action.Should().Throw<DomainValidationException>()
             .WithMessage("*empty*");
     }
 
@@ -74,10 +77,10 @@ public sealed class PostTests
         var content = new string('a', 501);
 
         // Act
-        var action = () => Post.Create(new AuthorId(Guid.NewGuid()), content);
+        var action = () => Post.Create(AuthorId, PostContent.From(content));
 
         // Assert
-        action.Should().Throw<BusinessRuleValidationException>();
+        action.Should().Throw<DomainValidationException>();
     }
 
     // -- Update -----------------------------------------------
@@ -86,17 +89,17 @@ public sealed class PostTests
     public void Update_Should_Update_Content_And_UpdatedAt()
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Hello world");
+        var post = Post.Create(AuthorId, PostContent.From("Hello World"));
         post.ClearDomainEvents();
 
         // Act
         var before = DateTimeOffset.UtcNow;
-        post.Update(authorId, "Updated content");
+        var updatedContent = PostContent.From("Updated content");
+        post.Update(AuthorId, updatedContent);
         var after = DateTimeOffset.UtcNow;
 
         // Assert
-        post.Content.Should().Be("Updated content");
+        post.Content.Should().Be(updatedContent);
         post.UpdatedAt.Should().BeOnOrAfter(before).And.BeOnOrBefore(after);
     }
 
@@ -104,12 +107,11 @@ public sealed class PostTests
     public void Update_Should_Raise_PostUpdatedDomainEvent()
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Hello world");
+        var post = Post.Create(AuthorId, PostContent.From("Hello world"));
         post.ClearDomainEvents();
 
         // Act
-        post.Update(authorId, "Updated content");
+        post.Update(AuthorId, PostContent.From("Updated content"));
 
         // Assert
         post.DomainEvents
@@ -121,13 +123,12 @@ public sealed class PostTests
     public void Update_Should_Throw_When_Post_Is_Deleted()
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Hello world");
-        post.Delete(authorId);
+        var post = Post.Create(AuthorId, PostContent.From("Hello world"));
+        post.Delete(AuthorId);
         post.ClearDomainEvents();
 
         // Act
-        var action = () => post.Update(authorId, "Updated content");
+        var action = () => post.Update(AuthorId, PostContent.From("Updated content"));
 
         // Assert
         action.Should().Throw<BusinessRuleValidationException>();
@@ -139,43 +140,41 @@ public sealed class PostTests
     public void Update_Should_Throw_When_Content_Is_Empty(string content)
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Hello world");
+        var post = Post.Create(AuthorId, PostContent.From("Hello world"));
         post.ClearDomainEvents();
 
         // Act
-        var action = () => post.Update(authorId, content);
+        var action = () => post.Update(AuthorId, PostContent.From(content));
 
         // Assert
-        action.Should().Throw<BusinessRuleValidationException>();
+        action.Should().Throw<DomainValidationException>();
     }
 
     [Fact]
     public void Update_Should_Throw_When_Content_Exceeds_Max_Length()
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Hello world");
+        var post = Post.Create(AuthorId, PostContent.From("Hello world"));
         post.ClearDomainEvents();
         var content = new string('a', 501);
 
         // Act
-        var action = () => post.Update(authorId, content);
+        var action = () => post.Update(AuthorId, PostContent.From(content));
 
         // Assert
-        action.Should().Throw<BusinessRuleValidationException>();
+        action.Should().Throw<DomainValidationException>();
     }
 
     [Fact]
     public void Update_Should_Throw_When_Author_Does_Not_Own_Post()
     {
         // Arrange
-        var post = Post.Create(new AuthorId(Guid.NewGuid()), "Hello world");
+        var post = Post.Create(AuthorId, PostContent.From("Hello world"));
         post.ClearDomainEvents();
-        var differentAuthorId = new AuthorId(Guid.NewGuid());
+        var differentAuthorId = AuthorId.New();
 
         // Act
-        var action = () => post.Update(differentAuthorId, "Updated content");
+        var action = () => post.Update(differentAuthorId, PostContent.From("Updated content"));
 
         // Assert
         action.Should().Throw<BusinessRuleValidationException>();
@@ -187,13 +186,12 @@ public sealed class PostTests
     public void Delete_Should_Set_DeletedAt_And_Mark_As_Deleted()
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Hello world");
+        var post = Post.Create(AuthorId, PostContent.From("Hello world"));
         post.ClearDomainEvents();
 
         // Act
         var before = DateTimeOffset.UtcNow;
-        post.Delete(authorId);
+        post.Delete(AuthorId);
         var after = DateTimeOffset.UtcNow;
 
         // Assert
@@ -206,12 +204,11 @@ public sealed class PostTests
     public void Delete_Should_Raise_PostDeletedDomainEvent()
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Hello world");
+        var post = Post.Create(AuthorId, PostContent.From("Hello world"));
         post.ClearDomainEvents();
 
         // Act
-        post.Delete(authorId);
+        post.Delete(AuthorId);
 
         // Assert
         post.DomainEvents
@@ -223,14 +220,13 @@ public sealed class PostTests
     public void Delete_Should_Be_Idempotent_When_Called_Twice()
     {
         // Arrange
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Hello world");
+        var post = Post.Create(AuthorId, PostContent.From("Hello world"));
         post.ClearDomainEvents();
 
         // Act
-        post.Delete(authorId);
+        post.Delete(AuthorId);
         var firstDeletedAt = post.DeletedAt;
-        post.Delete(authorId);
+        post.Delete(AuthorId);
 
         // Assert
         post.DeletedAt.Should().Be(firstDeletedAt);
@@ -241,8 +237,8 @@ public sealed class PostTests
     public void Delete_Should_Throw_When_Author_Does_Not_Own_Post()
     {
         // Arrange
-        var post = Post.Create(new AuthorId(Guid.NewGuid()), "Hello world");
-        var differentAuthorId = new AuthorId(Guid.NewGuid());
+        var post = Post.Create(AuthorId, PostContent.From("Hello world"));
+        var differentAuthorId = AuthorId.New();
 
         // Act
         var action = () => post.Delete(differentAuthorId);

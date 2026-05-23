@@ -3,15 +3,19 @@ using SharedKernel.Domain.Rules;
 
 namespace SharedKernel.Domain.Entities;
 
-public abstract class Entity<TId>
+public abstract class Entity<TId> where TId : EntityId
 {
-    public TId Id { get; protected set; } = default!;
+    /// <summary>
+    /// Null suppression is intentional — ID is always set via factory methods
+    /// or hydrated by EF Core before any domain interaction.
+    /// </summary>
+    public TId Id { get; protected set; } = null!;
 
     protected static void CheckRule(IBusinessRule rule)
     {
-        ArgumentNullException.ThrowIfNull(rule);
-
         if (rule.IsBroken())
+        {
             throw new BusinessRuleValidationException(rule);
+        }
     }
 }

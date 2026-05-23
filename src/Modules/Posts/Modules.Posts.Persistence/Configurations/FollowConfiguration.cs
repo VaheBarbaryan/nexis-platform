@@ -20,17 +20,17 @@ public sealed class FollowConfiguration : IEntityTypeConfiguration<Follow>
         builder.Property(x => x.Id)
             .HasConversion(
                 id => id.Value,
-                value => new FollowId(value));
+                value => FollowId.From(value));
 
         builder.Property(x => x.FollowerId)
             .HasConversion(
                 id => id.Value,
-                value => new AuthorId(value));
+                value => AuthorId.From(value));
 
         builder.Property(x => x.FolloweeId)
             .HasConversion(
                 id => id.Value,
-                value => new AuthorId(value));
+                value => AuthorId.From(value));
 
         builder.Property(x => x.CreatedAt)
             .HasPrecision(0)

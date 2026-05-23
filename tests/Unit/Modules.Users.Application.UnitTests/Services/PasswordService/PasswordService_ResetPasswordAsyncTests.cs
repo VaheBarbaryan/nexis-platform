@@ -36,7 +36,7 @@ public class PasswordService_ResetPasswordAsyncTests
 
         _tokenGenerator.Setup(x => x.Hash(token)).Returns(hashedToken);
         _passwordTokenStore.Setup(x => x.GetAsync(hashedToken, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Guid.Empty);
+            .ReturnsAsync(Guid.NewGuid()); // no user in repo -> returns false
 
         // Act
         var result = await service.ResetPasswordAsync(token, newPassword);
@@ -61,7 +61,7 @@ public class PasswordService_ResetPasswordAsyncTests
         _tokenGenerator.Setup(x => x.Hash(token)).Returns(hashedToken);
         _passwordTokenStore.Setup(x => x.GetAsync(hashedToken, It.IsAny<CancellationToken>()))
             .ReturnsAsync(userId);
-        _userRepository.Setup(x => x.GetByIdAsync(new UserId(userId), It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByIdAsync(UserId.From(userId), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
 
         // Act
@@ -83,19 +83,17 @@ public class PasswordService_ResetPasswordAsyncTests
         const string hashedToken = "hashed_token";
         const string initialPassword = "initial_password";
         const string newPassword = "new_password";
-        var userId = Guid.NewGuid();
         var user = User.Create(
-            new UserId(Guid.NewGuid()),
-            Email.Create("test@gmail.com"),
-            Username.Create("testuser"),
-            Password.Create(initialPassword),
-            new RoleId(Guid.NewGuid())
+            Email.From("test@gmail.com"),
+            Username.From("testuser"),
+            Password.From(initialPassword),
+            RoleId.New()
         );
 
         _tokenGenerator.Setup(x => x.Hash(token)).Returns(hashedToken);
         _passwordTokenStore.Setup(x => x.GetAsync(hashedToken, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userId);
-        _userRepository.Setup(x => x.GetByIdAsync(new UserId(userId), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user.Id.Value);
+        _userRepository.Setup(x => x.GetByIdAsync(UserId.From(user.Id.Value), It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         _passwordHasher.Setup(x => x.Verify(newPassword, initialPassword)).Returns(true);
 
@@ -119,19 +117,17 @@ public class PasswordService_ResetPasswordAsyncTests
         const string initialPassword = "initial_password";
         const string newPassword = "new_password";
         const string newPasswordHash = "new_password_hash";
-        var userId = Guid.NewGuid();
         var user = User.Create(
-            new UserId(Guid.NewGuid()),
-            Email.Create("test@gmail.com"),
-            Username.Create("testuser"),
-            Password.Create(initialPassword),
-            new RoleId(Guid.NewGuid())
+            Email.From("test@gmail.com"),
+            Username.From("testuser"),
+            Password.From(initialPassword),
+            RoleId.New()
         );
 
         _tokenGenerator.Setup(x => x.Hash(token)).Returns(hashedToken);
         _passwordTokenStore.Setup(x => x.GetAsync(hashedToken, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userId);
-        _userRepository.Setup(x => x.GetByIdAsync(new UserId(userId), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(user.Id.Value);
+        _userRepository.Setup(x => x.GetByIdAsync(user.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         _passwordHasher.Setup(x => x.Hash(newPassword)).Returns(newPasswordHash);
         _passwordTokenStore.Setup(x => x.RemoveAsync(hashedToken, It.IsAny<CancellationToken>()));

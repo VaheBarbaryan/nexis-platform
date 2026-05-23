@@ -27,8 +27,8 @@ public sealed class FollowService : IFollowService
 
     public async Task FollowAsync(Guid followerId, Guid followeeId, CancellationToken cancellationToken = default)
     {
-        var followerIdVo = new AuthorId(followerId);
-        var followeeIdVo = new AuthorId(followeeId);
+        var followerIdVo = AuthorId.From(followerId);
+        var followeeIdVo = AuthorId.From(followeeId);
 
         var exists =
             await _followRepository.ExistsAsync(followerIdVo, followeeIdVo, cancellationToken);
@@ -47,7 +47,7 @@ public sealed class FollowService : IFollowService
     public async Task UnfollowAsync(Guid followerId, Guid followeeId, CancellationToken cancellationToken = default)
     {
         var follow =
-            await _followRepository.GetAsync(new AuthorId(followerId), new AuthorId(followeeId), cancellationToken);
+            await _followRepository.GetAsync(AuthorId.From(followerId), AuthorId.From(followeeId), cancellationToken);
 
         if (follow is null)
         {
@@ -67,7 +67,7 @@ public sealed class FollowService : IFollowService
         CancellationToken cancellationToken = default)
     {
         var follows = await _followRepository.GetFollowersAsync(
-            new AuthorId(authorId), cursor, limit, cancellationToken);
+            AuthorId.From(authorId), cursor, limit, cancellationToken);
 
         var authorIds = follows.Select(f => f.FollowerId).Distinct();
         var authors = await _authorRepository.GetByIdsAsync(authorIds, cancellationToken);
@@ -78,7 +78,7 @@ public sealed class FollowService : IFollowService
             f =>
             {
                 authors.TryGetValue(f.FollowerId, out var author);
-                return new FollowSummary(f.FollowerId.Value, author?.Username ?? string.Empty, f.CreatedAt);
+                return new FollowSummary(f.FollowerId.Value, author?.Username.Value ?? string.Empty, f.CreatedAt);
             },
             f => new Cursor(f.CreatedAt, f.Id.Value).Encode());
     }
@@ -90,7 +90,7 @@ public sealed class FollowService : IFollowService
         CancellationToken cancellationToken = default)
     {
         var follows = await _followRepository.GetFollowingAsync(
-            new AuthorId(authorId), cursor, limit, cancellationToken);
+            AuthorId.From(authorId), cursor, limit, cancellationToken);
 
         var authorIds = follows.Select(f => f.FolloweeId).Distinct();
         var authors = await _authorRepository.GetByIdsAsync(authorIds, cancellationToken);
@@ -101,7 +101,7 @@ public sealed class FollowService : IFollowService
             f =>
             {
                 authors.TryGetValue(f.FolloweeId, out var author);
-                return new FollowSummary(f.FolloweeId.Value, author?.Username ?? string.Empty, f.CreatedAt);
+                return new FollowSummary(f.FolloweeId.Value, author?.Username.Value ?? string.Empty, f.CreatedAt);
             },
             f => new Cursor(f.CreatedAt, f.Id.Value).Encode());
     }

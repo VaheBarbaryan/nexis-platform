@@ -46,7 +46,7 @@ public sealed class LoginUserService : ILoginUserService
         string password,
         CancellationToken ct = default)
     {
-        var user = await _userRepository.GetByEmailAsync(email, ct);
+        var user = await _userRepository.GetByEmailAsync(Email.From(email), ct);
 
         if (user is null)
         {
@@ -90,7 +90,7 @@ public sealed class LoginUserService : ILoginUserService
             throw new InvalidCredentialException("Invalid refresh token.");
         }
 
-        var user = await _userRepository.GetByIdAsync(new UserId(userId.Value), ct);
+        var user = await _userRepository.GetByIdAsync(UserId.From(userId.Value), ct);
 
         if (user is null)
         {

@@ -18,10 +18,13 @@ public sealed class NotificationActorConfiguration : IEntityTypeConfiguration<No
         builder.Property(x => x.Id)
             .HasConversion(
                 id => id.Value,
-                value => new NotificationActorId(value)
+                value => NotificationActorId.From(value)
             );
 
         builder.Property(x => x.Username)
+            .HasConversion(
+                username => username.Value,
+                value => NotificationUsername.From(value))
             .HasMaxLength(50)
             .IsRequired();
     }

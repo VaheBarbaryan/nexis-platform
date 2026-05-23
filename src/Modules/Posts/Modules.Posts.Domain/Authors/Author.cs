@@ -3,22 +3,22 @@ using SharedKernel.Domain.Entities;
 
 namespace Modules.Posts.Domain.Authors;
 
-public class Author : Entity<AuthorId>
+public sealed class Author : Entity<AuthorId>
 {
-    public string Username { get; private set; } = null!;
+    public Username Username { get; private set; } = null!;
 
     private Author()
     {
     }
 
-    private Author(AuthorId id, string username)
+    private Author(AuthorId id, Username username)
     {
         Id = id;
         Username = username;
     }
 
-    public static Author Create(Guid id, string username)
+    public static Author Create(AuthorId id, Username username)
     {
-        return new Author(new AuthorId(id), username);
+        return new Author(id, username);
     }
 }

@@ -17,7 +17,6 @@ public sealed class NotificationActorRepository : INotificationActorRepository
 
     public async Task<bool> ExistsAsync(NotificationActorId id, CancellationToken ct = default)
     {
-        ArgumentNullException.ThrowIfNull(id);
         return await _context.NotificationActors.AnyAsync(a => a.Id == id, ct);
     }
 

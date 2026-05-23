@@ -7,6 +7,7 @@ using Modules.Posts.Domain.Authors.ValueObjects;
 using Modules.Posts.Domain.Comments;
 using Modules.Posts.Domain.Comments.Exceptions;
 using Modules.Posts.Domain.Comments.Repositories;
+using Modules.Posts.Domain.Comments.ValueObjects;
 using Modules.Posts.Domain.Posts.Repositories;
 using Modules.Posts.Domain.Posts.ValueObjects;
 using Moq;
@@ -30,7 +31,8 @@ public sealed class CommentService_UpdateAsyncTests
         var commentId = Guid.NewGuid();
 
         _commentRepository
-            .Setup(x => x.GetByIdAsync(It.IsAny<Domain.Comments.ValueObjects.CommentId>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetByIdAsync(It.IsAny<Domain.Comments.ValueObjects.CommentId>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync((Comment?)null);
 
         var act = () => service.UpdateAsync(Guid.NewGuid(), commentId, "Updated");
@@ -42,10 +44,10 @@ public sealed class CommentService_UpdateAsyncTests
     public async Task UpdateAsync_Should_Update_Comment_And_Commit()
     {
         var service = CreateService();
-        var authorId = new AuthorId(Guid.NewGuid());
-        var postId = new PostId(Guid.NewGuid());
-        var comment = Comment.Create(postId, authorId, "Original content");
-        var author = Author.Create(authorId.Value, "testuser");
+        var authorId = AuthorId.New();
+        var postId = PostId.New();
+        var comment = Comment.Create(postId, authorId, CommentContent.From("Original content"));
+        var author = Author.Create(authorId, Username.From("testuser"));
 
         _commentRepository
             .Setup(x => x.GetByIdAsync(comment.Id, It.IsAny<CancellationToken>()))
@@ -66,10 +68,10 @@ public sealed class CommentService_UpdateAsyncTests
     public async Task UpdateAsync_Should_Return_CommentSummary_With_Updated_Content()
     {
         var service = CreateService();
-        var authorId = new AuthorId(Guid.NewGuid());
-        var postId = new PostId(Guid.NewGuid());
-        var comment = Comment.Create(postId, authorId, "Original content");
-        var author = Author.Create(authorId.Value, "testuser");
+        var authorId = AuthorId.New();
+        var postId = PostId.New();
+        var comment = Comment.Create(postId, authorId, CommentContent.From("Original content"));
+        var author = Author.Create(authorId, Username.From("testuser"));
 
         _commentRepository
             .Setup(x => x.GetByIdAsync(comment.Id, It.IsAny<CancellationToken>()))

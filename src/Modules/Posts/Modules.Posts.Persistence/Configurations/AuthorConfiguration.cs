@@ -18,10 +18,14 @@ public sealed class AuthorConfiguration : IEntityTypeConfiguration<Author>
         builder.Property(x => x.Id)
             .HasConversion(
                 id => id.Value,
-                value => new AuthorId(value)
+                value => AuthorId.From(value)
             );
 
         builder.Property(x => x.Username)
+            .HasConversion(
+                username => username.Value,
+                value => Username.From(value)
+            )
             .HasMaxLength(50)
             .IsRequired();
     }

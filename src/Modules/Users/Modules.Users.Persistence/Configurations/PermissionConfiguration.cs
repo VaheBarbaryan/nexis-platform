@@ -14,11 +14,11 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
         builder.ToTable("permissions");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
-            .HasConversion(id => id.Value, value => new PermissionId(value))
+            .HasConversion(id => id.Value, value => PermissionId.From(value))
             .ValueGeneratedNever();
 
         builder.Property(x => x.Name)
-            .HasConversion(name => name.Value, value => PermissionName.Create(value))
+            .HasConversion(name => name.Value, value => PermissionName.From(value))
             .HasMaxLength(100)
             .IsRequired();
         builder.HasIndex(x => x.Name).IsUnique();

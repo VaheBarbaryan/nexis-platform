@@ -20,9 +20,9 @@ public class UserRepository : IUserRepository
         return await _context.Users.SingleOrDefaultAsync(x => x.Id == userId, cancellationToken: ct);
     }
 
-    public async Task<User?> GetByEmailAsync(string email, CancellationToken ct = default)
+    public async Task<User?> GetByEmailAsync(Email email, CancellationToken ct = default)
     {
-        return await _context.Users.SingleOrDefaultAsync(x => x.Email.Value == email, cancellationToken: ct);
+        return await _context.Users.SingleOrDefaultAsync(x => x.Email.Value == email.Value, cancellationToken: ct);
     }
 
     public async Task<bool> EmailExistsAsync(Email email, CancellationToken ct = default)

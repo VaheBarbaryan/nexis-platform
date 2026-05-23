@@ -17,7 +17,7 @@ public sealed class PostLike : Entity<PostLikeId>
 
     private PostLike(PostId postId, AuthorId authorId)
     {
-        Id = new PostLikeId(Guid.NewGuid());
+        Id = PostLikeId.New();
         PostId = postId;
         AuthorId = authorId;
         CreatedAt = DateTimeOffset.UtcNow;

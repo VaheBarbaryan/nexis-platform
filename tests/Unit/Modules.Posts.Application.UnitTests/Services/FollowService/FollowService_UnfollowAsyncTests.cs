@@ -26,7 +26,7 @@ public sealed class FollowService_UnfollowAsyncTests
         var followeeId = Guid.NewGuid();
 
         _followRepository
-            .Setup(x => x.GetAsync(new AuthorId(followerId), new AuthorId(followeeId), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync(AuthorId.From(followerId), AuthorId.From(followeeId), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Follow?)null);
 
         var act = () => service.UnfollowAsync(followerId, followeeId);
@@ -42,7 +42,7 @@ public sealed class FollowService_UnfollowAsyncTests
         var followeeId = Guid.NewGuid();
 
         _followRepository
-            .Setup(x => x.GetAsync(new AuthorId(followerId), new AuthorId(followeeId), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync(AuthorId.From(followerId), AuthorId.From(followeeId), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Follow?)null);
 
         await Assert.ThrowsAsync<NotFollowingException>(() => service.UnfollowAsync(followerId, followeeId));
@@ -55,8 +55,8 @@ public sealed class FollowService_UnfollowAsyncTests
     public async Task UnfollowAsync_Should_Remove_Follow_And_Commit_When_Following()
     {
         var service = CreateService();
-        var followerId = new AuthorId(Guid.NewGuid());
-        var followeeId = new AuthorId(Guid.NewGuid());
+        var followerId = AuthorId.New();
+        var followeeId = AuthorId.New();
         var follow = Follow.Create(followerId, followeeId);
 
         _followRepository

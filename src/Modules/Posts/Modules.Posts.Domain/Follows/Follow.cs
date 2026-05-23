@@ -20,7 +20,7 @@ public sealed class Follow : AggregateRoot<FollowId>
     {
         CheckRule(new CannotFollowYourselfRule(followerId, followeeId));
 
-        Id = new FollowId(Guid.NewGuid());
+        Id = FollowId.New();
         FollowerId = followerId;
         FolloweeId = followeeId;
         CreatedAt = DateTimeOffset.UtcNow;

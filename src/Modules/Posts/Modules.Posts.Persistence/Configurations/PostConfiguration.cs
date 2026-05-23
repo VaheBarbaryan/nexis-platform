@@ -20,17 +20,20 @@ public sealed class PostConfiguration : IEntityTypeConfiguration<Post>
         builder.Property(p => p.Id)
             .HasConversion(
                 id => id.Value,
-                value => new PostId(value)
+                value => PostId.From(value)
             );
 
         builder.Property(p => p.Content)
+            .HasConversion(
+                content => content.Value,
+                value => PostContent.From(value))
             .HasMaxLength(500)
             .IsRequired();
 
         builder.Property(p => p.AuthorId)
             .HasConversion(
                 id => id.Value,
-                value => new AuthorId(value)
+                value => AuthorId.From(value)
             );
 
         builder.Property(p => p.CreatedAt)
