@@ -8,6 +8,7 @@ namespace SharedKernel.Domain.Aggregates;
     "CA1030:Use events where appropriate",
     Justification = "This is a domain event helper, not a true C# event")]
 public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
+    where TId : EntityId
 {
     private readonly List<IDomainEvent> _domainEvents = new();
 
@@ -15,11 +16,8 @@ public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
 
     protected void RaiseDomainEvent(IDomainEvent domainEvent)
     {
-        ArgumentNullException.ThrowIfNull(domainEvent);
-
         _domainEvents.Add(domainEvent);
     }
 
-    public void ClearDomainEvents() =>
-        _domainEvents.Clear();
+    public void ClearDomainEvents() => _domainEvents.Clear();
 }

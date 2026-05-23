@@ -17,7 +17,7 @@ public sealed class NotificationRepository : INotificationRepository
     }
 
     public async Task<List<Notification>> GetByRecipientAsync(
-        Guid recipientId,
+        NotificationUserId recipientId,
         string? cursor,
         int limit = 20,
         CancellationToken ct = default)
@@ -39,12 +39,12 @@ public sealed class NotificationRepository : INotificationRepository
 
         return await _context.Notifications
             .FromSqlInterpolated($"""
-                SELECT * FROM notifications.notifications
-                WHERE recipient_id = {recipientId}
-                  AND (created_at, id) < ({lastDate}, {lastId})
-                ORDER BY created_at DESC, id DESC
-                LIMIT {limit + 1}
-                """)
+                                  SELECT * FROM notifications.notifications
+                                  WHERE recipient_id = {recipientId}
+                                    AND (created_at, id) < ({lastDate}, {lastId})
+                                  ORDER BY created_at DESC, id DESC
+                                  LIMIT {limit + 1}
+                                  """)
             .ToListAsync(ct);
     }
 

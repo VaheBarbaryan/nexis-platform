@@ -16,10 +16,10 @@ public sealed class User : AggregateRoot<UserId>
     public Username Username { get; private set; } = null!;
     public Password Password { get; private set; } = null!;
     public DateTimeOffset? EmailVerifiedAt { get; private set; }
-    public string? Bio { get; private set; }
-    public string? Location { get; private set; }
-    public string? Website { get; private set; }
-    public DateTime? BirthDate { get; private set; }
+    public Bio? Bio { get; private set; }
+    public Location? Location { get; private set; }
+    public Website? Website { get; private set; }
+    public BirthDate? BirthDate { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset UpdatedAt { get; private set; }
 
@@ -27,9 +27,9 @@ public sealed class User : AggregateRoot<UserId>
     {
     }
 
-    private User(UserId id, Email email, Username username, Password password)
+    private User(Email email, Username username, Password password)
     {
-        Id = id;
+        Id = UserId.New();
         Email = email;
         Username = username;
         Password = password;
@@ -40,13 +40,12 @@ public sealed class User : AggregateRoot<UserId>
     }
 
     public static User Create(
-        UserId userId,
         Email email,
         Username username,
         Password password,
         RoleId defaultRoleId)
     {
-        var user = new User(userId, email, username, password);
+        var user = new User(email, username, password);
 
         user.AssignRole(defaultRoleId);
 
@@ -65,7 +64,7 @@ public sealed class User : AggregateRoot<UserId>
         return user;
     }
 
-    public void UpdateProfile(string? bio, string? location, string? website, DateTime? birthDate)
+    public void UpdateProfile(Bio? bio, Location? location, Website? website, BirthDate? birthDate)
     {
         Bio = bio;
         Location = location;
@@ -98,7 +97,7 @@ public sealed class User : AggregateRoot<UserId>
     {
         CheckRule(new NewPasswordMustBeDifferentFromCurrentRule(password, Password.Value));
 
-        Password = Password.Create(password);
+        Password = Password.From(password);
         UpdatedAt = DateTimeOffset.UtcNow;
     }
 

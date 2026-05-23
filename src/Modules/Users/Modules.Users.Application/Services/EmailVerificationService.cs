@@ -43,7 +43,7 @@ public class EmailVerificationService : IEmailVerificationService
             throw new InvalidOperationException("Token is invalid.");
         }
 
-        var userIdVo = new UserId(userId.Value);
+        var userIdVo = UserId.From(userId.Value);
         var user = await _userRepository.GetByIdAsync(userIdVo, ct);
 
         if (user is null)
@@ -64,7 +64,7 @@ public class EmailVerificationService : IEmailVerificationService
 
     public async Task ResendEmailVerificationAsync(string email, CancellationToken ct = default)
     {
-        var user = await _userRepository.GetByEmailAsync(email, ct);
+        var user = await _userRepository.GetByEmailAsync(Email.From(email), ct);
 
         if (user is not null && user.EmailVerifiedAt is null)
         {

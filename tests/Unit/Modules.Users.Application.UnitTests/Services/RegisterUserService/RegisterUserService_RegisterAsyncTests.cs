@@ -111,7 +111,7 @@ public class RegisterUserService_RegisterAsyncTests
         var email = "test@gmail.com";
         var password = "strong_password";
         var hashedPassword = "hashed_password";
-        var role = Role.Create(SystemRoles.User.Value);
+        var role = Role.Create(SystemRoles.User);
 
         User? capturedUser = null;
 

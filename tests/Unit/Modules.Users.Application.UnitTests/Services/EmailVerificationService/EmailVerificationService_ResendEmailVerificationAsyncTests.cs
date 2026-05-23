@@ -26,16 +26,16 @@ public class EmailVerificationService_ResendEmailVerificationAsyncTests
     public async Task ResendEmailVerificationAsync_Should_Commit_Successfully_When_User_Is_Unverified()
     {
         // Arrange
+        var email = Email.From("test@gmail.com");
         var user = User.Create(
-            new UserId(Guid.NewGuid()),
-            Email.Create("test@gmail.com"),
-            Username.Create("testuser"),
-            Password.Create("Password123!"),
-            new RoleId(Guid.NewGuid())
+            email,
+            Username.From("testuser"),
+            Password.From("Password123!"),
+            RoleId.New()
         );
 
         _userRepository
-            .Setup(r => r.GetByEmailAsync("test@gmail.com", It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
         var service = CreateService();
@@ -53,7 +53,7 @@ public class EmailVerificationService_ResendEmailVerificationAsyncTests
     public async Task ResendEmailVerificationAsync_Should_Commit_Successfully_When_User_Does_Not_Exist()
     {
         _userRepository
-            .Setup(r => r.GetByEmailAsync("missing@gmail.com", It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByEmailAsync(Email.From("missing@gmail.com"), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
 
         var service = CreateService();
@@ -68,18 +68,18 @@ public class EmailVerificationService_ResendEmailVerificationAsyncTests
     [Fact]
     public async Task ResendEmailVerificationAsync_Should_Commit_Successfully_User_Is_Already_Verified()
     {
+        var email = Email.From("verified@gmail.com");
         var user = User.Create(
-            new UserId(Guid.NewGuid()),
-            Email.Create("verified@gmail.com"),
-            Username.Create("verifieduser"),
-            Password.Create("Password123!"),
-            new RoleId(Guid.NewGuid())
+            email,
+            Username.From("verifieduser"),
+            Password.From("Password123!"),
+            RoleId.New()
         );
 
         user.MarkEmailVerified();
 
         _userRepository
-            .Setup(r => r.GetByEmailAsync("verified@gmail.com", It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
         var service = CreateService();

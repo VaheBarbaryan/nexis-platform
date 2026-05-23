@@ -18,10 +18,10 @@ public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermissi
         builder.HasKey(p => new { p.RoleId, p.PermissionId });
 
         builder.Property(x => x.RoleId)
-            .HasConversion(id => id.Value, value => new RoleId(value));
+            .HasConversion(id => id.Value, value => RoleId.From(value));
 
         builder.Property(x => x.PermissionId)
-            .HasConversion(id => id.Value, value => new PermissionId(value));
+            .HasConversion(id => id.Value, value => PermissionId.From(value));
 
         builder.HasOne<Permission>()
             .WithMany()

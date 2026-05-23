@@ -22,19 +22,23 @@ public sealed class CommentConfiguration : IEntityTypeConfiguration<Comment>
         builder.Property(c => c.Id)
             .HasConversion(
                 id => id.Value,
-                value => new CommentId(value));
+                value => CommentId.From(value));
 
         builder.Property(c => c.PostId)
             .HasConversion(
                 id => id.Value,
-                value => new PostId(value));
+                value => PostId.From(value));
 
         builder.Property(c => c.AuthorId)
             .HasConversion(
                 id => id.Value,
-                value => new AuthorId(value));
+                value => AuthorId.From(value));
 
         builder.Property(c => c.Content)
+            .HasConversion(
+                content => content.Value,
+                value => CommentContent.From(value)
+            )
             .HasMaxLength(1000)
             .IsRequired();
 

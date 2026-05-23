@@ -33,7 +33,7 @@ public sealed class PostService_LikeAsyncTests
         var postId = Guid.NewGuid();
 
         _postRepository
-            .Setup(x => x.GetByIdAsync(new PostId(postId), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetByIdAsync(PostId.From(postId), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Post?)null);
 
         // Act
@@ -48,8 +48,8 @@ public sealed class PostService_LikeAsyncTests
     {
         // Arrange
         var service = CreateService();
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Hello world");
+        var authorId = AuthorId.New();
+        var post = Post.Create(authorId, PostContent.From("Hello world"));
         var existingLike = PostLike.Create(post.Id, authorId);
 
         _postRepository
@@ -73,8 +73,8 @@ public sealed class PostService_LikeAsyncTests
     {
         // Arrange
         var service = CreateService();
-        var authorId = new AuthorId(Guid.NewGuid());
-        var post = Post.Create(authorId, "Hello world");
+        var authorId = AuthorId.New();
+        var post = Post.Create(authorId, PostContent.From("Hello world"));
 
         _postRepository
             .Setup(x => x.GetByIdAsync(post.Id, It.IsAny<CancellationToken>()))

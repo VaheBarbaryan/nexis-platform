@@ -84,20 +84,17 @@ public class EmailVerificationService_VerifyEmailTests
     {
         // Arrange
         var service = CreateService();
-        var userId = Guid.NewGuid();
-
         var user = User.Create(
-            new UserId(userId),
-            Email.Create("test@mail.com"),
-            Username.Create("user"),
-            Password.Create("hashed_password"),
-            new RoleId(Guid.NewGuid()));
+            Email.From("test@mail.com"),
+            Username.From("user"),
+            Password.From("hashed_password"),
+            RoleId.New());
 
         user.MarkEmailVerified();
 
         _tokenGenerator.Setup(x => x.Hash("token")).Returns("hash");
         _tokenStore.Setup(x => x.GetDeleteAsync("hash", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userId);
+            .ReturnsAsync(user.Id.Value);
 
         _userRepository.Setup(x =>
                 x.GetByIdAsync(It.IsAny<UserId>(), It.IsAny<CancellationToken>()))
@@ -117,19 +114,17 @@ public class EmailVerificationService_VerifyEmailTests
     {
         // Arrange
         var service = CreateService();
-        var userId = Guid.NewGuid();
 
         var user = User.Create(
-            new UserId(userId),
-            Email.Create("test@mail.com"),
-            Username.Create("user"),
-            Password.Create("hashed_password"),
-            new RoleId(Guid.NewGuid()));
+            Email.From("test@mail.com"),
+            Username.From("user"),
+            Password.From("hashed_password"),
+            RoleId.New());
 
         _tokenGenerator.Setup(x => x.Hash("token")).Returns("hash");
         _tokenStore
             .Setup(x => x.GetDeleteAsync("hash", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userId);
+            .ReturnsAsync(user.Id.Value);
 
         _userRepository.Setup(x =>
                 x.GetByIdAsync(It.IsAny<UserId>(), It.IsAny<CancellationToken>()))

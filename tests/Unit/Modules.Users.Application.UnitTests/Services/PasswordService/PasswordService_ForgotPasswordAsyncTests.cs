@@ -29,13 +29,13 @@ public class PasswordService_ForgotPasswordAsyncTests
     {
         // Arrange
         var service = CreateService();
-        var email = "test@gmail.com";
+        var email = Email.From("test@gmail.com");
 
         _userRepository.Setup(x => x.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
 
         // Act
-        await service.ForgotPasswordAsync(email);
+        await service.ForgotPasswordAsync(email.Value);
 
         // Assert
         _unitOfWork.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
@@ -49,7 +49,7 @@ public class PasswordService_ForgotPasswordAsyncTests
         var email = "test@gmail.com";
         var user = CreateUser(email);
 
-        _userRepository.Setup(x => x.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByEmailAsync(user.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
         // Act
@@ -64,14 +64,14 @@ public class PasswordService_ForgotPasswordAsyncTests
     {
         // Arrange
         var service = CreateService();
-        var email = "test@gmail.com";
+        var email = Email.From("test@gmail.com");
 
         _userRepository.Setup(x => x.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
 
         // Act
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        await service.ForgotPasswordAsync(email);
+        await service.ForgotPasswordAsync(email.Value);
         stopwatch.Stop();
 
         // Assert - should take at least 100ms due to delay
@@ -88,7 +88,7 @@ public class PasswordService_ForgotPasswordAsyncTests
 
         user.MarkEmailVerified();
 
-        _userRepository.Setup(x => x.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
+        _userRepository.Setup(x => x.GetByEmailAsync(user.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
 
         // Act
@@ -101,11 +101,10 @@ public class PasswordService_ForgotPasswordAsyncTests
     private static User CreateUser(string email)
     {
         return User.Create(
-            new UserId(Guid.NewGuid()),
-            Email.Create(email),
-            Username.Create("testuser"),
-            Password.Create("Password123!"),
-            new RoleId(Guid.NewGuid())
+            Email.From(email),
+            Username.From("testuser"),
+            Password.From("Password123!"),
+            RoleId.New()
         );
     }
 }

@@ -4,20 +4,17 @@ public sealed record Password
 {
     public string Value { get; } = null!;
 
-    private Password() {}
-
-    private Password(string value)
+    private Password()
     {
-        Value = value;
     }
 
-    public static Password Create(string hash)
-    {
-        if (string.IsNullOrWhiteSpace(hash))
-            throw new ArgumentException("Password cannot be empty");
+    private Password(string value) => Value = value;
 
-        if (hash.Length < 8)
-            throw new ArgumentException("Password is too short.");
+    public static Password From(string hash)
+    {
+        if (string.IsNullOrWhiteSpace(hash)) throw new ArgumentException("Password cannot be empty", nameof(hash));
+
+        if (hash.Length < 8) throw new ArgumentException("Password is too short.", nameof(hash));
 
         return new Password(hash);
     }

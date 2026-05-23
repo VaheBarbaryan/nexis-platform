@@ -11,32 +11,32 @@ public sealed class Role : AggregateRoot<RoleId>
 
     public RoleName Name { get; private set; } = null!;
 
-    public IReadOnlyCollection<RolePermission> Permissions => _permissions;
+    public IReadOnlyCollection<RolePermission> Permissions => _permissions.AsReadOnly();
 
-    private Role() {}
-
-    private Role(RoleId id, RoleName name)
+    private Role()
     {
-        Id = id;
+    }
+
+    private Role(RoleName name)
+    {
+        Id = RoleId.New();
         Name = name;
     }
 
-    public static Role Create(string name)
+    public static Role Create(RoleName name)
     {
-        var roleId = new RoleId(Guid.NewGuid());
-        var roleName = RoleName.Create(name);
-
-        return new Role(roleId, roleName);
+        return new Role(name);
     }
 
     public void AddPermission(PermissionId permissionId)
     {
+        CheckRule(new RoleCannotHaveDuplicatePermissionRule(_permissions, permissionId));
+
         _permissions.Add(new RolePermission(Id, permissionId));
     }
 
     public void RemovePermission(PermissionId permissionId)
     {
-
         CheckRule(new RoleMustHavePermissionRule(_permissions, permissionId));
 
         var permission = _permissions.First(p => p.PermissionId == permissionId);

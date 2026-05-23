@@ -1,13 +1,14 @@
+using Modules.Notifications.Domain.Notifications.ValueObjects;
 using SharedKernel.Domain.Rules;
 
 namespace Modules.Notifications.Domain.Notifications.Rules;
 
 public sealed class CannotCreateSelfNotificationRule : IBusinessRule
 {
-    private readonly Guid _recipientId;
-    private readonly Guid _actorId;
+    private readonly NotificationUserId _recipientId;
+    private readonly NotificationUserId _actorId;
 
-    public CannotCreateSelfNotificationRule(Guid recipientId, Guid actorId)
+    public CannotCreateSelfNotificationRule(NotificationUserId recipientId, NotificationUserId actorId)
     {
         _recipientId = recipientId;
         _actorId = actorId;

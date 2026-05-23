@@ -12,7 +12,7 @@ public sealed class Comment : AggregateRoot<CommentId>, ISoftDeletable
 {
     public PostId PostId { get; private set; } = null!;
     public AuthorId AuthorId { get; private set; } = null!;
-    public string Content { get; private set; } = null!;
+    public CommentContent Content { get; private set; } = null!;
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset UpdatedAt { get; private set; }
     public DateTimeOffset? DeletedAt { get; private set; }
@@ -23,12 +23,9 @@ public sealed class Comment : AggregateRoot<CommentId>, ISoftDeletable
     {
     }
 
-    private Comment(PostId postId, AuthorId authorId, string content)
+    private Comment(PostId postId, AuthorId authorId, CommentContent content)
     {
-        CheckRule(new CommentContentCannotBeEmptyRule(content));
-        CheckRule(new CommentContentMaxLengthRule(content));
-
-        Id = new CommentId(Guid.NewGuid());
+        Id = CommentId.New();
         PostId = postId;
         AuthorId = authorId;
         Content = content;
@@ -38,7 +35,7 @@ public sealed class Comment : AggregateRoot<CommentId>, ISoftDeletable
         UpdatedAt = now;
     }
 
-    public static Comment Create(PostId postId, AuthorId authorId, string content)
+    public static Comment Create(PostId postId, AuthorId authorId, CommentContent content)
     {
         var comment = new Comment(postId, authorId, content);
 
@@ -47,7 +44,7 @@ public sealed class Comment : AggregateRoot<CommentId>, ISoftDeletable
                 comment.Id.Value,
                 comment.PostId.Value,
                 comment.AuthorId.Value,
-                comment.Content,
+                comment.Content.Value,
                 comment.CreatedAt
             )
         );
@@ -55,23 +52,23 @@ public sealed class Comment : AggregateRoot<CommentId>, ISoftDeletable
         return comment;
     }
 
-    public void Update(AuthorId requestingAuthorId, string content)
+    public void Update(AuthorId requestingAuthorId, CommentContent content)
     {
         CheckRule(new DeletedCommentCannotBeModifiedRule(IsDeleted));
         CheckRule(new CommentMustBelongToAuthorRule(AuthorId, requestingAuthorId));
-        CheckRule(new CommentContentCannotBeEmptyRule(content));
-        CheckRule(new CommentContentMaxLengthRule(content));
+
+        if (Content == content) return;
 
         Content = content;
         UpdatedAt = DateTimeOffset.UtcNow;
 
-        RaiseDomainEvent(new CommentUpdatedDomainEvent(Id.Value, PostId.Value, AuthorId.Value, Content, UpdatedAt));
+        RaiseDomainEvent(
+            new CommentUpdatedDomainEvent(Id.Value, PostId.Value, AuthorId.Value, Content.Value, UpdatedAt));
     }
 
     public void Delete(AuthorId requestingAuthorId)
     {
-        if (IsDeleted) return;
-
+        CheckRule(new DeletedCommentCannotBeModifiedRule(IsDeleted));
         CheckRule(new CommentMustBelongToAuthorRule(AuthorId, requestingAuthorId));
 
         var now = DateTimeOffset.UtcNow;

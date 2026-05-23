@@ -21,12 +21,15 @@ public sealed class NotificationActorService : INotificationActorService
 
     public async Task<NotificationActor> CreateAsync(Guid userId, string username, CancellationToken ct)
     {
-        var id = new NotificationActorId(userId);
+        var actorId = NotificationActorId.From(userId);
 
-        if (await _notificationActorRepository.ExistsAsync(id, ct))
-            return NotificationActor.Create(userId, username);
+        var notificationActor = NotificationActor.Create(actorId, NotificationUsername.From(username));
 
-        var notificationActor = NotificationActor.Create(userId, username);
+        if (await _notificationActorRepository.ExistsAsync(actorId, ct))
+        {
+            return notificationActor;
+        }
+
         _notificationActorRepository.Add(notificationActor);
 
         await _unitOfWork.CommitAsync(ct);

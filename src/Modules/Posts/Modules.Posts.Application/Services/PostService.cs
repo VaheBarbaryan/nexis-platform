@@ -55,8 +55,8 @@ public sealed class PostService : IPostService
                 authors.TryGetValue(p.AuthorId, out var author);
                 return new PostSummary(
                     p.Id.Value,
-                    new PostAuthor(p.AuthorId.Value, author?.Username ?? string.Empty),
-                    p.Content,
+                    new PostAuthor(p.AuthorId.Value, author?.Username.Value ?? string.Empty),
+                    p.Content.Value,
                     p.CreatedAt,
                     likeCounts.GetValueOrDefault(p.Id.Value),
                     commentCounts.GetValueOrDefault(p.Id.Value),
@@ -68,7 +68,7 @@ public sealed class PostService : IPostService
     public async Task<CursorResponse<PostSummary>> GetFeedAsync(Guid userId, string? cursor, int limit = 10,
         CancellationToken ct = default)
     {
-        var authorId = new AuthorId(userId);
+        var authorId = AuthorId.From(userId);
         var posts = await _postRepository.GetFeedAsync(authorId, cursor, limit, ct);
         var postIds = posts.Select(p => p.Id).ToList();
 
@@ -86,8 +86,8 @@ public sealed class PostService : IPostService
                 authors.TryGetValue(p.AuthorId, out var author);
                 return new PostSummary(
                     p.Id.Value,
-                    new PostAuthor(p.AuthorId.Value, author?.Username ?? string.Empty),
-                    p.Content,
+                    new PostAuthor(p.AuthorId.Value, author?.Username.Value ?? string.Empty),
+                    p.Content.Value,
                     p.CreatedAt,
                     likeCounts.GetValueOrDefault(p.Id.Value),
                     commentCounts.GetValueOrDefault(p.Id.Value),
@@ -98,7 +98,7 @@ public sealed class PostService : IPostService
 
     public async Task<PostDetail> GetByIdAsync(Guid postId, CancellationToken ct = default)
     {
-        var post = await _postRepository.GetByIdAsync(new PostId(postId), ct)
+        var post = await _postRepository.GetByIdAsync(PostId.From(postId), ct)
                    ?? throw new PostNotFoundException();
 
         var likesCount = await _postLikeRepository.GetCountAsync(post.Id, ct);
@@ -106,14 +106,15 @@ public sealed class PostService : IPostService
 
         var author = await _authorRepository.GetByIdAsync(post.AuthorId, ct);
 
-        return new PostDetail(post.Id.Value, new PostAuthor(post.AuthorId.Value, author?.Username ?? string.Empty),
-            post.Content, post.CreatedAt, post.UpdatedAt,
+        return new PostDetail(post.Id.Value,
+            new PostAuthor(post.AuthorId.Value, author?.Username.Value ?? string.Empty),
+            post.Content.Value, post.CreatedAt, post.UpdatedAt,
             likesCount, commentsCount);
     }
 
     public async Task<Post> CreateAsync(Guid authorId, string content, CancellationToken ct = default)
     {
-        var post = Post.Create(new AuthorId(authorId), content);
+        var post = Post.Create(AuthorId.From(authorId), PostContent.From(content));
         _postRepository.Add(post);
 
         await _unitOfWork.CommitAsync(ct);
@@ -123,8 +124,8 @@ public sealed class PostService : IPostService
 
     public async Task<Post> UpdateAsync(Guid authorId, Guid postId, string content, CancellationToken ct = default)
     {
-        var postIdVo = new PostId(postId);
-        var authorIdVo = new AuthorId(authorId);
+        var postIdVo = PostId.From(postId);
+        var authorIdVo = AuthorId.From(authorId);
         var post = await _postRepository.GetByIdAsync(postIdVo, ct);
 
         if (post is null)
@@ -132,7 +133,7 @@ public sealed class PostService : IPostService
             throw new PostNotFoundException();
         }
 
-        post.Update(authorIdVo, content);
+        post.Update(authorIdVo, PostContent.From(content));
 
         await _unitOfWork.CommitAsync(ct);
 
@@ -141,25 +142,25 @@ public sealed class PostService : IPostService
 
     public async Task DeleteAsync(Guid authorId, Guid postId, CancellationToken ct = default)
     {
-        var post = await _postRepository.GetByIdAsync(new PostId(postId), ct);
+        var post = await _postRepository.GetByIdAsync(PostId.From(postId), ct);
 
         if (post is null)
             throw new PostNotFoundException();
 
-        post.Delete(new AuthorId(authorId));
+        post.Delete(AuthorId.From(authorId));
 
         await _unitOfWork.CommitAsync(ct);
     }
 
     public async Task LikeAsync(Guid authorId, Guid postId, CancellationToken ct = default)
     {
-        var post = await _postRepository.GetByIdAsync(new PostId(postId), ct)
+        var post = await _postRepository.GetByIdAsync(PostId.From(postId), ct)
                    ?? throw new PostNotFoundException();
 
-        var existing = await _postLikeRepository.GetAsync(post.Id, new AuthorId(authorId), ct);
+        var existing = await _postLikeRepository.GetAsync(post.Id, AuthorId.From(authorId), ct);
         if (existing is not null) return;
 
-        var like = PostLike.Create(post.Id, new AuthorId(authorId));
+        var like = PostLike.Create(post.Id, AuthorId.From(authorId));
         _postLikeRepository.Add(like);
 
         await _unitOfWork.CommitAsync(ct);
@@ -168,10 +169,10 @@ public sealed class PostService : IPostService
 
     public async Task UnlikeAsync(Guid authorId, Guid postId, CancellationToken ct = default)
     {
-        var post = await _postRepository.GetByIdAsync(new PostId(postId), ct)
+        var post = await _postRepository.GetByIdAsync(PostId.From(postId), ct)
                    ?? throw new PostNotFoundException();
 
-        var existing = await _postLikeRepository.GetAsync(post.Id, new AuthorId(authorId), ct);
+        var existing = await _postLikeRepository.GetAsync(post.Id, AuthorId.From(authorId), ct);
         if (existing is null) return;
 
         _postLikeRepository.Remove(existing);

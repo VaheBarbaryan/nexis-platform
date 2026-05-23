@@ -21,17 +21,17 @@ public sealed class PostLikeConfiguration : IEntityTypeConfiguration<PostLike>
         builder.Property(x => x.Id)
             .HasConversion(
                 id => id.Value,
-                value => new PostLikeId(value));
+                value => PostLikeId.From(value));
 
         builder.Property(x => x.PostId)
             .HasConversion(
                 id => id.Value,
-                value => new PostId(value));
+                value => PostId.From(value));
 
         builder.Property(x => x.AuthorId)
             .HasConversion(
                 id => id.Value,
-                value => new AuthorId(value));
+                value => AuthorId.From(value));
 
         builder.Property(x => x.CreatedAt)
             .HasPrecision(0)

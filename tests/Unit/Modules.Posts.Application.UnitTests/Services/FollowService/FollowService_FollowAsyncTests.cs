@@ -26,7 +26,8 @@ public sealed class FollowService_FollowAsyncTests
         var followeeId = Guid.NewGuid();
 
         _followRepository
-            .Setup(x => x.ExistsAsync(new AuthorId(followerId), new AuthorId(followeeId), It.IsAny<CancellationToken>()))
+            .Setup(x => x.ExistsAsync(AuthorId.From(followerId), AuthorId.From(followeeId),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         var act = () => service.FollowAsync(followerId, followeeId);
@@ -42,7 +43,8 @@ public sealed class FollowService_FollowAsyncTests
         var followeeId = Guid.NewGuid();
 
         _followRepository
-            .Setup(x => x.ExistsAsync(new AuthorId(followerId), new AuthorId(followeeId), It.IsAny<CancellationToken>()))
+            .Setup(x => x.ExistsAsync(AuthorId.From(followerId), AuthorId.From(followeeId),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         await Assert.ThrowsAsync<AlreadyFollowException>(() => service.FollowAsync(followerId, followeeId));
@@ -59,7 +61,8 @@ public sealed class FollowService_FollowAsyncTests
         var followeeId = Guid.NewGuid();
 
         _followRepository
-            .Setup(x => x.ExistsAsync(new AuthorId(followerId), new AuthorId(followeeId), It.IsAny<CancellationToken>()))
+            .Setup(x => x.ExistsAsync(AuthorId.From(followerId), AuthorId.From(followeeId),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
         _unitOfWork
             .Setup(x => x.CommitAsync(It.IsAny<CancellationToken>()))
@@ -69,8 +72,8 @@ public sealed class FollowService_FollowAsyncTests
 
         _followRepository.Verify(
             x => x.Add(It.Is<Follow>(f =>
-                f.FollowerId == new AuthorId(followerId) &&
-                f.FolloweeId == new AuthorId(followeeId))),
+                f.FollowerId == AuthorId.From(followerId) &&
+                f.FolloweeId == AuthorId.From(followeeId))),
             Times.Once);
         _unitOfWork.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }

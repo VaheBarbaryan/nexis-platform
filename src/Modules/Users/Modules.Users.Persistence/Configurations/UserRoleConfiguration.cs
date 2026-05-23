@@ -17,10 +17,10 @@ public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
         builder.HasKey(x => new { x.UserId, x.RoleId });
 
         builder.Property(x => x.UserId)
-            .HasConversion(id => id.Value, value => new UserId(value));
+            .HasConversion(id => id.Value, value => UserId.From(value));
 
         builder.Property(x => x.RoleId)
-            .HasConversion(id => id.Value, value => new RoleId(value));
+            .HasConversion(id => id.Value, value => RoleId.From(value));
 
         builder.HasOne<Role>()
             .WithMany()

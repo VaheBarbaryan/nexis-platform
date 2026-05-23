@@ -14,9 +14,9 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
         builder.ToTable("roles");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id)
-            .HasConversion(id => id.Value, value => new RoleId(value));
+            .HasConversion(id => id.Value, value => RoleId.From(value));
         builder.Property(r => r.Name)
-            .HasConversion(name => name.Value, value => RoleName.Create(value))
+            .HasConversion(name => name.Value, value => RoleName.From(value))
             .HasMaxLength(100)
             .IsRequired();
 

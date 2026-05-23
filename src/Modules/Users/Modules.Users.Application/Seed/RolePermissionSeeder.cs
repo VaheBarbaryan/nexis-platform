@@ -68,7 +68,7 @@ public sealed class RolePermissionSeeder : IModuleSeeder
         {
             if (!existing.Any(p => p.Name == permName))
             {
-                var permission = Permission.Create(permName.Value);
+                var permission = Permission.Create(PermissionName.From(permName.Value));
                 await _permissionRepository.AddAsync(permission);
             }
         }
@@ -83,7 +83,7 @@ public sealed class RolePermissionSeeder : IModuleSeeder
         if (await _roleRepository.ExistsAsync(roleName))
             return;
 
-        var role = Role.Create(roleName.Value);
+        var role = Role.Create(roleName);
 
         foreach (var code in codes)
         {

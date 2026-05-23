@@ -19,16 +19,28 @@ public sealed class NotificationConfiguration : IEntityTypeConfiguration<Notific
         builder.Property(x => x.Id)
             .HasConversion(
                 id => id.Value,
-                value => new NotificationId(value));
+                value => NotificationId.From(value));
 
         builder.Property(x => x.Type)
             .HasConversion<string>()
             .HasMaxLength(50)
             .IsRequired();
 
-        builder.Property(x => x.RecipientId).IsRequired();
-        builder.Property(x => x.ActorId).IsRequired();
-        builder.Property(x => x.EntityId).IsRequired();
+        builder.Property(x => x.RecipientId)
+            .HasConversion(
+                recipientId => recipientId.Value,
+                value => NotificationUserId.From(value))
+            .IsRequired();
+        builder.Property(x => x.ActorId)
+            .HasConversion(
+                actorId => actorId.Value,
+                value => NotificationUserId.From(value))
+            .IsRequired();
+        builder.Property(x => x.EntityId)
+            .HasConversion(
+                entityId => entityId.Value,
+                value => NotificationEntityId.From(value))
+            .IsRequired();
         builder.Property(x => x.IsRead).IsRequired();
         builder.Property(x => x.CreatedAt).HasPrecision(0).IsRequired();
 

@@ -32,7 +32,7 @@ public class PasswordService : IPasswordService
 
     public async Task ForgotPasswordAsync(string email, CancellationToken ct = default)
     {
-        var user = await _userRepository.GetByEmailAsync(email, ct);
+        var user = await _userRepository.GetByEmailAsync(Email.From(email), ct);
 
         if (user?.EmailVerifiedAt is not null)
         {
@@ -54,7 +54,7 @@ public class PasswordService : IPasswordService
             return false;
         }
 
-        var user = await _userRepository.GetByIdAsync(new UserId(userId.Value), ct);
+        var user = await _userRepository.GetByIdAsync(UserId.From(userId.Value), ct);
 
         if (user is null || _passwordHasher.Verify(newPassword, user.Password.Value))
         {
@@ -75,7 +75,7 @@ public class PasswordService : IPasswordService
         string newPassword,
         CancellationToken ct = default)
     {
-        var user = await _userRepository.GetByIdAsync(new UserId(userId), ct);
+        var user = await _userRepository.GetByIdAsync(UserId.From(userId), ct);
 
         if (user is null)
         {

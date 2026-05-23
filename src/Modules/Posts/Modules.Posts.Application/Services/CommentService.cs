@@ -35,7 +35,7 @@ public sealed class CommentService : ICommentService
     public async Task<CursorResponse<CommentSummary>> GetByPostIdAsync(
         Guid postId, string? cursor, int limit = 20, CancellationToken ct = default)
     {
-        var comments = await _commentRepository.GetByPostIdAsync(new PostId(postId), cursor, limit, ct);
+        var comments = await _commentRepository.GetByPostIdAsync(PostId.From(postId), cursor, limit, ct);
 
         var authors = await _authorRepository.GetByIdsAsync(comments.Select(c => c.AuthorId), ct);
 
@@ -48,20 +48,21 @@ public sealed class CommentService : ICommentService
                 return new CommentSummary(
                     c.Id.Value,
                     c.PostId.Value,
-                    new PostAuthor(c.AuthorId.Value, author?.Username ?? string.Empty),
-                    c.Content,
+                    new PostAuthor(c.AuthorId.Value, author?.Username.Value ?? string.Empty),
+                    c.Content.Value,
                     c.CreatedAt,
                     c.UpdatedAt);
             },
             c => new Cursor(c.CreatedAt, c.Id.Value).Encode());
     }
 
-    public async Task<CommentSummary> CreateAsync(Guid authorId, Guid postId, string content, CancellationToken ct = default)
+    public async Task<CommentSummary> CreateAsync(Guid authorId, Guid postId, string content,
+        CancellationToken ct = default)
     {
-        var post = await _postRepository.GetByIdAsync(new PostId(postId), ct)
-            ?? throw new PostNotFoundException();
+        var post = await _postRepository.GetByIdAsync(PostId.From(postId), ct)
+                   ?? throw new PostNotFoundException();
 
-        var comment = Comment.Create(post.Id, new AuthorId(authorId), content);
+        var comment = Comment.Create(post.Id, AuthorId.From(authorId), CommentContent.From(content));
         _commentRepository.Add(comment);
 
         await _unitOfWork.CommitAsync(ct);
@@ -72,18 +73,19 @@ public sealed class CommentService : ICommentService
         return new CommentSummary(
             comment.Id.Value,
             comment.PostId.Value,
-            new PostAuthor(comment.AuthorId.Value, author?.Username ?? string.Empty),
-            comment.Content,
+            new PostAuthor(comment.AuthorId.Value, author?.Username.Value ?? string.Empty),
+            comment.Content.Value,
             comment.CreatedAt,
             comment.UpdatedAt);
     }
 
-    public async Task<CommentSummary> UpdateAsync(Guid authorId, Guid commentId, string content, CancellationToken ct = default)
+    public async Task<CommentSummary> UpdateAsync(Guid authorId, Guid commentId, string content,
+        CancellationToken ct = default)
     {
-        var comment = await _commentRepository.GetByIdAsync(new CommentId(commentId), ct)
-            ?? throw new CommentNotFoundException();
+        var comment = await _commentRepository.GetByIdAsync(CommentId.From(commentId), ct)
+                      ?? throw new CommentNotFoundException();
 
-        comment.Update(new AuthorId(authorId), content);
+        comment.Update(AuthorId.From(authorId), CommentContent.From(content));
 
         await _unitOfWork.CommitAsync(ct);
 
@@ -92,18 +94,18 @@ public sealed class CommentService : ICommentService
         return new CommentSummary(
             comment.Id.Value,
             comment.PostId.Value,
-            new PostAuthor(comment.AuthorId.Value, author?.Username ?? string.Empty),
-            comment.Content,
+            new PostAuthor(comment.AuthorId.Value, author?.Username.Value ?? string.Empty),
+            comment.Content.Value,
             comment.CreatedAt,
             comment.UpdatedAt);
     }
 
     public async Task DeleteAsync(Guid authorId, Guid commentId, CancellationToken ct = default)
     {
-        var comment = await _commentRepository.GetByIdAsync(new CommentId(commentId), ct)
-            ?? throw new CommentNotFoundException();
+        var comment = await _commentRepository.GetByIdAsync(CommentId.From(commentId), ct)
+                      ?? throw new CommentNotFoundException();
 
-        comment.Delete(new AuthorId(authorId));
+        comment.Delete(AuthorId.From(authorId));
 
         await _unitOfWork.CommitAsync(ct);
         await _commentRepository.RefreshCountsAsync(ct);
